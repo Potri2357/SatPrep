@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-blue-500: #2D6BCB;
+    --color-blue-600: #2458AD;
+    --color-blue-700: #1C458A;
+    --color-blue-400: #5A8FDD;
+    --color-blue-300: #8FB2EA;
+    --color-blue-100: #DCE8F8;
+    --color-blue-50: #EEF4FC;
+
+    --color-navy-700: #212835;
+    --color-navy-600: #2E3746;
+    --color-navy-500: #46526A;
+    --color-navy-800: #151A23;
+    --color-navy-900: #0E1117;
+
+    --color-ice-100: #EAF1F8;
+    --color-ice-50: #F5F8FC;
+
+    --color-success: #1F9D6B;
+    --color-warning: #D9902B;
+    --color-danger: #D64550;
+    --color-review: #7B5CD6;
+
+    --canvas: #EAF1F8;
+    --surface: #FFFFFF;
+    --surface-raised: #FFFFFF;
+    --border: #DDE4EE;
+    --text-primary: #212835;
+    --text-secondary: #5B6578;
+    --text-tertiary: #8892A3;
+  }
+
+  [data-theme="dark"] {
+    --canvas: #0E1117;
+    --surface: #151A23;
+    --surface-raised: #1B212C;
+    --border: #2A3342;
+    --text-primary: #EAF1F8;
+    --text-secondary: #A3AEC2;
+    --text-tertiary: #7B879B;
+
+    --color-success: #3DBE8B;
+    --color-warning: #E9A94F;
+    --color-danger: #EC6A74;
+    --color-review: #9B83E8;
+  }
+}
+
+body {
+  background-color: var(--canvas);
+  color: var(--text-primary);
+  font-family: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-family: var(--font-dm-mono), monospace;
+}
+
+/* Diagonal split signature gradient from PRD Section 7.3 */
+.signature-diagonal {
+  background: linear-gradient(135deg, #2D6BCB 50%, #212835 50%);
+}
+
+/* Subtle graph paper grid pattern (PRD Section 7.2) */
+.bg-grid-pattern {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(45, 107, 203, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(45, 107, 203, 0.04) 1px, transparent 1px);
+}
+
+.dark .bg-grid-pattern,
+[data-theme="dark"] .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(90, 143, 221, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(90, 143, 221, 0.05) 1px, transparent 1px);
+}
+
+/* KaTeX custom styles */
+@import "katex/dist/katex.min.css";
+.katex-display {
+  margin: 0.75em 0 !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0;
+}
