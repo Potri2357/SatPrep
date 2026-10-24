@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { INITIAL_QUESTIONS, INITIAL_TOPICS, INITIAL_KEYS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
 import { Question } from '@/lib/types';
-import { Search, Filter, Plus, Edit3, Trash2, Check, Eye, X } from 'lucide-react';
+import { Search, Filter, Plus, Edit3, Trash2, Check, Eye, X, BookOpen } from 'lucide-react';
 
 export default function QuestionBankManagementPage() {
   const [questions, setQuestions] = useState<Question[]>(INITIAL_QUESTIONS);
@@ -36,17 +36,21 @@ export default function QuestionBankManagementPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#212835] dark:text-white">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Calibrated Items Inventory</span>
+          </div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             Question Bank Inventory
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Search, filter, audit KaTeX math rendering, and manage live questions in circulation.
           </p>
         </div>
 
         <button
           onClick={() => alert('New Question Form modal opened')}
-          className="px-4 py-2 rounded-xl bg-[#2D6BCB] hover:bg-[#2458AD] text-white text-xs font-semibold flex items-center gap-2 shadow-sm"
+          className="px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all shadow-blue-500/20 hover:scale-[1.02]"
         >
           <Plus className="w-4 h-4" />
           <span>Add Single Question</span>
@@ -54,21 +58,21 @@ export default function QuestionBankManagementPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] flex flex-col sm:flex-row gap-3">
+      <div className="p-4 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 flex flex-col sm:flex-row gap-3 shadow-xs">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-blue-500 absolute left-3.5 top-3" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search stems, options, or formulas..."
-            className="w-full h-10 pl-9 pr-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117] text-xs"
+            className="w-full h-10 pl-10 pr-3 rounded-xl border border-blue-100 bg-blue-50/30 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 text-xs"
           />
         </div>
 
         <select
           value={topicFilter}
           onChange={(e) => setTopicFilter(e.target.value)}
-          className="h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117] text-xs"
+          className="h-10 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 text-xs font-medium focus:outline-none focus:border-blue-500"
         >
           <option value="all">All Topics</option>
           {INITIAL_TOPICS.map((t) => (
@@ -79,7 +83,7 @@ export default function QuestionBankManagementPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117] text-xs"
+          className="h-10 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 text-xs font-medium focus:outline-none focus:border-blue-500"
         >
           <option value="all">All Statuses</option>
           <option value="live">Live</option>
@@ -91,76 +95,78 @@ export default function QuestionBankManagementPage() {
         </select>
       </div>
 
-      {/* Question Table (PRD Section 7.10: 36px-48px rows, tabular numerals) */}
-      <div className="rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] overflow-hidden shadow-sm">
+      {/* Question Table */}
+      <div className="rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 overflow-hidden shadow-xs">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#1B212C] text-slate-400 uppercase tracking-wider text-[10px]">
-              <th className="p-3">Stem &amp; Details</th>
-              <th className="p-3">Topic</th>
-              <th className="p-3">Difficulty</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Source</th>
-              <th className="p-3 text-right">Actions</th>
+            <tr className="border-b border-blue-100 bg-blue-50/50 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
+              <th className="p-3.5 pl-5">Stem &amp; Details</th>
+              <th className="p-3.5">Topic</th>
+              <th className="p-3.5">Difficulty</th>
+              <th className="p-3.5">Status</th>
+              <th className="p-3.5">Source</th>
+              <th className="p-3.5 pr-5 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#DDE4EE] dark:divide-[#2E3746]">
+          <tbody className="divide-y divide-blue-50">
             {filtered.map((q) => {
-              let badgeColor = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
-              if (q.status === 'live') badgeColor = 'bg-[#1F9D6B]/15 text-[#1F9D6B] font-bold';
-              else if (q.status === 'auto_verified') badgeColor = 'bg-[#2D6BCB]/15 text-[#2D6BCB] font-bold';
-              else if (q.status === 'needs_review') badgeColor = 'bg-amber-500/15 text-amber-500 font-bold';
-              else if (q.status === 'flagged') badgeColor = 'bg-red-500/15 text-red-500 font-bold';
-              else if (q.status === 'retired') badgeColor = 'bg-slate-200 dark:bg-slate-700 text-slate-400';
+              let badgeColor = 'bg-slate-100 text-slate-600 border border-slate-200';
+              if (q.status === 'live') badgeColor = 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold';
+              else if (q.status === 'auto_verified') badgeColor = 'bg-blue-50 text-blue-700 border border-blue-200 font-bold';
+              else if (q.status === 'needs_review') badgeColor = 'bg-amber-50 text-amber-700 border border-amber-200 font-bold';
+              else if (q.status === 'flagged') badgeColor = 'bg-red-50 text-red-700 border border-red-200 font-bold';
+              else if (q.status === 'retired') badgeColor = 'bg-slate-100 text-slate-400 border border-slate-200';
 
               return (
-                <tr key={q.id} className="hover:bg-slate-50/50 dark:hover:bg-[#1B212C]/50 transition-colors">
-                  <td className="p-3 max-w-md">
-                    <div className="font-medium text-[#212835] dark:text-white line-clamp-2">
+                <tr key={q.id} className="hover:bg-blue-50/40 transition-colors">
+                  <td className="p-3.5 pl-5 max-w-md">
+                    <div className="font-semibold text-slate-900 line-clamp-2">
                       <MathRenderer content={q.stem} />
                     </div>
                     <div className="text-[10px] text-slate-400 mt-1 font-mono">
                       ID: {q.id} · Options: {q.options.length} · Version: v{q.version}
                     </div>
                   </td>
-                  <td className="p-3 capitalize text-slate-600 dark:text-slate-300 font-medium">
+                  <td className="p-3.5 capitalize text-slate-700 font-medium">
                     {q.topic_id.replace('-', ' ')}
                   </td>
-                  <td className="p-3 font-mono font-bold">
-                    Level {q.difficulty_assigned}
+                  <td className="p-3.5 font-mono">
+                    <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-[11px] font-bold">
+                      Lvl {q.difficulty_assigned}
+                    </span>
                   </td>
-                  <td className="p-3">
-                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-mono ${badgeColor}`}>
+                  <td className="p-3.5">
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] uppercase font-mono ${badgeColor}`}>
                       {q.status}
                     </span>
                   </td>
-                  <td className="p-3 text-slate-500 capitalize">
+                  <td className="p-3.5 text-slate-500 capitalize">
                     {q.source}
                   </td>
-                  <td className="p-3 text-right space-x-1">
+                  <td className="p-3.5 pr-5 text-right space-x-1">
                     <button
                       onClick={() => setPreviewQ(q)}
-                      className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-black dark:hover:text-white"
+                      className="p-1.5 rounded-xl hover:bg-blue-50 text-slate-500 hover:text-blue-600 transition-colors"
                       title="Inspect & KaTeX Preview"
                     >
-                      <Eye className="w-3.5 h-3.5" />
+                      <Eye className="w-4 h-4" />
                     </button>
                     {q.status !== 'live' && (
                       <button
                         onClick={() => handleApprove(q.id)}
-                        className="p-1.5 rounded hover:bg-[#1F9D6B]/10 text-[#1F9D6B]"
+                        className="p-1.5 rounded-xl hover:bg-emerald-50 text-emerald-600 transition-colors"
                         title="Approve to Live"
                       >
-                        <Check className="w-3.5 h-3.5" />
+                        <Check className="w-4 h-4" />
                       </button>
                     )}
                     {q.status !== 'retired' && (
                       <button
                         onClick={() => handleRetire(q.id)}
-                        className="p-1.5 rounded hover:bg-red-500/10 text-red-500"
+                        className="p-1.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors"
                         title="Retire from circulation"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     )}
                   </td>
@@ -173,31 +179,35 @@ export default function QuestionBankManagementPage() {
 
       {/* INSPECTION PREVIEW MODAL */}
       {previewQ && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#151A23] rounded-2xl border border-[#DDE4EE] dark:border-[#2E3746] max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl border border-blue-100 max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-blue-100 pb-3">
               <div>
-                <span className="font-mono font-bold text-xs">{previewQ.id}</span>
-                <span className="ml-2 text-xs text-slate-400 capitalize">Topic: {previewQ.topic_id}</span>
+                <span className="font-mono font-bold text-xs text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+                  {previewQ.id}
+                </span>
+                <span className="ml-2.5 text-xs text-slate-500 capitalize">Topic: {previewQ.topic_id}</span>
               </div>
-              <button onClick={() => setPreviewQ(null)}>
-                <X className="w-4 h-4 text-slate-400 hover:text-white" />
+              <button onClick={() => setPreviewQ(null)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700">
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <div>
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Question Stem (KaTeX Rendered)</div>
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0E1117] border border-[#DDE4EE] dark:border-[#2E3746] text-sm">
+              <div className="text-[10px] uppercase font-bold text-blue-700 tracking-wider mb-1.5">Question Stem (KaTeX Rendered)</div>
+              <div className="p-4 rounded-2xl bg-blue-50/40 border border-blue-100 text-sm text-slate-900 leading-relaxed">
                 <MathRenderer content={previewQ.stem} />
               </div>
             </div>
 
             <div>
-              <div className="text-[10px] uppercase font-bold text-slate-400 mb-1">Options List</div>
-              <div className="space-y-1.5">
+              <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1.5">Options List</div>
+              <div className="space-y-2">
                 {previewQ.options.map((opt) => (
-                  <div key={opt.id} className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center gap-2 text-xs">
-                    <span className="font-mono font-bold uppercase">{opt.id}.</span>
+                  <div key={opt.id} className="p-3 rounded-xl border border-blue-100 bg-white flex items-center gap-2.5 text-xs text-slate-800">
+                    <span className="w-6 h-6 rounded-full bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-mono font-bold uppercase text-[10px]">
+                      {opt.id}
+                    </span>
                     <MathRenderer content={opt.text} />
                   </div>
                 ))}
@@ -205,11 +215,12 @@ export default function QuestionBankManagementPage() {
             </div>
 
             {INITIAL_KEYS[previewQ.id] && (
-              <div className="p-4 rounded-xl bg-[#1F9D6B]/10 border border-[#1F9D6B]/30 text-xs space-y-2">
-                <div className="font-bold text-[#1F9D6B]">
-                  Correct Key: Option {INITIAL_KEYS[previewQ.id].correct_option.toUpperCase()}
+              <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 text-xs space-y-2">
+                <div className="font-bold text-emerald-800 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span>Correct Key: Option {INITIAL_KEYS[previewQ.id].correct_option.toUpperCase()}</span>
                 </div>
-                <div className="text-slate-700 dark:text-slate-300">
+                <div className="text-slate-700">
                   <MathRenderer content={INITIAL_KEYS[previewQ.id].solution} />
                 </div>
               </div>

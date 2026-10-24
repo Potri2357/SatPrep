@@ -123,26 +123,26 @@ export default function NewTestBuilderPage() {
   const countPresets = [5, 10, 15, 20, 35];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F8FC] via-[#EAF1F8] to-[#E2ECF7] dark:from-[#0E1117] dark:via-[#151A23] dark:to-[#0A0D12] flex flex-col text-[#212835] dark:text-[#EAF1F8] relative overflow-x-hidden selection:bg-[#2D6BCB] selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col text-slate-800 relative overflow-x-hidden selection:bg-blue-600 selection:text-white">
       {/* Decorative Glassmorphism Ambient Glow Orbs */}
-      <div className="absolute top-12 left-1/4 w-96 h-96 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-80 right-10 w-[450px] h-[450px] bg-indigo-300/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-20 left-10 w-80 h-80 bg-cyan-300/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-12 left-1/4 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-80 right-10 w-[450px] h-[450px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-20 left-10 w-80 h-80 bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Glassmorphic Sticky Header */}
-      <header className="sticky top-0 z-40 bg-white/70 dark:bg-[#151A23]/70 backdrop-blur-xl border-b border-white/60 dark:border-[#2E3746]/60 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-blue-100 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <BrandLogo size={34} showWordmark={true} />
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-[#2D6BCB]/10 text-[#2D6BCB] border border-[#2D6BCB]/20">
-              <Sparkles className="w-3 h-3 text-[#2D6BCB]" />
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              <Sparkles className="w-3 h-3 text-blue-600" />
               <span>Custom Test Setup</span>
             </span>
           </div>
 
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-[#2D6BCB] bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-white/80 dark:border-slate-700 shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-blue-600 bg-white hover:bg-slate-50 border border-slate-200 shadow-xs transition-all"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Dashboard</span>
@@ -156,19 +156,19 @@ export default function NewTestBuilderPage() {
         <div className="lg:col-span-2 space-y-7">
           {/* Title Area */}
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#212835] dark:text-white">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
               Create a Practice Test
             </h1>
-            <p className="text-xs sm:text-sm text-[#5B6578] dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
               Select your exam pattern, topics, and composition. Your paper is assembled and verified before you start.
             </p>
           </div>
 
           {/* Section 1: Exam & Mode Picker (Glass Card) */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white/80 dark:bg-[#151A23]/80 backdrop-blur-xl border border-white/90 dark:border-[#2E3746] shadow-[0_8px_30px_rgb(45,107,203,0.05)] space-y-5">
+          <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-[#2D6BCB] text-white flex items-center justify-center text-[10px] font-bold">1</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">1</span>
                 <span>Target Exam &amp; Pattern</span>
               </span>
             </div>
@@ -182,25 +182,25 @@ export default function NewTestBuilderPage() {
                     key={e.id}
                     type="button"
                     onClick={() => setExamId(e.id)}
-                    className={`p-4 rounded-2xl border text-left transition-all relative overflow-hidden group ${
+                    className={`p-4 rounded-2xl border text-left transition-all relative overflow-hidden group cursor-pointer ${
                       isSelected
-                        ? 'border-[#2D6BCB] bg-gradient-to-br from-[#DCE8F8]/70 to-[#EEF4FC]/90 text-[#1C458A] shadow-md shadow-[#2D6BCB]/15 ring-2 ring-[#2D6BCB]/30'
-                        : 'border-white/80 dark:border-[#2E3746] bg-white/60 dark:bg-[#0E1117]/60 hover:bg-white dark:hover:bg-[#1B212C] text-slate-700 dark:text-slate-300 shadow-sm'
+                        ? 'border-blue-600 bg-blue-50/80 text-blue-900 shadow-sm ring-1 ring-blue-500'
+                        : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/30 text-slate-700 shadow-xs'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-bold text-sm text-[#212835] dark:text-white group-hover:text-[#2D6BCB] transition-colors">
+                      <span className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors">
                         {e.name}
                       </span>
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
-                          isSelected ? 'bg-[#2D6BCB] text-white' : 'border border-slate-300 dark:border-slate-600'
+                          isSelected ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-300 bg-slate-50'
                         }`}
                       >
                         {isSelected && <Check className="w-3 h-3" />}
                       </div>
                     </div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    <div className="text-[11px] text-slate-500">
                       35 Questions · 20 Mins · -0.25 Mark
                     </div>
                   </button>
@@ -210,10 +210,10 @@ export default function NewTestBuilderPage() {
 
             {/* Mode Selector (Pill Segmented Chips) */}
             <div className="pt-2">
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">
+              <label className="block text-xs font-bold text-slate-700 mb-2">
                 Test Mode
               </label>
-              <div className="p-1 rounded-full bg-slate-200/60 dark:bg-[#0E1117] backdrop-blur-md border border-white/80 dark:border-[#2E3746] flex gap-1">
+              <div className="p-1 rounded-full bg-slate-100 border border-slate-200 flex gap-1">
                 {[
                   { id: 'topic_test', label: 'Topic Drill' },
                   { id: 'sectional', label: 'Sectional (20 min)' },
@@ -224,10 +224,10 @@ export default function NewTestBuilderPage() {
                     <button
                       key={m.id}
                       onClick={() => setMode(m.id as any)}
-                      className={`flex-1 py-2 text-xs font-bold rounded-full transition-all duration-200 ${
+                      className={`flex-1 py-2 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'bg-white dark:bg-[#212835] text-[#2D6BCB] shadow-md shadow-black/5 scale-[1.01]'
-                          : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                          ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md shadow-blue-500/25 scale-[1.01]'
+                          : 'text-slate-600 hover:text-blue-600'
                       }`}
                     >
                       {m.label}
@@ -239,21 +239,21 @@ export default function NewTestBuilderPage() {
           </div>
 
           {/* Section 2: Question Source & Chips Configuration (Glass Card) */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white/80 dark:bg-[#151A23]/80 backdrop-blur-xl border border-white/90 dark:border-[#2E3746] shadow-[0_8px_30px_rgb(45,107,203,0.05)] space-y-6">
+          <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                <span className="w-5 h-5 rounded-full bg-[#2D6BCB] text-white flex items-center justify-center text-[10px] font-bold">2</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">2</span>
                 <span>Question Selection &amp; Content Mix</span>
               </span>
 
               {/* Source Toggle Pills */}
-              <div className="p-1 rounded-full bg-slate-200/60 dark:bg-[#0E1117] backdrop-blur-md border border-white/80 dark:border-[#2E3746] flex gap-1 self-start sm:self-auto">
+              <div className="p-1 rounded-full bg-slate-100 border border-slate-200 flex gap-1 self-start sm:self-auto">
                 <button
                   onClick={() => setSourceType('auto')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                     sourceType === 'auto'
-                      ? 'bg-[#2D6BCB] text-white shadow-sm'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md shadow-blue-500/20'
+                      : 'text-slate-600 hover:text-blue-600'
                   }`}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
@@ -261,10 +261,10 @@ export default function NewTestBuilderPage() {
                 </button>
                 <button
                   onClick={() => setSourceType('manual')}
-                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                     sourceType === 'manual'
-                      ? 'bg-[#2D6BCB] text-white shadow-sm'
-                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md shadow-blue-500/20'
+                      : 'text-slate-600 hover:text-blue-600'
                   }`}
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -286,15 +286,15 @@ export default function NewTestBuilderPage() {
                   </div>
 
                   {/* 1. Number & Calculation Speed */}
-                  <div className="p-4 rounded-2xl bg-white/50 dark:bg-[#0E1117]/50 border border-white/80 dark:border-[#2E3746] space-y-2.5">
+                  <div className="p-4 rounded-2xl bg-blue-50/40 border border-blue-100 space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-[#2D6BCB] uppercase tracking-wider">
+                      <span className="text-[11px] font-bold text-blue-700 uppercase tracking-wider">
                         ⚡ Number &amp; Calculation Speed
                       </span>
                       <button
                         type="button"
                         onClick={() => selectAllInGroup(numberTopics)}
-                        className="text-[10px] font-semibold text-slate-500 hover:text-[#2D6BCB]"
+                        className="text-[10px] font-semibold text-slate-500 hover:text-blue-600 cursor-pointer"
                       >
                         Toggle All
                       </button>
@@ -308,14 +308,14 @@ export default function NewTestBuilderPage() {
                             key={t.id}
                             type="button"
                             onClick={() => toggleTopic(t.id)}
-                            className={`px-3.5 py-2 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5 select-none ${
+                            className={`px-3.5 py-2 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5 select-none cursor-pointer ${
                               sel
-                                ? 'bg-[#2D6BCB] border-[#2D6BCB] text-white shadow-md shadow-[#2D6BCB]/25 scale-[1.02]'
-                                : 'bg-white/80 dark:bg-[#151A23] border-[#DDE4EE] dark:border-[#2E3746] text-slate-700 dark:text-slate-300 hover:bg-white hover:border-[#2D6BCB]/40 hover:shadow-sm'
+                                ? 'bg-gradient-to-r from-blue-600 to-blue-700 border-blue-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                                : 'bg-white border-slate-200 text-slate-700 hover:bg-blue-50/50 hover:border-blue-300'
                             }`}
                           >
                             <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
-                              sel ? 'bg-white text-[#2D6BCB] font-bold' : 'border border-slate-300'
+                              sel ? 'bg-white text-blue-600 font-bold' : 'border border-slate-300'
                             }`}>
                               {sel ? '✓' : '+'}
                             </span>
@@ -327,15 +327,15 @@ export default function NewTestBuilderPage() {
                   </div>
 
                   {/* 2. Arithmetic Fundamentals */}
-                  <div className="p-4 rounded-2xl bg-white/50 dark:bg-[#0E1117]/50 border border-white/80 dark:border-[#2E3746] space-y-2.5">
+                  <div className="p-4 rounded-2xl bg-emerald-50/30 border border-emerald-100 space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-[#1F9D6B] uppercase tracking-wider">
+                      <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">
                         🎯 Arithmetic Fundamentals
                       </span>
                       <button
                         type="button"
                         onClick={() => selectAllInGroup(arithmeticTopics)}
-                        className="text-[10px] font-semibold text-slate-500 hover:text-[#1F9D6B]"
+                        className="text-[10px] font-semibold text-slate-500 hover:text-emerald-700 cursor-pointer"
                       >
                         Toggle All
                       </button>
@@ -349,14 +349,14 @@ export default function NewTestBuilderPage() {
                             key={t.id}
                             type="button"
                             onClick={() => toggleTopic(t.id)}
-                            className={`px-3.5 py-2 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5 select-none ${
+                            className={`px-3.5 py-2 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5 select-none cursor-pointer ${
                               sel
-                                ? 'bg-[#1F9D6B] border-[#1F9D6B] text-white shadow-md shadow-[#1F9D6B]/25 scale-[1.02]'
-                                : 'bg-white/80 dark:bg-[#151A23] border-[#DDE4EE] dark:border-[#2E3746] text-slate-700 dark:text-slate-300 hover:bg-white hover:border-[#1F9D6B]/40 hover:shadow-sm'
+                                ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 border-emerald-600 text-white shadow-md shadow-emerald-500/25 scale-[1.02]'
+                                : 'bg-white border-slate-200 text-slate-700 hover:bg-emerald-50/40 hover:border-emerald-300'
                             }`}
                           >
                             <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
-                              sel ? 'bg-white text-[#1F9D6B] font-bold' : 'border border-slate-300'
+                              sel ? 'bg-white text-emerald-600 font-bold' : 'border border-slate-300'
                             }`}>
                               {sel ? '✓' : '+'}
                             </span>
@@ -368,15 +368,15 @@ export default function NewTestBuilderPage() {
                   </div>
 
                   {/* 3. Data Interpretation */}
-                  <div className="p-4 rounded-2xl bg-white/50 dark:bg-[#0E1117]/50 border border-white/80 dark:border-[#2E3746] space-y-2.5">
+                  <div className="p-4 rounded-2xl bg-purple-50/30 border border-purple-100 space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-[#7B5CD6] uppercase tracking-wider">
+                      <span className="text-[11px] font-bold text-purple-700 uppercase tracking-wider">
                         📊 Data Interpretation
                       </span>
                       <button
                         type="button"
                         onClick={() => selectAllInGroup(diTopics)}
-                        className="text-[10px] font-semibold text-slate-500 hover:text-[#7B5CD6]"
+                        className="text-[10px] font-semibold text-slate-500 hover:text-purple-700 cursor-pointer"
                       >
                         Toggle All
                       </button>
@@ -392,12 +392,12 @@ export default function NewTestBuilderPage() {
                             onClick={() => toggleTopic(t.id)}
                             className={`px-3.5 py-2 rounded-full text-xs font-semibold border transition-all duration-200 flex items-center gap-1.5 select-none ${
                               sel
-                                ? 'bg-[#7B5CD6] border-[#7B5CD6] text-white shadow-md shadow-[#7B5CD6]/25 scale-[1.02]'
-                                : 'bg-white/80 dark:bg-[#151A23] border-[#DDE4EE] dark:border-[#2E3746] text-slate-700 dark:text-slate-300 hover:bg-white hover:border-[#7B5CD6]/40 hover:shadow-sm'
+                                ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/25 scale-[1.02]'
+                                : 'bg-white border-blue-100 text-slate-700 hover:bg-blue-50/70 hover:border-blue-300 hover:shadow-xs'
                             }`}
                           >
                             <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
-                              sel ? 'bg-white text-[#7B5CD6] font-bold' : 'border border-slate-300'
+                              sel ? 'bg-white text-blue-600 font-bold' : 'border border-blue-300 text-blue-500'
                             }`}>
                               {sel ? '✓' : '+'}
                             </span>
@@ -410,10 +410,10 @@ export default function NewTestBuilderPage() {
                 </div>
 
                 {/* Question Count Preset Chips + Range Slider */}
-                <div className="pt-5 border-t border-slate-200/60 dark:border-slate-800 space-y-3.5">
+                <div className="pt-5 border-t border-blue-100 space-y-3.5">
                   <div className="flex justify-between items-center text-xs font-bold">
-                    <span className="text-slate-700 dark:text-slate-300">Question Volume</span>
-                    <span className="font-mono text-base text-[#2D6BCB] font-extrabold bg-[#2D6BCB]/10 px-3 py-0.5 rounded-full border border-[#2D6BCB]/20">
+                    <span className="text-slate-800">Question Volume</span>
+                    <span className="font-mono text-base text-blue-600 font-extrabold bg-blue-50 px-3 py-0.5 rounded-full border border-blue-200">
                       {questionCount} Questions
                     </span>
                   </div>
@@ -427,8 +427,8 @@ export default function NewTestBuilderPage() {
                         onClick={() => setQuestionCount(cnt)}
                         className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all ${
                           questionCount === cnt
-                            ? 'bg-[#2D6BCB] text-white border-[#2D6BCB] shadow-sm'
-                            : 'bg-white/80 dark:bg-[#151A23] border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-white'
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                            : 'bg-white border-blue-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600'
                         }`}
                       >
                         {cnt} Qs
@@ -443,13 +443,13 @@ export default function NewTestBuilderPage() {
                     step="5"
                     value={questionCount}
                     onChange={(e) => setQuestionCount(Number(e.target.value))}
-                    className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[#2D6BCB]"
+                    className="w-full h-2 bg-blue-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
                   />
                 </div>
 
                 {/* Difficulty Mix Chips */}
-                <div className="pt-5 border-t border-slate-200/60 dark:border-slate-800 space-y-2.5">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+                <div className="pt-5 border-t border-blue-100 space-y-2.5">
+                  <label className="block text-xs font-bold text-slate-800">
                     Difficulty Level Calibration
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -467,8 +467,8 @@ export default function NewTestBuilderPage() {
                           onClick={() => setDifficultyMix(d.id)}
                           className={`py-2 px-3 rounded-full text-xs font-bold border text-center transition-all ${
                             isSel
-                              ? 'border-[#2D6BCB] bg-[#2D6BCB] text-white shadow-md shadow-[#2D6BCB]/20'
-                              : 'border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-[#151A23] text-slate-600 dark:text-slate-300 hover:bg-white'
+                              ? 'border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                              : 'border-blue-100 bg-white text-slate-600 hover:bg-blue-50 hover:text-blue-600'
                           }`}
                         >
                           {d.label}
@@ -487,7 +487,7 @@ export default function NewTestBuilderPage() {
                   <select
                     value={manualFilterTopic}
                     onChange={(e) => setManualFilterTopic(e.target.value)}
-                    className="flex-1 h-10 px-3 rounded-xl border border-white/80 dark:border-[#2E3746] bg-white/80 dark:bg-[#0E1117] text-xs font-medium"
+                    className="flex-1 h-10 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
                   >
                     <option value="all">All Topics</option>
                     {INITIAL_TOPICS.map((t) => (
@@ -498,7 +498,7 @@ export default function NewTestBuilderPage() {
                   <select
                     value={manualFilterDiff}
                     onChange={(e) => setManualFilterDiff(e.target.value)}
-                    className="flex-1 h-10 px-3 rounded-xl border border-white/80 dark:border-[#2E3746] bg-white/80 dark:bg-[#0E1117] text-xs font-medium"
+                    className="flex-1 h-10 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
                   >
                     <option value="all">All Difficulty Levels</option>
                     <option value="1">Level 1 - Easy</option>
@@ -508,19 +508,19 @@ export default function NewTestBuilderPage() {
                   </select>
                 </div>
 
-                <div className="divide-y divide-slate-100 dark:divide-[#2E3746] max-h-96 overflow-y-auto pr-1">
+                <div className="divide-y divide-blue-50 max-h-96 overflow-y-auto pr-1">
                   {filteredQuestions.map((q) => {
                     const inBasket = basketQids.includes(q.id);
                     return (
                       <div key={q.id} className="py-3.5 flex items-start justify-between gap-4">
                         <div className="flex-1 space-y-1.5">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#DCE8F8] dark:bg-[#2E3746] text-[#1C458A] dark:text-slate-300">
+                            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
                               Level {q.difficulty_assigned}
                             </span>
                             <span className="text-[10px] text-slate-500 capitalize">{q.topic_id}</span>
                           </div>
-                          <div className="text-xs text-[#212835] dark:text-slate-200 line-clamp-2">
+                          <div className="text-xs text-slate-800 line-clamp-2">
                             <MathRenderer content={q.stem} />
                           </div>
                         </div>
@@ -530,8 +530,8 @@ export default function NewTestBuilderPage() {
                           onClick={() => toggleBasket(q.id)}
                           className={`px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 flex items-center gap-1.5 transition-all ${
                             inBasket
-                              ? 'bg-[#1F9D6B] text-white shadow-sm'
-                              : 'bg-white dark:bg-[#2E3746] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-[#DCE8F8]'
+                              ? 'bg-emerald-600 text-white shadow-sm'
+                              : 'bg-white text-slate-700 border border-blue-200 hover:bg-blue-50 hover:text-blue-600'
                           }`}
                         >
                           {inBasket ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
@@ -548,50 +548,50 @@ export default function NewTestBuilderPage() {
 
         {/* Right Col: Glassmorphic Live Summary Rail */}
         <div className="space-y-6">
-          <div className="p-6 sm:p-7 rounded-3xl bg-white/80 dark:bg-[#151A23]/80 backdrop-blur-xl border border-white/90 dark:border-[#2E3746] shadow-[0_12px_40px_rgb(45,107,203,0.08)] sticky top-24 space-y-5">
+          <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-md sticky top-24 space-y-5">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-extrabold text-[#212835] dark:text-white">
+              <h2 className="text-base font-extrabold text-slate-900">
                 Test Summary
               </h2>
-              <span className="w-2.5 h-2.5 rounded-full bg-[#1F9D6B] animate-pulse" title="Ready to freeze" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Ready to freeze" />
             </div>
 
             <div className="space-y-3 text-xs">
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-slate-500">Target Exam</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200 text-right">
+                <span className="font-bold text-slate-900 text-right">
                   {INITIAL_EXAMS.find((e) => e.id === examId)?.name || 'IBPS PO Prelims 2026'}
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-slate-500">Selection Mode</span>
-                <span className="font-semibold capitalize text-slate-700 dark:text-slate-300">
+                <span className="font-semibold capitalize text-slate-700">
                   {sourceType} Selection
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-slate-500">Total Questions</span>
-                <span className="font-extrabold font-mono text-[#2D6BCB] text-sm">
+                <span className="font-extrabold font-mono text-blue-700 text-sm">
                   {sourceType === 'manual' ? basketQids.length : questionCount} Questions
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-slate-500">Estimated Duration</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">{estimatedMinutes} Minutes</span>
+                <span className="font-bold text-slate-900">{estimatedMinutes} Minutes</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-slate-500">Negative Marking</span>
-                <span className="font-bold text-[#D64550]">-0.25 marks per wrong</span>
+                <span className="font-bold text-rose-600">-0.25 marks per wrong</span>
               </div>
             </div>
 
             {/* Freshness Chip Badge */}
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#DCE8F8]/80 to-[#EEF4FC] dark:from-[#2D6BCB]/20 dark:to-transparent border border-[#2D6BCB]/25 flex items-center justify-between text-xs">
+            <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200 flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#2D6BCB]" />
-                <span className="font-bold text-[#1C458A] dark:text-[#8FB2EA]">Unseen Questions</span>
+                <Sparkles className="w-4 h-4 text-blue-600" />
+                <span className="font-bold text-blue-900">Unseen Questions</span>
               </div>
-              <span className="font-extrabold font-mono text-[#2D6BCB] bg-white dark:bg-slate-800 px-2.5 py-0.5 rounded-full shadow-sm">
+              <span className="font-extrabold font-mono text-blue-700 bg-white px-2.5 py-0.5 rounded-full shadow-xs border border-blue-100">
                 92% Fresh
               </span>
             </div>
@@ -600,13 +600,13 @@ export default function NewTestBuilderPage() {
             <button
               onClick={handleBuildTest}
               disabled={isSubmitting || (sourceType === 'manual' && basketQids.length === 0)}
-              className="w-full h-12 rounded-2xl bg-gradient-to-r from-[#2D6BCB] to-[#2458AD] hover:from-[#2458AD] hover:to-[#1C458A] disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#2D6BCB]/30 transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
             >
               <span>{isSubmitting ? 'Freezing Bundle...' : 'Assemble & Freeze Test'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
-            <p className="text-[11px] text-center text-slate-500 dark:text-slate-400 leading-tight">
+            <p className="text-[11px] text-center text-slate-400 leading-tight">
               Pre-assembled server-side before the clock starts for zero runtime latency.
             </p>
           </div>

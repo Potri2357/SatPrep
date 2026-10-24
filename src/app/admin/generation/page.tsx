@@ -51,42 +51,46 @@ export default function GenerationControlCentrePage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#212835] dark:text-white">
-            Question Generation &amp; Assembly Control Centre
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
+            <Cpu className="w-3.5 h-3.5" />
+            <span>AI Pipeline &amp; Synthesis</span>
+          </div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
+            Question Generation Control Centre
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Manage parametric templates, dispatch Gemini generation jobs, and supervise pre-built test packs.
+          <p className="text-xs text-slate-500 mt-0.5">
+            Manage parametric templates, dispatch Gemini generation jobs, and supervise calibrated test packs.
           </p>
         </div>
 
         {/* Global Kill Switch (AD-35) */}
         <button
           onClick={() => setKillSwitchActive(!killSwitchActive)}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
+          className={`px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 transition-all shadow-sm ${
             killSwitchActive
               ? 'bg-red-600 text-white animate-pulse'
-              : 'border border-[#DDE4EE] dark:border-[#2E3746] bg-white dark:bg-[#151A23] text-slate-700 dark:text-slate-300 hover:border-red-500'
+              : 'border border-blue-200 bg-white text-slate-700 hover:border-red-400 hover:text-red-600'
           }`}
         >
-          {killSwitchActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+          {killSwitchActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 text-emerald-600" />}
           <span>{killSwitchActive ? 'Kill Switch ACTIVE (Paused)' : 'Generation Pipeline Normal'}</span>
         </button>
       </div>
 
       {/* Launch Job Creator Card */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] shadow-sm space-y-4">
-        <h2 className="text-sm font-bold text-[#212835] dark:text-white flex items-center gap-2">
-          <Zap className="w-4 h-4 text-[#2D6BCB]" />
+      <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-xs space-y-5">
+        <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <Zap className="w-4 h-4 text-blue-600" />
           <span>Dispatch New Question Generation Batch</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
           <div>
-            <label className="font-semibold block mb-1">Target Topic</label>
+            <label className="font-semibold text-slate-700 block mb-1.5">Target Topic</label>
             <select
               value={topicId}
               onChange={(e) => setTopicId(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117]"
+              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
             >
               {INITIAL_TOPICS.map((t) => (
                 <option key={t.id} value={t.id}>{t.name}</option>
@@ -95,11 +99,11 @@ export default function GenerationControlCentrePage() {
           </div>
 
           <div>
-            <label className="font-semibold block mb-1">Target Difficulty</label>
+            <label className="font-semibold text-slate-700 block mb-1.5">Target Difficulty</label>
             <select
               value={difficulty}
               onChange={(e) => setDifficulty(Number(e.target.value))}
-              className="w-full h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117]"
+              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
             >
               <option value="1">Level 1 - Easy</option>
               <option value="2">Level 2 - Moderate-Easy</option>
@@ -110,11 +114,11 @@ export default function GenerationControlCentrePage() {
           </div>
 
           <div>
-            <label className="font-semibold block mb-1">Generation Method</label>
+            <label className="font-semibold text-slate-700 block mb-1.5">Generation Method</label>
             <select
               value={method}
               onChange={(e) => setMethod(e.target.value as any)}
-              className="w-full h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117]"
+              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
             >
               <option value="template">Parametric Template (100% Math Verified)</option>
               <option value="llm_twist">Gemini Blueprint Twist + Sandbox</option>
@@ -122,14 +126,14 @@ export default function GenerationControlCentrePage() {
           </div>
 
           <div>
-            <label className="font-semibold block mb-1">Batch Count</label>
+            <label className="font-semibold text-slate-700 block mb-1.5">Batch Count</label>
             <input
               type="number"
               min="5"
               max="100"
               value={count}
               onChange={(e) => setCount(Number(e.target.value))}
-              className="w-full h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117] font-mono"
+              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 font-mono text-xs focus:outline-none focus:border-blue-500"
             />
           </div>
         </div>
@@ -138,43 +142,46 @@ export default function GenerationControlCentrePage() {
           <button
             onClick={handleLaunchJob}
             disabled={isSubmitting || killSwitchActive}
-            className="px-6 py-2.5 rounded-xl bg-[#2D6BCB] hover:bg-[#2458AD] disabled:opacity-40 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-[#2D6BCB]/25"
+            className="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
           >
+            <Zap className="w-4 h-4" />
             <span>{isSubmitting ? 'Dispatching...' : 'Dispatch Generation Job'}</span>
           </button>
         </div>
       </div>
 
       {/* Job Monitor Table (AD-32) */}
-      <div className="rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-[#DDE4EE] dark:border-[#2E3746] flex items-center justify-between">
-          <span className="font-bold text-xs">Generation Job Monitor</span>
-          <span className="text-[10px] text-slate-400 font-mono">POLLING: FOR UPDATE SKIP LOCKED</span>
+      <div className="rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 overflow-hidden shadow-xs">
+        <div className="p-4 px-6 border-b border-blue-100 bg-blue-50/30 flex items-center justify-between">
+          <span className="font-bold text-xs text-slate-900">Generation Job Monitor</span>
+          <span className="text-[10px] text-blue-700 font-mono font-bold bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+            POLLING: FOR UPDATE SKIP LOCKED
+          </span>
         </div>
 
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="border-b border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#1B212C] text-slate-400 uppercase text-[10px]">
-              <th className="p-3">Job ID</th>
-              <th className="p-3">Topic</th>
-              <th className="p-3">Method</th>
-              <th className="p-3">Accepted / Target</th>
-              <th className="p-3">Runtime</th>
-              <th className="p-3 text-right">Status</th>
+            <tr className="border-b border-blue-100 bg-blue-50/50 text-slate-500 uppercase text-[10px] font-bold">
+              <th className="p-3.5 pl-6">Job ID</th>
+              <th className="p-3.5">Topic</th>
+              <th className="p-3.5">Method</th>
+              <th className="p-3.5">Accepted / Target</th>
+              <th className="p-3.5">Runtime</th>
+              <th className="p-3.5 pr-6 text-right">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#DDE4EE] dark:divide-[#2E3746]">
+          <tbody className="divide-y divide-blue-50">
             {jobs.map((j) => (
-              <tr key={j.id} className="hover:bg-slate-50/50 dark:hover:bg-[#1B212C]/50">
-                <td className="p-3 font-mono font-bold text-slate-700 dark:text-slate-300">{j.id}</td>
-                <td className="p-3 font-semibold">{j.topic_name} (Lvl {j.difficulty})</td>
-                <td className="p-3 text-slate-500 capitalize">{j.method.replace('_', ' ')}</td>
-                <td className="p-3 font-mono text-[#1F9D6B] font-bold">
+              <tr key={j.id} className="hover:bg-blue-50/40 transition-colors">
+                <td className="p-3.5 pl-6 font-mono font-bold text-blue-700">{j.id}</td>
+                <td className="p-3.5 font-semibold text-slate-800">{j.topic_name} (Lvl {j.difficulty})</td>
+                <td className="p-3.5 text-slate-500 capitalize">{j.method.replace('_', ' ')}</td>
+                <td className="p-3.5 font-mono text-emerald-700 font-bold">
                   {j.accepted_count} / {j.count} items
                 </td>
-                <td className="p-3 font-mono text-slate-400">{j.runtime_sec}s</td>
-                <td className="p-3 text-right">
-                  <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase font-mono bg-[#1F9D6B]/15 text-[#1F9D6B]">
+                <td className="p-3.5 font-mono text-slate-400">{j.runtime_sec}s</td>
+                <td className="p-3.5 pr-6 text-right">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase font-mono bg-emerald-50 text-emerald-700 border border-emerald-200">
                     {j.status}
                   </span>
                 </td>

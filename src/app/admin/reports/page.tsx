@@ -45,23 +45,29 @@ export default function ReportsAndRegradePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-xl font-bold tracking-tight text-[#212835] dark:text-white">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
+          <Flag className="w-3.5 h-3.5" />
+          <span>Quality Triage &amp; Key Audits</span>
+        </div>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
           Question Quality Inbox &amp; Re-grade Tool
         </h1>
-        <p className="text-xs text-slate-400 mt-0.5">
+        <p className="text-xs text-slate-500 mt-0.5">
           Triage reported answer keys, monitor auto-flagged items, and recalculate historical attempts upon key corrections.
         </p>
       </div>
 
       {/* RE-GRADE TOOL CARD (AD-53) */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] shadow-sm space-y-4">
-        <div className="flex items-center gap-2">
-          <RotateCcw className="w-5 h-5 text-[#2D6BCB]" />
+      <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-xs space-y-4">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <RotateCcw className="w-5 h-5" />
+          </div>
           <div>
-            <h2 className="text-sm font-bold text-[#212835] dark:text-white">
+            <h2 className="text-sm font-bold text-slate-900">
               Historical Attempt Re-grade Engine
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               When an expert reviewer verifies a contested key, this tool recalculates scores and accuracy for all candidate attempts that contained this question.
             </p>
           </div>
@@ -69,21 +75,21 @@ export default function ReportsAndRegradePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-2">
           <div>
-            <label className="font-semibold block mb-1">Target Question ID</label>
+            <label className="font-semibold text-slate-700 block mb-1">Target Question ID</label>
             <input
               type="text"
               value={regradeQid}
               onChange={(e) => setRegradeQid(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117] font-mono"
+              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 font-mono text-xs focus:outline-none focus:border-blue-500"
             />
           </div>
 
           <div>
-            <label className="font-semibold block mb-1">Corrected Key</label>
+            <label className="font-semibold text-slate-700 block mb-1">Corrected Key</label>
             <select
               value={newKey}
               onChange={(e) => setNewKey(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg border border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50 dark:bg-[#0E1117] uppercase font-bold"
+              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 uppercase font-bold text-xs focus:outline-none focus:border-blue-500"
             >
               <option value="a">Option A</option>
               <option value="b">Option B</option>
@@ -97,7 +103,7 @@ export default function ReportsAndRegradePage() {
             <button
               onClick={handleExecuteRegrade}
               disabled={isProcessing}
-              className="w-full h-10 rounded-lg bg-[#2D6BCB] hover:bg-[#2458AD] disabled:opacity-40 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm"
+              className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.01]"
             >
               <RotateCcw className="w-4 h-4" />
               <span>{isProcessing ? 'Recalculating...' : 'Execute Re-grade'}</span>
@@ -106,8 +112,8 @@ export default function ReportsAndRegradePage() {
         </div>
 
         {regradeResult && (
-          <div className="p-4 rounded-xl bg-[#1F9D6B]/10 border border-[#1F9D6B]/30 text-xs text-[#1F9D6B] font-semibold flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <div className="p-4 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
             <span>
               Re-grade Completed! Question {regradeResult.question_id} key changed to {regradeResult.new_correct_option.toUpperCase()}. Recalculated {regradeResult.affected_attempts} student test attempts.
             </span>
@@ -116,44 +122,46 @@ export default function ReportsAndRegradePage() {
       </div>
 
       {/* STUDENT REPORTS INBOX (AD-50 to AD-52) */}
-      <div className="rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-[#DDE4EE] dark:border-[#2E3746] flex items-center justify-between">
-          <span className="font-bold text-xs">Student-Reported Questions Inbox</span>
-          <span className="text-[10px] text-slate-400">Auto-flag rule: ≥ 3 reports moves item to flagged</span>
+      <div className="rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 overflow-hidden shadow-xs">
+        <div className="p-4 px-6 border-b border-blue-100 bg-blue-50/30 flex items-center justify-between">
+          <span className="font-bold text-xs text-slate-900">Student-Reported Questions Inbox</span>
+          <span className="text-[10px] text-amber-800 font-medium bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
+            Auto-flag rule: ≥ 3 reports moves item to flagged
+          </span>
         </div>
 
-        <div className="divide-y divide-[#DDE4EE] dark:divide-[#2E3746]">
+        <div className="divide-y divide-blue-50">
           {reports.map((rep) => (
-            <div key={rep.id} className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
+            <div key={rep.id} className="p-4 px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{rep.question_id}</span>
-                  <span className="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-amber-500/15 text-amber-500">
+                  <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">{rep.question_id}</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] uppercase font-bold bg-amber-50 text-amber-700 border border-amber-200">
                     {rep.reason.replace('_', ' ')}
                   </span>
                   <span className="text-slate-400">Reported by {rep.user_name}</span>
                 </div>
-                <div className="text-slate-600 dark:text-slate-300 font-medium">{rep.text}</div>
+                <div className="text-slate-800 font-medium">{rep.text}</div>
                 {rep.question_stem && (
-                  <div className="text-[11px] text-slate-400 line-clamp-1 italic">{rep.question_stem}</div>
+                  <div className="text-[11px] text-slate-500 line-clamp-1 italic">{rep.question_stem}</div>
                 )}
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => alert(`Report ${rep.id} dismissed.`)}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 hover:text-black dark:hover:text-white"
+                  className="px-3.5 py-1.5 rounded-full border border-blue-200 text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                 >
                   Dismiss
                 </button>
                 <button
                   onClick={() => {
                     setRegradeQid(rep.question_id);
-                    alert(`Loaded ${rep.question_id} into Re-grade Engine above.`);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-[#2D6BCB] text-white font-semibold"
+                  className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-xs"
                 >
-                  Inspect &amp; Fix Key
+                  Load in Re-grade
                 </button>
               </div>
             </div>

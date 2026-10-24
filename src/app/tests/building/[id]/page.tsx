@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/brand-logo';
-import { CheckCircle2, ArrowRight, Clock, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Clock, ShieldCheck, Sparkles } from 'lucide-react';
 
 export default function BuildingTestPage() {
   const router = useRouter();
@@ -50,39 +50,47 @@ export default function BuildingTestPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#EAF1F8] dark:bg-[#0E1117] flex flex-col justify-between p-6 sm:p-12 text-[#212835] dark:text-[#EAF1F8]">
-      <header className="max-w-xl mx-auto w-full flex items-center justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between p-6 sm:p-12 text-slate-800 relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
+
+      <header className="max-w-xl mx-auto w-full flex items-center justify-between z-10">
         <BrandLogo size={36} showWordmark={true} />
         <Link
           href="/dashboard"
-          className="text-xs font-semibold text-[#5B6578] dark:text-slate-400 hover:text-[#2D6BCB] transition-colors"
+          className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-600 shadow-xs transition-colors"
         >
           Continue in background
         </Link>
       </header>
 
-      <main className="max-w-lg mx-auto w-full my-auto py-12 text-center space-y-8">
-        {/* Animated Brand Plus Motif Loader (PRD Section 7.2) */}
-        <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-[#2D6BCB]/15 animate-ping opacity-30" />
+      <main className="max-w-lg mx-auto w-full my-auto py-12 text-center space-y-8 z-10">
+        {/* Animated Brand Plus Motif Loader */}
+        <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
+          <div className="absolute inset-0 rounded-full bg-blue-400/20 animate-ping opacity-40" />
           <div className="relative z-10 transition-transform duration-700 hover:rotate-180">
-            <BrandLogo size={72} showWordmark={false} />
+            <BrandLogo size={80} showWordmark={false} />
           </div>
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#212835] dark:text-white">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Sub-Second Server Assembly</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             {isReady ? 'Your Test is Ready!' : 'Assembling Your Test Paper'}
           </h1>
-          <p className="text-xs sm:text-sm text-[#5B6578] dark:text-slate-400 mt-1 max-w-sm mx-auto">
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-sm mx-auto">
             {isReady
               ? 'The complete question bundle has been frozen and verified server-side.'
               : 'Our worker is selecting calibrated, unseen questions matching your pattern.'}
           </p>
         </div>
 
-        {/* Stepped Progress List (PRD Section 8.6 TA-20) */}
-        <div className="p-6 rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] text-left space-y-4 shadow-sm">
+        {/* Stepped Progress List */}
+        <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 text-left space-y-4 shadow-sm">
           {steps.map((st) => {
             const completed = isReady || currentStep > st.num;
             const active = !isReady && currentStep === st.num;
@@ -90,18 +98,18 @@ export default function BuildingTestPage() {
               <div key={st.num} className="flex items-start gap-3.5">
                 <div className="mt-0.5 shrink-0">
                   {completed ? (
-                    <CheckCircle2 className="w-5 h-5 text-[#1F9D6B]" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                   ) : active ? (
-                    <div className="w-5 h-5 rounded-full border-2 border-[#2D6BCB] border-t-transparent animate-spin" />
+                    <div className="w-5 h-5 rounded-full border-2 border-blue-600 border-t-transparent animate-spin" />
                   ) : (
-                    <div className="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-700" />
+                    <div className="w-5 h-5 rounded-full border border-slate-300" />
                   )}
                 </div>
                 <div>
-                  <div className={`text-xs font-semibold ${completed || active ? 'text-[#212835] dark:text-white' : 'text-slate-400'}`}>
+                  <div className={`text-xs font-bold ${completed || active ? 'text-slate-900' : 'text-slate-400'}`}>
                     {st.title}
                   </div>
-                  <div className="text-[11px] text-[#5B6578] dark:text-slate-400">{st.desc}</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">{st.desc}</div>
                 </div>
               </div>
             );
@@ -113,7 +121,7 @@ export default function BuildingTestPage() {
           <div className="space-y-3 pt-2">
             <button
               onClick={() => router.push(`/tests/${testId}/instructions`)}
-              className="w-full h-12 rounded-xl bg-[#2D6BCB] hover:bg-[#2458AD] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#2D6BCB]/30 transition-all hover:scale-[1.01]"
+              className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.01]"
             >
               <span>View Exam Instructions</span>
               <ArrowRight className="w-4 h-4" />
@@ -125,7 +133,7 @@ export default function BuildingTestPage() {
         )}
       </main>
 
-      <footer className="text-xs text-center text-[#8892A3]">
+      <footer className="text-xs text-center text-slate-400 z-10">
         SATPREP ENGINE // TA-20 BUILD PIPELINE // ZERO RUNTIME LATENCY
       </footer>
     </div>

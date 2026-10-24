@@ -43,8 +43,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           </clipPath>
         </defs>
 
-        {/* Outer Ice Disc with subtle navy ring */}
-        <circle cx="50" cy="50" r="47" fill={ice100} stroke="#2E3746" strokeWidth="1.5" />
+        {/* Outer Ice Disc with subtle blue ring */}
+        <circle cx="50" cy="50" r="47" fill={ice100} stroke="#BFDBFE" strokeWidth="1.5" />
         <circle cx="50" cy="50" r="46" fill="url(#logo-grid)" />
 
         {/* The Rounded Plus Mark (Composite of horizontal and vertical capsule bars) */}

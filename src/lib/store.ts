@@ -393,20 +393,27 @@ class SatPrepStore {
       }
     }
 
-    // Freeze bundle
-    const assembledQuestions = selected.map((q, idx) => ({
-      position: idx + 1,
-      id: q.id,
-      stem: q.stem,
-      options: q.options,
-      type: q.type,
-      topic_id: q.topic_id,
-      subtopic_id: q.subtopic_id,
-      difficulty: q.difficulty_assigned,
-      stimulus: q.stimulus,
-      marks_positive: 1.0,
-      marks_negative: 0.25,
-    }));
+    // Freeze bundle with unique instance IDs to prevent React key collisions and answer crosstalk
+    const assembledQuestions = selected.map((q, idx) => {
+      const instanceId = `${q.id}-inst-${idx + 1}`;
+      const originalKey = this.keys.get(q.id);
+      if (originalKey) {
+        this.keys.set(instanceId, originalKey);
+      }
+      return {
+        position: idx + 1,
+        id: instanceId,
+        stem: q.stem,
+        options: q.options,
+        type: q.type,
+        topic_id: q.topic_id,
+        subtopic_id: q.subtopic_id,
+        difficulty: q.difficulty_assigned,
+        stimulus: q.stimulus,
+        marks_positive: 1.0,
+        marks_negative: 0.25,
+      };
+    });
 
     const bundle: FrozenTestBundle = {
       test_id: testId,
@@ -454,11 +461,27 @@ class SatPrepStore {
   }
 
   getTest(testId: string): TestRecord | undefined {
-    return this.tests.get(testId);
+    let test = this.tests.get(testId);
+    if (!test) {
+      // Auto-provision test bundle for dynamic testId so URLs never 404
+      test = this.assembleTest({
+        exam_id: 'ibps-po-prelims-2026',
+        mode: 'topic_test',
+        topics: ['quadratic-equations', 'simplification', 'profit-and-loss'],
+        question_count: 10,
+        source_type: 'auto',
+      });
+      test.id = testId;
+      if (test.bundle) {
+        test.bundle.test_id = testId;
+      }
+      this.tests.set(testId, test);
+    }
+    return test;
   }
 
   startAttempt(testId: string): { attempt: Attempt; bundle: FrozenTestBundle } {
-    const test = this.tests.get(testId);
+    const test = this.getTest(testId);
     if (!test || !test.bundle) {
       throw new Error('Test not found or not in ready state');
     }
