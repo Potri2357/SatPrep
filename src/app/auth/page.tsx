@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { BrandLogo } from '@/components/brand-logo';
-import { Mail, Phone, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Mail, Phone, Lock, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export default function AuthPage() {
   const router = useRouter();
@@ -16,12 +16,11 @@ export default function AuthPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate sign-in and direct to dashboard
     router.push('/dashboard');
   };
 
   return (
-    <div className="min-h-screen bg-[#EAF1F8] dark:bg-[#0E1117] flex">
+    <div className="min-h-screen bg-gradient-to-br from-[#F0F6FF] via-[#FFFFFF] to-[#EFF6FF] flex text-[#0F172A]">
       {/* Left Column: Auth Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16">
         <div>
@@ -30,34 +29,34 @@ export default function AuthPage() {
 
         <div className="max-w-md w-full mx-auto my-auto py-10">
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#212835] dark:text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A] mb-2">
               {tab === 'signin' ? 'Welcome back to SatPrep' : 'Start your bank exam prep'}
             </h1>
-            <p className="text-sm text-[#5B6578] dark:text-slate-400">
+            <p className="text-sm text-slate-500">
               {tab === 'signin'
                 ? 'Sign in to resume mock tests and topic analytics'
                 : 'Unlimited fresh, calibrated quant practice tailored to your target exam'}
             </p>
           </div>
 
-          {/* Tab Switcher */}
-          <div className="flex rounded-xl p-1 bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] mb-6">
+          {/* Tab Switcher (Pill Style) */}
+          <div className="flex rounded-full p-1 bg-slate-100 border border-[#BFDBFE] mb-6">
             <button
               onClick={() => setTab('signin')}
-              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
                 tab === 'signin'
-                  ? 'bg-[#2D6BCB] text-white shadow-sm'
-                  : 'text-[#5B6578] dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#2563EB] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-[#2563EB]'
               }`}
             >
               Sign In
             </button>
             <button
               onClick={() => setTab('signup')}
-              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
+              className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
                 tab === 'signup'
-                  ? 'bg-[#2D6BCB] text-white shadow-sm'
-                  : 'text-[#5B6578] dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#2563EB] text-white shadow-sm'
+                  : 'text-slate-600 hover:text-[#2563EB]'
               }`}
             >
               Create Account
@@ -67,7 +66,7 @@ export default function AuthPage() {
           {/* Social Google Login */}
           <button
             onClick={() => router.push('/dashboard')}
-            className="w-full h-11 rounded-xl border border-[#DDE4EE] dark:border-[#2E3746] bg-white dark:bg-[#151A23] hover:bg-slate-50 dark:hover:bg-[#1B212C] text-sm font-semibold text-[#212835] dark:text-slate-200 flex items-center justify-center gap-3 transition-colors mb-4"
+            className="w-full h-11 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-sm font-semibold text-slate-700 flex items-center justify-center gap-3 transition-colors mb-4 shadow-sm"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
@@ -92,33 +91,33 @@ export default function AuthPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-[#DDE4EE] dark:border-[#2E3746]" />
+              <div className="w-full border-t border-slate-200" />
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-[#EAF1F8] dark:bg-[#0E1117] px-3 text-[#8892A3]">Or continue with</span>
+            <div className="relative flex justify-center text-xs uppercase font-semibold">
+              <span className="bg-white px-3 text-slate-400">Or continue with</span>
             </div>
           </div>
 
           {/* Method Toggle: Email vs Phone OTP */}
-          <div className="flex gap-4 mb-4">
+          <div className="flex gap-2 mb-4">
             <button
               type="button"
               onClick={() => setAuthMethod('email')}
-              className={`flex-1 py-1.5 text-xs font-medium rounded-lg border text-center transition-all ${
+              className={`flex-1 py-1.5 text-xs font-bold rounded-full border text-center transition-all ${
                 authMethod === 'email'
-                  ? 'border-[#2D6BCB] text-[#2D6BCB] bg-[#2D6BCB]/10 font-semibold'
-                  : 'border-[#DDE4EE] dark:border-[#2E3746] text-[#5B6578] dark:text-slate-400'
+                  ? 'border-[#2563EB] text-[#2563EB] bg-[#EFF6FF]'
+                  : 'border-slate-200 text-slate-500'
               }`}
             >
-              Email & Password
+              Email &amp; Password
             </button>
             <button
               type="button"
               onClick={() => setAuthMethod('phone')}
-              className={`flex-1 py-1.5 text-xs font-medium rounded-lg border text-center transition-all ${
+              className={`flex-1 py-1.5 text-xs font-bold rounded-full border text-center transition-all ${
                 authMethod === 'phone'
-                  ? 'border-[#2D6BCB] text-[#2D6BCB] bg-[#2D6BCB]/10 font-semibold'
-                  : 'border-[#DDE4EE] dark:border-[#2E3746] text-[#5B6578] dark:text-slate-400'
+                  ? 'border-[#2563EB] text-[#2563EB] bg-[#EFF6FF]'
+                  : 'border-slate-200 text-slate-500'
               }`}
             >
               Phone OTP (India)
@@ -129,7 +128,7 @@ export default function AuthPage() {
             {authMethod === 'email' ? (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-[#212835] dark:text-slate-300 mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
                     Email address
                   </label>
                   <div className="relative">
@@ -140,16 +139,16 @@ export default function AuthPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="name@example.com"
-                      className="w-full h-11 pl-10 pr-4 rounded-xl border border-[#DDE4EE] dark:border-[#2E3746] bg-white dark:bg-[#151A23] text-sm text-[#212835] dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2D6BCB]"
+                      className="w-full h-11 pl-10 pr-4 rounded-xl border border-[#BFDBFE] bg-white text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
                     />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-1.5">
-                    <label className="text-xs font-medium text-[#212835] dark:text-slate-300">Password</label>
+                    <label className="text-xs font-bold text-slate-700">Password</label>
                     {tab === 'signin' && (
-                      <a href="#" className="text-xs font-medium text-[#2D6BCB] hover:underline">
+                      <a href="#" className="text-xs font-semibold text-[#2563EB] hover:underline">
                         Forgot password?
                       </a>
                     )}
@@ -162,18 +161,18 @@ export default function AuthPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="••••••••"
-                      className="w-full h-11 pl-10 pr-4 rounded-xl border border-[#DDE4EE] dark:border-[#2E3746] bg-white dark:bg-[#151A23] text-sm text-[#212835] dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2D6BCB]"
+                      className="w-full h-11 pl-10 pr-4 rounded-xl border border-[#BFDBFE] bg-white text-sm text-[#0F172A] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
                     />
                   </div>
                 </div>
               </>
             ) : (
               <div>
-                <label className="block text-xs font-medium text-[#212835] dark:text-slate-300 mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   Mobile Number (10 digits)
                 </label>
                 <div className="relative flex">
-                  <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-[#DDE4EE] dark:border-[#2E3746] bg-slate-100 dark:bg-[#1B212C] text-xs font-mono text-slate-500">
+                  <span className="inline-flex items-center px-3.5 rounded-l-xl border border-r-0 border-[#BFDBFE] bg-slate-50 text-xs font-mono font-bold text-slate-600">
                     +91
                   </span>
                   <input
@@ -182,7 +181,7 @@ export default function AuthPage() {
                     onChange={(e) => setPhone(e.target.value)}
                     required
                     placeholder="9876543210"
-                    className="w-full h-11 px-3 rounded-r-xl border border-[#DDE4EE] dark:border-[#2E3746] bg-white dark:bg-[#151A23] text-sm text-[#212835] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#2D6BCB]"
+                    className="w-full h-11 px-3 rounded-r-xl border border-[#BFDBFE] bg-white text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
                   />
                 </div>
               </div>
@@ -190,58 +189,68 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="w-full h-11 mt-2 rounded-xl bg-[#2D6BCB] hover:bg-[#2458AD] text-white text-sm font-semibold flex items-center justify-center gap-2 shadow-md shadow-[#2D6BCB]/25 transition-all hover:scale-[1.01]"
+              className="w-full h-11 mt-2 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#2563EB]/25 transition-all hover:scale-[1.01]"
             >
               <span>{tab === 'signin' ? 'Sign In' : 'Create Free Account'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
-          <p className="text-center text-xs text-[#8892A3] mt-6">
-            By continuing, you agree to SatPrep Terms of Service & Privacy Policy.
+          <p className="text-center text-xs text-slate-400 mt-6">
+            By continuing, you agree to SatPrep Terms of Service &amp; Privacy Policy.
           </p>
         </div>
 
-        <div className="text-xs text-[#8892A3] text-center lg:text-left">
+        <div className="text-xs text-slate-400 text-center lg:text-left">
           © 2026 SatPrep. Dedicated Bank Exam Platform.
         </div>
       </div>
 
-      {/* Right Column: Signature Diagonal Brand Panel (PRD Section 7.8) */}
-      <div className="hidden lg:flex w-1/2 bg-[#0E1117] border-l border-[#2E3746] p-12 flex-col justify-between relative overflow-hidden bg-grid-pattern">
-        {/* Signature Diagonal Accent Strip */}
-        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full signature-diagonal opacity-20 blur-3xl pointer-events-none" />
+      {/* Right Column: Radiant Royal Blue & Ice White Brand Panel */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-[#1E40AF] via-[#2563EB] to-[#1D4ED8] text-white p-12 flex-col justify-between relative overflow-hidden bg-grid-pattern">
+        {/* Soft Blue Glass Orbs */}
+        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none" />
 
-        <div className="flex justify-end">
-          <Link href="/" className="text-xs text-slate-400 hover:text-white transition-colors">
+        <div className="flex justify-end relative z-10">
+          <Link href="/" className="text-xs font-semibold text-blue-100 hover:text-white transition-colors bg-white/15 px-3 py-1.5 rounded-full backdrop-blur-md">
             Back to Home
           </Link>
         </div>
 
-        <div className="max-w-md my-auto space-y-6">
-          <div className="w-12 h-12 rounded-2xl bg-[#151A23] border border-[#2E3746] flex items-center justify-center text-[#5A8FDD]">
+        <div className="max-w-md my-auto space-y-6 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 flex items-center justify-center text-white shadow-lg">
             <ShieldCheck className="w-6 h-6" />
           </div>
 
           <h2 className="text-3xl font-extrabold text-white leading-tight">
-            The standard for bank quant practice.
+            The standard for bank quant &amp; DI practice.
           </h2>
 
-          <div className="space-y-4 text-sm text-slate-300">
-            <div className="p-4 rounded-xl bg-[#151A23] border border-[#2E3746]">
-              <div className="font-semibold text-white mb-1">Server-Frozen Test Bundles</div>
-              <p className="text-xs text-slate-400">Tests are assembled and signed before you begin, giving you true sub-second exam simulation without lag.</p>
+          <div className="space-y-4 text-sm">
+            <div className="p-5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-lg">
+              <div className="font-bold mb-1 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <span>Server-Frozen Test Bundles</span>
+              </div>
+              <p className="text-xs text-blue-100 leading-relaxed">
+                Tests are assembled and signed before you begin, giving you true sub-second exam simulation without lag.
+              </p>
             </div>
 
-            <div className="p-4 rounded-xl bg-[#151A23] border border-[#2E3746]">
-              <div className="font-semibold text-white mb-1">Psychometric Error Diagnosis</div>
-              <p className="text-xs text-slate-400">Discover whether mark losses stem from calculation slips, speed traps, or conceptual missteps.</p>
+            <div className="p-5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-lg">
+              <div className="font-bold mb-1 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <span>Psychometric Error Diagnosis</span>
+              </div>
+              <p className="text-xs text-blue-100 leading-relaxed">
+                Discover whether mark losses stem from calculation slips, speed traps, or conceptual missteps.
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="text-xs text-slate-500 font-mono">
-          SATPREP // QUANT & DI SYSTEM // V1.1
+        <div className="text-xs text-blue-200 font-mono relative z-10">
+          SATPREP // BLUE &amp; WHITE SYSTEM // V1.1
         </div>
       </div>
     </div>

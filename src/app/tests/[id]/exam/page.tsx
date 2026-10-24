@@ -304,10 +304,14 @@ export default function ExamTestWindow() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#212835] flex items-center justify-center text-white">
-        <div className="text-center space-y-4">
-          <BrandLogo size={48} showWordmark={false} />
-          <div className="text-sm font-mono text-slate-300">Synchronizing test paper with server...</div>
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="glass-panel p-8 rounded-3xl text-center space-y-4 max-w-sm mx-auto z-10 border border-blue-100 shadow-xl shadow-blue-500/5">
+          <div className="flex justify-center">
+            <BrandLogo size={48} showWordmark={false} />
+          </div>
+          <div className="text-base font-bold text-slate-900">Synchronizing Exam Paper...</div>
+          <div className="text-xs text-blue-600 font-mono animate-pulse">Loading question bank &amp; candidate session</div>
         </div>
       </div>
     );
@@ -318,31 +322,31 @@ export default function ExamTestWindow() {
   const isRed = secondsRemaining <= 60;
 
   return (
-    <div className="min-h-screen bg-[#EAF1F8] dark:bg-[#0E1117] flex flex-col select-none text-[#212835] dark:text-[#EAF1F8]">
-      {/* 1. TOP HEADER (56px, Navy-700 background - PRD Section 7.9) */}
-      <header className="h-14 bg-[#212835] text-white border-b border-[#2E3746] px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col select-none text-slate-800">
+      {/* 1. TOP HEADER (Royal Blue Gradient with Ice White details) */}
+      <header className="h-16 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-md border-b border-blue-500/30 px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
         <div className="flex items-center gap-4">
-          <BrandLogo size={32} showWordmark={false} />
+          <BrandLogo size={34} showWordmark={false} />
           <div className="hidden sm:block">
             <span className="font-bold text-sm text-white tracking-tight">{examName}</span>
           </div>
 
-          {/* Section Tab (Pill Segmented Control) */}
-          <div className="px-3 py-1 rounded-full bg-[#2D6BCB] text-xs font-bold text-white shadow-sm">
+          {/* Section Tab (Glass Pill Segmented Control) */}
+          <div className="px-3.5 py-1 rounded-full bg-white/20 text-xs font-bold text-white border border-white/30 backdrop-blur-md shadow-sm">
             Quantitative Aptitude
           </div>
         </div>
 
         {/* Center: Server-Authoritative Timer */}
         <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-slate-300" />
+          <Clock className="w-4 h-4 text-blue-100" />
           <div
-            className={`font-mono text-sm sm:text-base font-bold tabular-nums px-3 py-1 rounded-lg border transition-colors ${
+            className={`font-mono text-sm sm:text-base font-bold tabular-nums px-4 py-1.5 rounded-xl border transition-all shadow-sm ${
               isRed
-                ? 'bg-red-500/20 text-red-400 border-red-500/40'
+                ? 'bg-red-500 text-white border-red-400 animate-pulse'
                 : isAmber
-                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                : 'bg-[#151A23] text-white border-[#2E3746]'
+                ? 'bg-amber-400 text-slate-950 border-amber-300'
+                : 'bg-white text-blue-900 border-blue-200'
             }`}
           >
             {formatTimer(secondsRemaining)}
@@ -352,14 +356,14 @@ export default function ExamTestWindow() {
         {/* Right: Tools & Candidate Info */}
         <div className="flex items-center gap-3">
           {/* Autosave Status */}
-          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-slate-400">
-            <span className={`w-2 h-2 rounded-full ${isSaved ? 'bg-[#1F9D6B]' : 'bg-amber-400 animate-pulse'}`} />
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-[11px] text-white border border-white/20">
+            <span className={`w-2 h-2 rounded-full ${isSaved ? 'bg-emerald-400' : 'bg-amber-300 animate-pulse'}`} />
             <span>{isSaved ? 'Synced' : 'Saving...'}</span>
           </div>
 
           {/* Online Monitor */}
           {!isOnline && (
-            <div className="flex items-center gap-1 text-[11px] text-red-400 bg-red-950/50 px-2 py-0.5 rounded border border-red-800">
+            <div className="flex items-center gap-1 text-[11px] text-red-100 bg-red-600/80 px-2.5 py-1 rounded-full border border-red-400 shadow-sm">
               <WifiOff className="w-3 h-3" />
               <span>Offline</span>
             </div>
@@ -368,7 +372,7 @@ export default function ExamTestWindow() {
           {/* Calculator Button */}
           <button
             onClick={() => setShowCalculator(!showCalculator)}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-300 transition-colors"
+            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors"
             title="On-screen Calculator"
           >
             <Calculator className="w-4 h-4" />
@@ -377,24 +381,24 @@ export default function ExamTestWindow() {
           {/* Fullscreen Button */}
           <button
             onClick={toggleFullscreen}
-            className="p-1.5 rounded-lg hover:bg-white/10 text-slate-300 transition-colors hidden sm:block"
+            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-colors hidden sm:block"
             title="Toggle Fullscreen"
           >
             {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
           </button>
 
           {/* Candidate Photo & Name */}
-          <div className="flex items-center gap-2 pl-2 border-l border-[#2E3746]">
-            <div className="w-7 h-7 rounded-full bg-[#EAF1F8] text-[#212835] font-bold text-xs flex items-center justify-center">
+          <div className="flex items-center gap-2 pl-2 border-l border-white/20">
+            <div className="w-8 h-8 rounded-full bg-white text-blue-700 font-bold text-xs flex items-center justify-center shadow-sm">
               AS
             </div>
-            <span className="hidden md:inline text-xs font-semibold text-slate-200">Aditya S.</span>
+            <span className="hidden md:inline text-xs font-semibold text-white">Aditya S.</span>
           </div>
 
           {/* Mobile Palette Drawer Toggle */}
           <button
             onClick={() => setIsMobilePaletteOpen(true)}
-            className="p-1.5 rounded-lg bg-[#2E3746] text-white lg:hidden"
+            className="p-2 rounded-xl bg-white/20 text-white border border-white/30 lg:hidden"
           >
             <Menu className="w-4 h-4" />
           </button>
@@ -402,50 +406,53 @@ export default function ExamTestWindow() {
       </header>
 
       {/* 2. MAIN TEST CONTENT (Question Left, Palette Right) */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Ambient Glow */}
+        <div className="absolute top-12 left-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+
         {/* LEFT / CENTER: Question Canvas */}
-        <main className="flex-1 flex flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full">
+        <main className="flex-1 flex flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto w-full z-10">
           {currentQ ? (
-            <div className="bg-white dark:bg-[#151A23] rounded-2xl border border-[#DDE4EE] dark:border-[#2E3746] p-6 sm:p-8 shadow-sm flex-1 flex flex-col justify-between">
+            <div className="glass-panel bg-white/95 backdrop-blur-xl rounded-3xl border border-blue-100 p-6 sm:p-8 shadow-sm flex-1 flex flex-col justify-between">
               <div>
                 {/* Question Header & Marks Bar */}
-                <div className="flex items-center justify-between border-b border-[#DDE4EE] dark:border-[#2E3746] pb-3 mb-6 text-xs">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6 text-xs">
                   <div className="flex items-center gap-2.5">
-                    <span className="px-2.5 py-1 rounded-lg bg-[#DCE8F8] dark:bg-[#2D6BCB]/20 text-[#1C458A] dark:text-[#8FB2EA] font-bold text-sm">
+                    <span className="px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 font-bold text-xs">
                       Question {currentIdx + 1} of {questions.length}
                     </span>
-                    <span className="text-slate-400 capitalize hidden sm:inline">
+                    <span className="px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 font-medium text-xs capitalize hidden sm:inline">
                       Topic: {currentQ.topic_id.replace('-', ' ')}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 font-semibold text-xs">
-                    <span className="text-[#1F9D6B]">+1.00 Mark</span>
-                    <span className="text-[#D64550]">-0.25 Negative</span>
+                  <div className="flex items-center gap-2 font-semibold text-xs">
+                    <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">+1.00 Mark</span>
+                    <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-semibold">-0.25 Negative</span>
                   </div>
                 </div>
 
                 {/* DI Stimulus if present */}
                 {currentQ.stimulus && (
-                  <div className="mb-6 p-4 rounded-xl bg-slate-50 dark:bg-[#0E1117] border border-[#DDE4EE] dark:border-[#2E3746]">
-                    <div className="font-bold text-xs text-[#212835] dark:text-white mb-2">
+                  <div className="mb-6 p-4 rounded-2xl bg-blue-50/50 border border-blue-100">
+                    <div className="font-bold text-xs text-blue-900 mb-2">
                       Stimulus: {currentQ.stimulus.title || 'Data Table'}
                     </div>
                     {currentQ.stimulus.chart_type === 'table' && currentQ.stimulus.structured_data && (
                       <div className="overflow-x-auto text-xs">
-                        <table className="w-full text-left border-collapse">
+                        <table className="w-full text-left border-collapse bg-white rounded-xl overflow-hidden shadow-sm">
                           <thead>
-                            <tr className="border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
+                            <tr className="border-b border-blue-100 bg-blue-100/50 text-blue-900">
                               {currentQ.stimulus.structured_data.headers.map((h: string, i: number) => (
-                                <th key={i} className="p-2 font-semibold">{h}</th>
+                                <th key={i} className="p-2.5 font-semibold">{h}</th>
                               ))}
                             </tr>
                           </thead>
                           <tbody>
                             {currentQ.stimulus.structured_data.rows.map((row: string[], rIdx: number) => (
-                              <tr key={rIdx} className="border-b border-slate-100 dark:border-slate-800">
+                              <tr key={rIdx} className="border-b border-slate-100 hover:bg-blue-50/30">
                                 {row.map((cell: string, cIdx: number) => (
-                                  <td key={cIdx} className="p-2 font-mono">{cell}</td>
+                                  <td key={cIdx} className="p-2.5 font-mono text-slate-700">{cell}</td>
                                 ))}
                               </tr>
                             ))}
@@ -456,12 +463,12 @@ export default function ExamTestWindow() {
                   </div>
                 )}
 
-                {/* Question Stem (KaTeX rendered, 18px min for math - PRD Section 7.4) */}
-                <div className="text-base sm:text-lg font-medium text-[#212835] dark:text-white leading-relaxed mb-8">
+                {/* Question Stem (KaTeX rendered) */}
+                <div className="text-base sm:text-lg font-medium text-slate-900 leading-relaxed mb-8">
                   <MathRenderer content={currentQ.stem} />
                 </div>
 
-                {/* Options (52px minimum height - PRD Section 7.9) */}
+                {/* Options (52px minimum height) */}
                 <div className="space-y-3">
                   {currentQ.options.map((opt) => {
                     const isSelected = selectedOption === opt.id;
@@ -469,22 +476,22 @@ export default function ExamTestWindow() {
                       <div
                         key={opt.id}
                         onClick={() => setSelectedOption(opt.id)}
-                        className={`min-h-[52px] p-3.5 rounded-xl border flex items-center gap-3.5 cursor-pointer transition-all select-none ${
+                        className={`min-h-[52px] p-4 rounded-2xl border flex items-center gap-4 cursor-pointer transition-all select-none ${
                           isSelected
-                            ? 'border-[#2D6BCB] bg-[#DCE8F8]/40 dark:bg-[#2D6BCB]/15 ring-2 ring-[#2D6BCB]'
-                            : 'border-[#DDE4EE] dark:border-[#2E3746] bg-slate-50/50 dark:bg-[#0E1117]/50 hover:bg-[#EEF4FC] dark:hover:bg-[#1B212C]'
+                            ? 'border-blue-600 bg-blue-50/80 ring-2 ring-blue-500 shadow-sm'
+                            : 'border-slate-200 bg-white/80 hover:border-blue-300 hover:bg-blue-50/30 shadow-xs'
                         }`}
                       >
                         <div
-                          className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs uppercase shrink-0 transition-colors ${
+                          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs uppercase shrink-0 transition-colors ${
                             isSelected
-                              ? 'bg-[#2D6BCB] text-white shadow-sm'
-                              : 'border border-slate-400 dark:border-slate-600 text-slate-600 dark:text-slate-300'
+                              ? 'bg-blue-600 text-white shadow-sm'
+                              : 'border border-slate-300 bg-slate-100 text-slate-600'
                           }`}
                         >
                           {opt.id}
                         </div>
-                        <div className="text-sm sm:text-base font-medium text-[#212835] dark:text-slate-100 flex-1">
+                        <div className={`text-sm sm:text-base font-medium flex-1 ${isSelected ? 'text-blue-950 font-semibold' : 'text-slate-800'}`}>
                           <MathRenderer content={opt.text} />
                         </div>
                       </div>
@@ -494,38 +501,43 @@ export default function ExamTestWindow() {
               </div>
             </div>
           ) : (
-            <div>Loading question...</div>
+            <div className="p-8 text-center text-slate-500">Loading question...</div>
           )}
         </main>
 
         {/* RIGHT PANEL: Question Palette (Desktop View) */}
-        <aside className="w-80 bg-white dark:bg-[#151A23] border-l border-[#DDE4EE] dark:border-[#2E3746] p-5 hidden lg:flex flex-col justify-between shrink-0">
-          <div className="space-y-4">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              Question Palette
-            </h2>
+        <aside className="w-80 bg-white/95 backdrop-blur-xl border-l border-blue-100 p-6 hidden lg:flex flex-col justify-between shrink-0 z-20">
+          <div className="space-y-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Question Palette
+              </h2>
+              <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                {questions.length} Items
+              </span>
+            </div>
 
-            {/* 5-Column Grid of 40px Tiles (PRD Section 7.9) */}
-            <div className="grid grid-cols-5 gap-2 max-h-72 overflow-y-auto pr-1">
+            {/* 5-Column Grid of 40px Tiles */}
+            <div className="grid grid-cols-5 gap-2.5 max-h-72 overflow-y-auto pr-1">
               {questions.map((q, idx) => {
                 const ans = answers[q.id];
                 const state = ans?.state || 'not_visited';
                 const isCurrent = idx === currentIdx;
 
                 // Color & Shape based on 5 palette states
-                let bgClass = 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200';
-                if (state === 'answered') bgClass = 'bg-[#1F9D6B] text-white';
-                else if (state === 'not_answered') bgClass = 'bg-[#D64550] text-white';
-                else if (state === 'marked_for_review') bgClass = 'bg-[#7B5CD6] text-white rounded-full';
-                else if (state === 'answered_and_marked') bgClass = 'bg-[#7B5CD6] text-white rounded-full ring-2 ring-[#1F9D6B]';
+                let bgClass = 'bg-slate-100 border border-slate-200 text-slate-700 hover:bg-blue-50';
+                if (state === 'answered') bgClass = 'bg-emerald-500 text-white shadow-sm';
+                else if (state === 'not_answered') bgClass = 'bg-rose-500 text-white shadow-sm';
+                else if (state === 'marked_for_review') bgClass = 'bg-purple-600 text-white rounded-full shadow-sm';
+                else if (state === 'answered_and_marked') bgClass = 'bg-purple-600 text-white rounded-full ring-2 ring-emerald-400 shadow-sm';
 
                 return (
                   <button
                     key={q.id}
                     onClick={() => handlePaletteJump(idx)}
                     className={`w-10 h-10 font-mono font-bold text-xs flex items-center justify-center transition-all ${bgClass} ${
-                      state !== 'marked_for_review' && state !== 'answered_and_marked' ? 'rounded-lg' : ''
-                    } ${isCurrent ? 'ring-2 ring-[#2D6BCB] ring-offset-2 scale-105' : 'hover:opacity-90'}`}
+                      state !== 'marked_for_review' && state !== 'answered_and_marked' ? 'rounded-xl' : ''
+                    } ${isCurrent ? 'ring-2 ring-blue-600 ring-offset-2 scale-105 font-extrabold' : 'hover:opacity-90'}`}
                   >
                     {idx + 1}
                   </button>
@@ -534,43 +546,43 @@ export default function ExamTestWindow() {
             </div>
 
             {/* Counts Legend */}
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] space-y-1.5 text-slate-600 dark:text-slate-400">
+            <div className="pt-4 border-t border-slate-100 text-[11px] space-y-2 text-slate-600">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded bg-[#1F9D6B]" />
+                  <span className="w-3 h-3 rounded bg-emerald-500" />
                   <span>Answered</span>
                 </div>
-                <span className="font-mono font-bold">{counts.answered}</span>
+                <span className="font-mono font-bold text-slate-900">{counts.answered}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded bg-[#D64550]" />
+                  <span className="w-3 h-3 rounded bg-rose-500" />
                   <span>Not Answered</span>
                 </div>
-                <span className="font-mono font-bold">{counts.not_answered}</span>
+                <span className="font-mono font-bold text-slate-900">{counts.not_answered}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full bg-[#7B5CD6]" />
+                  <span className="w-3 h-3 rounded-full bg-purple-600" />
                   <span>Marked for Review</span>
                 </div>
-                <span className="font-mono font-bold">{counts.marked_for_review + counts.answered_and_marked}</span>
+                <span className="font-mono font-bold text-slate-900">{counts.marked_for_review + counts.answered_and_marked}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded bg-slate-200 dark:bg-slate-700" />
+                  <span className="w-3 h-3 rounded bg-slate-200" />
                   <span>Not Visited</span>
                 </div>
-                <span className="font-mono font-bold">{counts.not_visited}</span>
+                <span className="font-mono font-bold text-slate-900">{counts.not_visited}</span>
               </div>
             </div>
           </div>
 
           {/* Submit Test Button */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+          <div className="pt-4 border-t border-slate-100">
             <button
               onClick={() => setShowSubmitModal(true)}
-              className="w-full h-11 rounded-xl bg-[#212835] hover:bg-slate-900 text-white font-bold text-xs uppercase tracking-wider border border-[#2E3746] transition-all hover:scale-[1.01]"
+              className="w-full h-11 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-blue-500/20 transition-all hover:scale-[1.01]"
             >
               Submit Exam
             </button>
@@ -578,14 +590,14 @@ export default function ExamTestWindow() {
         </aside>
       </div>
 
-      {/* 3. STICKY BOTTOM ACTION BAR (PRD Section 6.5 & Section 7.9) */}
-      <footer className="h-16 bg-white dark:bg-[#151A23] border-t border-[#DDE4EE] dark:border-[#2E3746] px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
+      {/* 3. STICKY BOTTOM ACTION BAR */}
+      <footer className="h-16 bg-white/95 backdrop-blur-xl border-t border-blue-100 px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
         <div className="flex items-center gap-2">
           {/* Previous Button */}
           <button
             onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
             disabled={currentIdx === 0}
-            className="px-4 py-2 rounded-xl text-xs font-semibold border border-[#DDE4EE] dark:border-[#2E3746] disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-[#1B212C] text-slate-700 dark:text-slate-300"
+            className="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors shadow-xs"
           >
             Previous
           </button>
@@ -594,17 +606,17 @@ export default function ExamTestWindow() {
           <button
             onClick={handleClearResponse}
             disabled={!selectedOption}
-            className="px-4 py-2 rounded-xl text-xs font-semibold border border-[#DDE4EE] dark:border-[#2E3746] disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-[#1B212C] text-slate-700 dark:text-slate-300 hidden sm:block"
+            className="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 hidden sm:block transition-colors shadow-xs"
           >
             Clear Response
           </button>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {/* Mark for Review & Next */}
           <button
             onClick={handleMarkForReviewAndNext}
-            className="px-4 py-2 rounded-xl text-xs font-semibold border border-[#7B5CD6] text-[#7B5CD6] hover:bg-[#7B5CD6]/10 transition-colors"
+            className="px-4 py-2 rounded-xl text-xs font-semibold border border-purple-300 text-purple-700 bg-purple-50/60 hover:bg-purple-100/60 transition-colors"
           >
             Mark for Review &amp; Next
           </button>
@@ -612,52 +624,52 @@ export default function ExamTestWindow() {
           {/* Save & Next (Primary Blue Button) */}
           <button
             onClick={handleSaveAndNext}
-            className="px-6 py-2 rounded-xl text-xs font-bold bg-[#2D6BCB] hover:bg-[#2458AD] text-white shadow-md shadow-[#2D6BCB]/25 transition-all"
+            className="px-6 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md shadow-blue-500/25 transition-all hover:scale-[1.02]"
           >
             Save &amp; Next
           </button>
         </div>
       </footer>
 
-      {/* SUBMIT CONFIRMATION MODAL (TW-07) */}
+      {/* SUBMIT CONFIRMATION MODAL */}
       {showSubmitModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#151A23] rounded-2xl border border-[#DDE4EE] dark:border-[#2E3746] max-w-md w-full p-6 space-y-5 shadow-2xl">
-            <h2 className="text-lg font-bold text-[#212835] dark:text-white">Exam Submission Confirmation</h2>
-            <p className="text-xs text-[#5B6578] dark:text-slate-400">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="glass-panel bg-white/95 rounded-3xl border border-blue-100 max-w-md w-full p-6 space-y-5 shadow-2xl">
+            <h2 className="text-lg font-bold text-slate-900">Exam Submission Confirmation</h2>
+            <p className="text-xs text-slate-600">
               Are you sure you want to submit your exam? You cannot modify your answers once submitted.
             </p>
 
             {/* Summary Table */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0E1117] border border-[#DDE4EE] dark:border-[#2E3746] space-y-2 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-800">
-                <span className="text-[#1F9D6B] font-semibold">Answered</span>
-                <span className="font-mono font-bold">{counts.answered + counts.answered_and_marked}</span>
+            <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-100 space-y-2 text-xs">
+              <div className="flex justify-between py-1 border-b border-blue-100/60">
+                <span className="text-emerald-700 font-semibold">Answered</span>
+                <span className="font-mono font-bold text-slate-900">{counts.answered + counts.answered_and_marked}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-800">
-                <span className="text-[#D64550] font-semibold">Not Answered</span>
-                <span className="font-mono font-bold">{counts.not_answered}</span>
+              <div className="flex justify-between py-1 border-b border-blue-100/60">
+                <span className="text-rose-700 font-semibold">Not Answered</span>
+                <span className="font-mono font-bold text-slate-900">{counts.not_answered}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-800">
-                <span className="text-[#7B5CD6] font-semibold">Marked for Review</span>
-                <span className="font-mono font-bold">{counts.marked_for_review}</span>
+              <div className="flex justify-between py-1 border-b border-blue-100/60">
+                <span className="text-purple-700 font-semibold">Marked for Review</span>
+                <span className="font-mono font-bold text-slate-900">{counts.marked_for_review}</span>
               </div>
               <div className="flex justify-between py-1">
                 <span className="text-slate-500">Not Visited</span>
-                <span className="font-mono font-bold">{counts.not_visited}</span>
+                <span className="font-mono font-bold text-slate-900">{counts.not_visited}</span>
               </div>
             </div>
 
             <div className="flex gap-3">
               <button
                 onClick={() => setShowSubmitModal(false)}
-                className="w-1/2 py-2.5 rounded-xl border border-[#DDE4EE] dark:border-[#2E3746] text-xs font-semibold"
+                className="w-1/2 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold"
               >
                 Return to Exam
               </button>
               <button
                 onClick={() => handleSubmitTest(false)}
-                className="w-1/2 py-2.5 rounded-xl bg-[#2D6BCB] hover:bg-[#2458AD] text-white text-xs font-bold shadow-md shadow-[#2D6BCB]/30"
+                className="w-1/2 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold shadow-md shadow-blue-500/25"
               >
                 Yes, Submit Final
               </button>
@@ -666,17 +678,17 @@ export default function ExamTestWindow() {
         </div>
       )}
 
-      {/* ON-SCREEN CALCULATOR (TW-11) */}
+      {/* ON-SCREEN CALCULATOR */}
       {showCalculator && (
-        <div className="fixed bottom-20 right-6 z-50 w-64 bg-white dark:bg-[#151A23] rounded-2xl border border-[#DDE4EE] dark:border-[#2E3746] p-4 shadow-2xl space-y-3">
-          <div className="flex items-center justify-between text-xs font-bold border-b border-slate-200 dark:border-slate-800 pb-2">
+        <div className="fixed bottom-20 right-6 z-50 w-64 glass-panel bg-white/95 rounded-2xl border border-blue-100 p-4 shadow-2xl space-y-3">
+          <div className="flex items-center justify-between text-xs font-bold border-b border-slate-100 pb-2 text-slate-800">
             <span>Basic Calculator</span>
-            <button onClick={() => setShowCalculator(false)} className="text-slate-400 hover:text-white">
+            <button onClick={() => setShowCalculator(false)} className="text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-[#0E1117] text-right font-mono font-bold text-base truncate">
+          <div className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-100 text-right font-mono font-bold text-base text-blue-900 truncate">
             {calcInput}
           </div>
 
@@ -688,7 +700,6 @@ export default function ExamTestWindow() {
                   if (btn === 'C') setCalcInput('0');
                   else if (btn === '=') {
                     try {
-                      // Safe arithmetic evaluation
                       const sanitized = calcInput.replace(/[^0-9+\-*/.]/g, '');
                       setCalcInput(String(Function(`'use strict'; return (${sanitized})`)()));
                     } catch {
@@ -698,7 +709,7 @@ export default function ExamTestWindow() {
                     setCalcInput((prev) => (prev === '0' ? btn : prev + btn));
                   }
                 }}
-                className="p-2 rounded-lg bg-slate-50 dark:bg-[#2E3746] hover:bg-[#DCE8F8] dark:hover:bg-[#46526A] text-center"
+                className="p-2 rounded-lg bg-slate-50 hover:bg-blue-50 text-slate-800 border border-slate-100 text-center transition-colors"
               >
                 {btn}
               </button>
@@ -707,13 +718,13 @@ export default function ExamTestWindow() {
         </div>
       )}
 
-      {/* MOBILE PALETTE SLIDE-OVER DRAWER (TW-14) */}
+      {/* MOBILE PALETTE SLIDE-OVER DRAWER */}
       {isMobilePaletteOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 lg:hidden flex justify-end">
-          <div className="w-72 bg-white dark:bg-[#151A23] h-full p-6 flex flex-col justify-between overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm lg:hidden flex justify-end">
+          <div className="w-72 bg-white h-full p-6 flex flex-col justify-between overflow-y-auto shadow-2xl">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="font-bold text-sm">Question Palette</span>
+                <span className="font-bold text-sm text-slate-900">Question Palette</span>
                 <button onClick={() => setIsMobilePaletteOpen(false)}>
                   <X className="w-5 h-5 text-slate-400" />
                 </button>
@@ -722,16 +733,16 @@ export default function ExamTestWindow() {
               <div className="grid grid-cols-5 gap-2">
                 {questions.map((q, idx) => {
                   const state = answers[q.id]?.state || 'not_visited';
-                  let bgClass = 'bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200';
-                  if (state === 'answered') bgClass = 'bg-[#1F9D6B] text-white';
-                  else if (state === 'not_answered') bgClass = 'bg-[#D64550] text-white';
-                  else if (state === 'marked_for_review' || state === 'answered_and_marked') bgClass = 'bg-[#7B5CD6] text-white rounded-full';
+                  let bgClass = 'bg-slate-100 border border-slate-200 text-slate-700';
+                  if (state === 'answered') bgClass = 'bg-emerald-500 text-white';
+                  else if (state === 'not_answered') bgClass = 'bg-rose-500 text-white';
+                  else if (state === 'marked_for_review' || state === 'answered_and_marked') bgClass = 'bg-purple-600 text-white rounded-full';
 
                   return (
                     <button
                       key={q.id}
                       onClick={() => handlePaletteJump(idx)}
-                      className={`w-10 h-10 font-mono font-bold text-xs flex items-center justify-center rounded-lg ${bgClass}`}
+                      className={`w-10 h-10 font-mono font-bold text-xs flex items-center justify-center rounded-xl ${bgClass}`}
                     >
                       {idx + 1}
                     </button>
@@ -745,7 +756,7 @@ export default function ExamTestWindow() {
                 setIsMobilePaletteOpen(false);
                 setShowSubmitModal(true);
               }}
-              className="w-full py-3 rounded-xl bg-[#212835] text-white text-xs font-bold uppercase mt-6"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold uppercase tracking-wider mt-6 shadow-md shadow-blue-500/25"
             >
               Submit Exam
             </button>

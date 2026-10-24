@@ -46,51 +46,68 @@ export default function PracticeHubPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#EAF1F8] dark:bg-[#0E1117] flex flex-col text-[#212835] dark:text-[#EAF1F8]">
-      <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#151A23]/90 backdrop-blur-md border-b border-[#DDE4EE] dark:border-[#2E3746] px-6 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col text-slate-800 relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-10 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
+
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-blue-100 px-6 h-16 flex items-center justify-between">
         <BrandLogo size={34} showWordmark={true} />
         <div className="flex items-center gap-4 text-xs font-semibold">
-          <Link href="/dashboard" className="text-slate-500 hover:text-slate-900 dark:hover:text-white">
+          <Link href="/dashboard" className="text-slate-600 hover:text-blue-600 transition-colors">
             Dashboard
           </Link>
-          <Link href="/tests/new" className="px-3.5 py-1.5 rounded-lg bg-[#2D6BCB] text-white">
+          <Link
+            href="/tests/new"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+          >
             Timed Mock Tests
           </Link>
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 space-y-8">
+      <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 space-y-8 z-10">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#212835] dark:text-white">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-3">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Targeted Skill Mastery</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             Quant Practice &amp; Spaced Revision
           </h1>
-          <p className="text-xs sm:text-sm text-[#5B6578] dark:text-slate-400 mt-1">
-            Untimed instant feedback mode and targeted review of previously bookmarked or wrong questions.
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl">
+            Untimed instant feedback drill and targeted review of previously bookmarked or wrong questions.
           </p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex rounded-xl p-1 bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] max-w-md">
+        {/* Navigation Tabs (Chips) */}
+        <div className="flex rounded-2xl p-1 bg-white border border-blue-100 shadow-xs max-w-md">
           <button
             onClick={() => setActiveTab('topics')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
-              activeTab === 'topics' ? 'bg-[#2D6BCB] text-white shadow-sm' : 'text-slate-500 hover:text-white'
+            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
+              activeTab === 'topics'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm'
+                : 'text-slate-600 hover:text-blue-600'
             }`}
           >
             Topic Practice (Instant)
           </button>
           <button
             onClick={() => setActiveTab('bookmarks')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
-              activeTab === 'bookmarks' ? 'bg-[#2D6BCB] text-white shadow-sm' : 'text-slate-500 hover:text-white'
+            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
+              activeTab === 'bookmarks'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm'
+                : 'text-slate-600 hover:text-blue-600'
             }`}
           >
             Bookmarks (12)
           </button>
           <button
             onClick={() => setActiveTab('revision')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
-              activeTab === 'revision' ? 'bg-[#2D6BCB] text-white shadow-sm' : 'text-slate-500 hover:text-white'
+            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
+              activeTab === 'revision'
+                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm'
+                : 'text-slate-600 hover:text-blue-600'
             }`}
           >
             Spaced Revision (5)
@@ -101,8 +118,8 @@ export default function PracticeHubPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Topic Selector List */}
             <div className="space-y-3">
-              <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Choose Topic</div>
-              <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+              <div className="text-xs font-bold uppercase tracking-wider text-slate-500">Choose Topic</div>
+              <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
                 {INITIAL_TOPICS.map((t) => (
                   <button
                     key={t.id}
@@ -112,14 +129,16 @@ export default function PracticeHubPage() {
                       setChosenOpt(null);
                       setShowSolution(false);
                     }}
-                    className={`w-full p-3 rounded-xl border text-left text-xs transition-all flex items-center justify-between ${
+                    className={`w-full p-3.5 rounded-2xl border text-left text-xs transition-all flex items-center justify-between ${
                       selectedTopic === t.id
-                        ? 'border-[#2D6BCB] bg-white dark:bg-[#151A23] font-bold text-[#2D6BCB] shadow-sm'
-                        : 'border-[#DDE4EE] dark:border-[#2E3746] bg-white/50 dark:bg-[#151A23]/50 text-slate-600 dark:text-slate-300 hover:bg-white'
+                        ? 'border-blue-600 bg-blue-50/80 font-bold text-blue-900 shadow-xs ring-1 ring-blue-500'
+                        : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/30 text-slate-700'
                     }`}
                   >
                     <span>{t.name}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">Mastery: 78%</span>
+                    <span className="text-[10px] text-blue-600 font-mono font-bold bg-blue-100/60 px-2 py-0.5 rounded-full">
+                      78%
+                    </span>
                   </button>
                 ))}
               </div>
@@ -127,30 +146,30 @@ export default function PracticeHubPage() {
 
             {/* Instant Feedback Question Area */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="p-6 rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] shadow-sm space-y-6">
-                <div className="flex items-center justify-between text-xs border-b border-slate-100 dark:border-slate-800 pb-3">
-                  <span className="font-bold px-2 py-0.5 rounded bg-[#DCE8F8] dark:bg-[#2D6BCB]/20 text-[#2D6BCB]">
+              <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-6">
+                <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-4">
+                  <span className="font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
                     Instant Feedback Drill
                   </span>
-                  <span className="text-slate-400">Question {practiceIdx + 1} of {Math.max(1, topicQuestions.length)}</span>
+                  <span className="text-slate-500 font-mono">Question {practiceIdx + 1} of {Math.max(1, topicQuestions.length)}</span>
                 </div>
 
-                <div className="text-sm sm:text-base font-medium leading-relaxed">
+                <div className="text-base sm:text-lg font-medium text-slate-900 leading-relaxed">
                   <MathRenderer content={currentQ.stem} />
                 </div>
 
                 {/* Options */}
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   {currentQ.options.map((opt) => {
                     const isSelected = chosenOpt === opt.id;
                     const isCorrect = currentKey && opt.id === currentKey.correct_option;
 
-                    let optStyle = 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-[#1B212C]';
+                    let optStyle = 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/30 text-slate-800';
                     if (chosenOpt) {
                       if (isCorrect) {
-                        optStyle = 'border-[#1F9D6B] bg-[#1F9D6B]/15 text-[#1F9D6B] font-bold';
+                        optStyle = 'border-emerald-300 bg-emerald-50 text-emerald-900 font-bold shadow-xs';
                       } else if (isSelected && !isCorrect) {
-                        optStyle = 'border-red-500 bg-red-500/15 text-red-500 font-bold';
+                        optStyle = 'border-rose-300 bg-rose-50 text-rose-900 font-bold shadow-xs';
                       }
                     }
 
@@ -158,15 +177,23 @@ export default function PracticeHubPage() {
                       <div
                         key={opt.id}
                         onClick={() => handleSelectOption(opt.id)}
-                        className={`p-3.5 rounded-xl border text-xs flex items-center justify-between cursor-pointer transition-all ${optStyle}`}
+                        className={`p-4 rounded-2xl border text-xs sm:text-sm flex items-center justify-between cursor-pointer transition-all ${optStyle}`}
                       >
                         <div className="flex items-center gap-3">
-                          <span className="font-bold uppercase font-mono">{opt.id}.</span>
+                          <span className={`w-7 h-7 rounded-full flex items-center justify-center font-bold uppercase font-mono text-xs ${
+                            chosenOpt && isCorrect
+                              ? 'bg-emerald-600 text-white'
+                              : chosenOpt && isSelected && !isCorrect
+                              ? 'bg-rose-600 text-white'
+                              : 'bg-slate-100 text-slate-600 border border-slate-200'
+                          }`}>
+                            {opt.id}
+                          </span>
                           <MathRenderer content={opt.text} />
                         </div>
 
-                        {chosenOpt && isCorrect && <CheckCircle2 className="w-4 h-4 text-[#1F9D6B]" />}
-                        {chosenOpt && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-red-500" />}
+                        {chosenOpt && isCorrect && <CheckCircle2 className="w-5 h-5 text-emerald-600" />}
+                        {chosenOpt && isSelected && !isCorrect && <XCircle className="w-5 h-5 text-rose-600" />}
                       </div>
                     );
                   })}
@@ -174,16 +201,16 @@ export default function PracticeHubPage() {
 
                 {/* Immediate Explanation Drawer */}
                 {showSolution && currentKey && (
-                  <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#0E1117] border border-[#DDE4EE] dark:border-[#2E3746] space-y-3 text-xs animate-in fade-in">
-                    <div className="font-bold text-[#1F9D6B] flex items-center gap-1.5">
+                  <div className="p-5 rounded-2xl bg-blue-50/50 border border-blue-100 space-y-3 text-xs animate-in fade-in">
+                    <div className="font-bold text-emerald-700 flex items-center gap-1.5 text-sm">
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Correct Key: Option {currentKey.correct_option.toUpperCase()}</span>
                     </div>
-                    <div className="leading-relaxed text-slate-700 dark:text-slate-300">
+                    <div className="leading-relaxed text-slate-800 text-sm">
                       <MathRenderer content={currentKey.solution} />
                     </div>
                     {currentKey.shortcut && (
-                      <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300">
+                      <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-medium">
                         <strong>Shortcut:</strong> {currentKey.shortcut}
                       </div>
                     )}
@@ -194,7 +221,7 @@ export default function PracticeHubPage() {
                 {chosenOpt && (
                   <button
                     onClick={handleNextPractice}
-                    className="w-full h-11 rounded-xl bg-[#2D6BCB] hover:bg-[#2458AD] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md shadow-[#2D6BCB]/25"
+                    className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-blue-500/25 transition-all hover:scale-[1.01]"
                   >
                     <span>Next Question</span>
                     <ArrowRight className="w-4 h-4" />
@@ -206,15 +233,17 @@ export default function PracticeHubPage() {
         )}
 
         {activeTab !== 'topics' && (
-          <div className="p-8 rounded-2xl bg-white dark:bg-[#151A23] border border-[#DDE4EE] dark:border-[#2E3746] text-center space-y-4">
-            <Bookmark className="w-8 h-8 text-[#2D6BCB] mx-auto" />
-            <h2 className="text-base font-bold">Your Saved Revision Collection</h2>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+          <div className="p-12 rounded-3xl glass-panel bg-white/95 border border-blue-100 text-center space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center mx-auto text-blue-600">
+              <Bookmark className="w-8 h-8" />
+            </div>
+            <h2 className="text-lg font-bold text-slate-900">Your Saved Revision Collection</h2>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto">
               Questions wrong 3+ days ago resurface automatically under our spaced repetition schedule.
             </p>
             <button
               onClick={() => setActiveTab('topics')}
-              className="px-5 py-2 rounded-xl bg-[#2D6BCB] text-white text-xs font-bold"
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/25"
             >
               Start Revision Drill
             </button>
