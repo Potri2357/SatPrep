@@ -179,7 +179,7 @@ export default function NewTestBuilderPage() {
 
       const data = await res.json();
       if (data.success && data.test_id) {
-        router.push(`/tests/building/${data.test_id}`);
+        router.push(`/tests/${data.test_id}/instructions`);
       } else {
         alert(data.error || 'Failed to assemble test');
         setIsSubmitting(false);
