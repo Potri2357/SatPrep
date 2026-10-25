@@ -248,7 +248,22 @@ export default function ResultAnalysisPage() {
 
   const sc = snapshot.score_card;
 
-  const filteredQuestions = snapshot.questions_review.filter((q) => {
+  // Deduplicate questions by stem to ensure zero repetition in questions review
+  const uniqueQuestionsReview = React.useMemo(() => {
+    if (!snapshot?.questions_review) return [];
+    const seen = new Set<string>();
+    const list: typeof snapshot.questions_review = [];
+    snapshot.questions_review.forEach((q) => {
+      const stemNorm = q.stem.trim();
+      if (!seen.has(stemNorm)) {
+        seen.add(stemNorm);
+        list.push({ ...q, position: list.length + 1 });
+      }
+    });
+    return list;
+  }, [snapshot?.questions_review]);
+
+  const filteredQuestions = uniqueQuestionsReview.filter((q) => {
     if (filter === 'correct') return q.is_correct;
     if (filter === 'wrong') return !q.is_correct && !!q.your_answer;
     if (filter === 'skipped') return !q.your_answer;
@@ -297,89 +312,141 @@ export default function ResultAnalysisPage() {
           </div>
         </div>
 
-        {/* HERO SCORE CARD WITH NEUMORPHIC GLASS ACCENT */}
+        {/* HERO SCORE CARD WITH IMPROVISED MULTI-SEGMENT PIE/DONUT CHART */}
         <div className="neu-glass-card p-6 sm:p-8 rounded-3xl relative overflow-hidden">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            {/* Score Ring */}
-            <div className="flex items-center gap-6">
-              <div className="relative w-28 h-28 flex items-center justify-center shrink-0">
-                <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                  <path
-                    className="text-blue-100"
-                    strokeWidth="3.5"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                  <path
-                    className="text-[#2563EB]"
-                    strokeDasharray={`${Math.max(5, sc.accuracy_percent)}, 100`}
-                    strokeWidth="3.5"
-                    strokeLinecap="round"
-                    stroke="currentColor"
-                    fill="none"
-                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                  />
-                </svg>
-                <div className="absolute text-center">
-                  <div className="text-2xl font-bold font-mono text-[#2563EB] leading-none">
-                    {sc.total_score.toFixed(2)}
-                  </div>
-                  <div className="text-[10px] text-slate-400 mt-1 font-semibold">/ {sc.max_marks}</div>
-                </div>
-              </div>
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            {/* Left: Improvised Donut Pie Chart + Legend */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 w-full">
+              {/* Donut Chart SVG with Exact Proportional Segments */}
+              {(() => {
+                const totalQ = Math.max(1, sc.max_marks || (sc.correct + sc.wrong + sc.skipped) || 35);
+                const C = 282.743; // 2 * PI * 45
+                const correctArc = (sc.correct / totalQ) * C;
+                const wrongArc = (sc.wrong / totalQ) * C;
+                const skippedArc = Math.max(0, C - correctArc - wrongArc);
 
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
-                  <TrendingUp className="w-3.5 h-3.5" />
-                  <span>Accuracy: {sc.accuracy_percent}%</span>
+                return (
+                  <div className="flex flex-col items-center gap-3 shrink-0">
+                    <div className="relative w-36 h-36 flex items-center justify-center">
+                      <svg className="w-full h-full -rotate-90 drop-shadow-xs" viewBox="0 0 110 110">
+                        {/* Background track */}
+                        <circle
+                          cx="55"
+                          cy="55"
+                          r="45"
+                          stroke="#F1F5F9"
+                          strokeWidth="9"
+                          fill="none"
+                        />
+                        {/* Skipped arc (Slate) */}
+                        <circle
+                          cx="55"
+                          cy="55"
+                          r="45"
+                          stroke="#CBD5E1"
+                          strokeWidth="9"
+                          strokeDasharray={`${skippedArc} ${C}`}
+                          strokeDashoffset={`${-(correctArc + wrongArc)}`}
+                          fill="none"
+                        />
+                        {/* Incorrect arc (Rose red) */}
+                        <circle
+                          cx="55"
+                          cy="55"
+                          r="45"
+                          stroke="#EF4444"
+                          strokeWidth="9"
+                          strokeDasharray={`${wrongArc} ${C}`}
+                          strokeDashoffset={`${-correctArc}`}
+                          fill="none"
+                        />
+                        {/* Correct arc (Emerald green) */}
+                        <circle
+                          cx="55"
+                          cy="55"
+                          r="45"
+                          stroke="#10B981"
+                          strokeWidth="9"
+                          strokeDasharray={`${correctArc} ${C}`}
+                          strokeDashoffset="0"
+                          fill="none"
+                        />
+                      </svg>
+
+                      {/* Center Score Readout */}
+                      <div className="absolute text-center flex flex-col items-center justify-center">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                          Score
+                        </span>
+                        <div className="text-3xl font-black font-mono text-[#005CE6] leading-none my-0.5">
+                          {sc.total_score.toFixed(2)}
+                        </div>
+                        <span className="text-[11px] font-bold text-slate-500">
+                          / {sc.max_marks}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Chart Legend Chips */}
+                    <div className="flex items-center gap-2 text-[11px]">
+                      <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span>{sc.correct} Correct</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
+                        <span className="w-2 h-2 rounded-full bg-rose-500" />
+                        <span>{sc.wrong} Wrong</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                        <span className="w-2 h-2 rounded-full bg-slate-400" />
+                        <span>{sc.skipped} Skipped</span>
+                      </span>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Analysis Header & Performance Summary (Unified, no separate bulky cards) */}
+              <div className="space-y-2.5 text-center sm:text-left flex-1">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <TrendingUp className="w-3.5 h-3.5" />
+                    <span>Accuracy: {sc.accuracy_percent}%</span>
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                    <Award className="w-3.5 h-3.5 text-[#005CE6]" />
+                    <span>Percentile: {sc.percentile || 91.8}%ile</span>
+                  </div>
                 </div>
+
                 <h2 className="text-xl sm:text-2xl font-extrabold text-[#0F172A]">
                   Quantitative Aptitude Analysis
                 </h2>
-                <p className="text-xs text-slate-600 mt-1">
-                  Time Spent: <strong className="text-slate-900">{Math.round(sc.total_time_spent_sec / 60)}m {sc.total_time_spent_sec % 60}s</strong> · Attempted: <strong className="text-slate-900">{sc.attempted}/{sc.max_marks}</strong>
+
+                <p className="text-xs text-slate-600 leading-relaxed max-w-lg">
+                  Time Spent: <strong className="text-slate-900">{Math.round(sc.total_time_spent_sec / 60)}m {sc.total_time_spent_sec % 60}s</strong> · Attempted: <strong className="text-slate-900">{sc.attempted}/{sc.max_marks}</strong> questions · Pace: <strong className="text-slate-900">{sc.attempted > 0 ? Math.round(sc.total_time_spent_sec / sc.attempted) : 0}s</strong>/Q.
                 </p>
-              </div>
-            </div>
-
-            {/* Percentile & Rank Cards */}
-            <div className="flex gap-4 w-full md:w-auto">
-              <div className="flex-1 md:w-36 p-4 rounded-2xl neu-inset text-center">
-                <span className="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">Percentile</span>
-                <div className="text-2xl font-extrabold font-mono text-blue-800 mt-1">
-                  {sc.percentile || 88.4}%ile
-                </div>
-                <div className="text-[10px] text-slate-500 mt-0.5">Top 12% in cohort</div>
-              </div>
-
-              <div className="flex-1 md:w-36 p-4 rounded-2xl neu-glass-card text-center">
-                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">All-India Rank</span>
-                <div className="text-2xl font-extrabold font-mono text-slate-900 mt-1">
-                  #{sc.rank || 142}
-                </div>
-                <div className="text-[10px] text-slate-500 mt-0.5">Cohort: 1,250 test takers</div>
               </div>
             </div>
           </div>
 
           {/* Quick Metrics Strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-100 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-100 text-xs">
             <div>
-              <span className="text-slate-500">Correct Answers:</span>
+              <span className="text-slate-500 font-medium">Correct Marks:</span>
               <div className="text-base font-bold text-emerald-600 font-mono mt-0.5">+{sc.correct} ({sc.correct * 1.0} marks)</div>
             </div>
             <div>
-              <span className="text-slate-500">Negative Marks Lost:</span>
+              <span className="text-slate-500 font-medium">Negative Marks Lost:</span>
               <div className="text-base font-bold text-rose-600 font-mono mt-0.5">-{sc.negative_marks_lost.toFixed(2)} marks ({sc.wrong} wrong)</div>
             </div>
             <div>
-              <span className="text-slate-500">Skipped Questions:</span>
+              <span className="text-slate-500 font-medium">Skipped Questions:</span>
               <div className="text-base font-bold text-slate-700 font-mono mt-0.5">{sc.skipped} questions</div>
             </div>
             <div>
-              <span className="text-slate-500">Average Pace:</span>
-              <div className="text-base font-bold text-[#2563EB] font-mono mt-0.5">
+              <span className="text-slate-500 font-medium">Average Pace:</span>
+              <div className="text-base font-bold text-[#005CE6] font-mono mt-0.5">
                 {sc.attempted > 0 ? Math.round(sc.total_time_spent_sec / sc.attempted) : 0}s per question
               </div>
             </div>
@@ -465,7 +532,7 @@ export default function ResultAnalysisPage() {
               {/* Filter Tabs */}
               <div className="flex flex-wrap gap-1.5 text-xs">
                 {[
-                  { id: 'all', label: `All (${snapshot.questions_review.length})` },
+                  { id: 'all', label: `All (${uniqueQuestionsReview.length})` },
                   { id: 'wrong', label: `Incorrect (${snapshot.score_card.wrong})` },
                   { id: 'correct', label: `Correct (${snapshot.score_card.correct})` },
                   { id: 'skipped', label: `Skipped (${snapshot.score_card.skipped})` },
@@ -504,7 +571,7 @@ export default function ResultAnalysisPage() {
             {/* Questions Number Strip */}
             <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100">
               {filteredQuestions.map((q) => {
-                const isSelected = q.position === (snapshot.questions_review[selectedQIndex]?.position);
+                const isSelected = q.position === (uniqueQuestionsReview[selectedQIndex]?.position);
                 let chipColor = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
                 if (q.is_correct) {
                   chipColor = 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100';
@@ -516,7 +583,7 @@ export default function ResultAnalysisPage() {
                   <button
                     key={q.question_id}
                     onClick={() => {
-                      const actualIdx = snapshot.questions_review.findIndex((item) => item.question_id === q.question_id);
+                      const actualIdx = uniqueQuestionsReview.findIndex((item) => item.question_id === q.question_id);
                       if (actualIdx !== -1) {
                         setSelectedQIndex(actualIdx);
                         setExplanationTab('solution');
@@ -534,15 +601,15 @@ export default function ResultAnalysisPage() {
           </div>
 
           {/* Focused Question Explanation Card (Compact, High-Density & Elegant) */}
-          {snapshot.questions_review[selectedQIndex] && (() => {
-            const activeQ = snapshot.questions_review[selectedQIndex];
+          {uniqueQuestionsReview[selectedQIndex] && (() => {
+            const activeQ = uniqueQuestionsReview[selectedQIndex];
             return (
               <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#BCEBFC] shadow-sm space-y-4">
                 {/* Compact Question Header */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="font-bold font-mono px-2.5 py-0.5 rounded-full bg-[#005CE6] text-white text-[11px]">
-                      Q{activeQ.position} of {snapshot.questions_review.length}
+                      Q{activeQ.position} of {uniqueQuestionsReview.length}
                     </span>
                     <span className="text-slate-700 capitalize font-bold text-xs bg-slate-100 px-2 py-0.5 rounded-md">
                       {activeQ.topic_name}
@@ -749,10 +816,10 @@ export default function ResultAnalysisPage() {
 
                   <button
                     onClick={() => {
-                      setSelectedQIndex((prev) => Math.min(snapshot.questions_review.length - 1, prev + 1));
+                      setSelectedQIndex((prev) => Math.min(uniqueQuestionsReview.length - 1, prev + 1));
                       setExplanationTab('solution');
                     }}
-                    disabled={selectedQIndex === snapshot.questions_review.length - 1}
+                    disabled={selectedQIndex === uniqueQuestionsReview.length - 1}
                     className="neu-chip-primary px-4 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer shadow-xs text-xs"
                   >
                     <span>Next →</span>

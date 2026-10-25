@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { INITIAL_QUESTIONS, INITIAL_TOPICS, INITIAL_KEYS } from '@/lib/store';
+import { ALL_PRACTICE_QUESTIONS as INITIAL_QUESTIONS, INITIAL_TOPICS, ALL_PRACTICE_KEYS as INITIAL_KEYS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
 import { Question } from '@/lib/types';
 import { Search, Filter, Plus, Edit3, Trash2, Check, Eye, X, BookOpen } from 'lucide-react';

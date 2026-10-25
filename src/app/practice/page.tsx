@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/navbar';
-import { INITIAL_TOPICS, INITIAL_QUESTIONS, INITIAL_KEYS } from '@/lib/store';
+import { INITIAL_TOPICS, ALL_PRACTICE_QUESTIONS as INITIAL_QUESTIONS, ALL_PRACTICE_KEYS as INITIAL_KEYS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
 import { Question, QuestionKey } from '@/lib/types';
 import { cn } from '@/lib/utils';

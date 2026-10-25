@@ -492,6 +492,28 @@ export const INITIAL_KEYS: Record<string, QuestionKey> = {
   },
 };
 
+// Deduplicated comprehensive question list for practice and review
+export const ALL_PRACTICE_QUESTIONS: Question[] = (() => {
+  const seen = new Set<string>();
+  const list: Question[] = [];
+  FULL_MOCK_35_QUESTIONS.forEach((q) => {
+    seen.add(q.stem.trim());
+    list.push(q);
+  });
+  INITIAL_QUESTIONS.forEach((q) => {
+    if (!seen.has(q.stem.trim())) {
+      seen.add(q.stem.trim());
+      list.push(q);
+    }
+  });
+  return list;
+})();
+
+export const ALL_PRACTICE_KEYS: Record<string, QuestionKey> = {
+  ...INITIAL_KEYS,
+  ...FULL_MOCK_35_KEYS,
+};
+
 // Global In-Memory Store
 class SatPrepStore {
   private user: UserProfile = {
@@ -518,17 +540,33 @@ class SatPrepStore {
   private jobs: GenerationJob[] = [];
 
   constructor() {
-    INITIAL_QUESTIONS.forEach((q) => this.questions.set(q.id, q));
-    Object.entries(INITIAL_KEYS).forEach(([qid, k]) => this.keys.set(qid, k));
+    // Seed questions with unique stems to prevent duplication
+    const seenStems = new Set<string>();
 
-    // Seed official 35-question full blueprint for authentic real-time exam pattern
-    FULL_MOCK_35_QUESTIONS.forEach((q) => this.questions.set(q.id, q));
+    FULL_MOCK_35_QUESTIONS.forEach((q) => {
+      const stemNorm = q.stem.trim();
+      seenStems.add(stemNorm);
+      this.questions.set(q.id, q);
+    });
     Object.entries(FULL_MOCK_35_KEYS).forEach(([qid, k]) => this.keys.set(qid, k));
+
+    INITIAL_QUESTIONS.forEach((q) => {
+      const stemNorm = q.stem.trim();
+      if (!seenStems.has(stemNorm)) {
+        seenStems.add(stemNorm);
+        this.questions.set(q.id, q);
+      }
+    });
+    Object.entries(INITIAL_KEYS).forEach(([qid, k]) => {
+      if (!this.keys.has(qid)) {
+        this.keys.set(qid, k);
+      }
+    });
 
     // Seed sample reports
     this.reports.push({
       id: 'rep-1',
-      question_id: 'q-profit-1',
+      question_id: 'q-full-arith-26',
       user_id: 'user-default-1',
       user_name: 'Pooja Verma',
       reason: 'unclear',
@@ -597,25 +635,33 @@ class SatPrepStore {
     const exam = INITIAL_EXAMS.find((e) => e.id === config.exam_id) || INITIAL_EXAMS[0];
 
     let selected: Question[] = [];
+    const usedStems = new Set<string>();
+
+    const addQuestionUnique = (q: Question) => {
+      const stemNorm = q.stem.trim();
+      if (!usedStems.has(stemNorm)) {
+        usedStems.add(stemNorm);
+        selected.push(q);
+        return true;
+      }
+      return false;
+    };
 
     // Exact and authentic real-time banking exam question pattern
     if (config.mode === 'full_mock' || config.question_count === 35) {
       // Full 35-Question Quantitative Aptitude standard exam pattern:
-      // Q1-Q5: Simplification & Approximation
-      // Q6-Q10: Quadratic Equations
-      // Q11-Q15: Number Series
-      // Q16-Q20: Table DI Set (5 questions)
-      // Q21-Q25: Pie Chart DI Set (5 questions)
-      // Q26-Q35: 10 Core Arithmetic Word Problems
-      selected = [...FULL_MOCK_35_QUESTIONS];
-    } else if (config.mode === 'sectional' || config.question_count === 25) {
-      // 25-Question Sectional Pattern: 5 Simplification, 5 Quadratic, 5 Series, 5 DI, 5 Arithmetic
-      const simps = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'simplification').slice(0, 5);
-      const quads = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'quadratic-equations').slice(0, 5);
-      const series = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'number-series').slice(0, 5);
-      const di = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'tabular-di').slice(0, 5);
-      const arith = FULL_MOCK_35_QUESTIONS.filter((q) => !['simplification', 'quadratic-equations', 'number-series', 'tabular-di', 'bar-pie-di'].includes(q.topic_id)).slice(0, 5);
-      selected = [...simps, ...quads, ...series, ...di, ...arith];
+      FULL_MOCK_35_QUESTIONS.forEach(addQuestionUnique);
+    } else if (config.mode === 'sectional' || config.question_count === 25 || config.question_count === 20) {
+      const countPerGroup = config.question_count === 20 ? 4 : 5;
+      const simps = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'simplification').slice(0, countPerGroup);
+      const quads = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'quadratic-equations').slice(0, countPerGroup);
+      const series = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'number-series').slice(0, countPerGroup);
+      const di = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'tabular-di').slice(0, countPerGroup);
+      const arith = FULL_MOCK_35_QUESTIONS.filter(
+        (q) => !['simplification', 'quadratic-equations', 'number-series', 'tabular-di', 'bar-pie-di'].includes(q.topic_id)
+      ).slice(0, countPerGroup);
+
+      [...simps, ...quads, ...series, ...di, ...arith].forEach(addQuestionUnique);
     } else {
       // Topic test / Custom practice: filter by chosen topics or selected QIDs
       let pool = Array.from(this.questions.values()).filter((q) => q.status === 'live' || q.status === 'reviewed');
@@ -630,17 +676,27 @@ class SatPrepStore {
         pool = Array.from(this.questions.values());
       }
 
-      let idx = 0;
-      while (selected.length < config.question_count) {
-        selected.push(pool[idx % pool.length]);
-        idx++;
+      // Add unique matching questions first
+      pool.forEach((q) => {
+        if (selected.length < config.question_count) {
+          addQuestionUnique(q);
+        }
+      });
+
+      // If more questions needed, pull additional unique questions from the blueprint bank (NEVER duplicate)
+      if (selected.length < config.question_count) {
+        FULL_MOCK_35_QUESTIONS.forEach((q) => {
+          if (selected.length < config.question_count) {
+            addQuestionUnique(q);
+          }
+        });
       }
     }
 
     // Freeze bundle with unique instance IDs to prevent React key collisions and answer crosstalk
     const assembledQuestions = selected.map((q, idx) => {
       const instanceId = `${q.id}-inst-${idx + 1}`;
-      const originalKey = this.keys.get(q.id);
+      const originalKey = this.keys.get(q.id) || FULL_MOCK_35_KEYS[q.id];
       if (originalKey) {
         this.keys.set(instanceId, originalKey);
       }
