@@ -470,46 +470,6 @@ export default function NewTestBuilderPage() {
                 <span className="text-slate-500">Negative Marking</span>
                 <span className="font-bold text-rose-600">{negativeMarking}</span>
               </div>
-
-              {/* Exact Pattern Breakdown for Full Mock */}
-              {mode === 'full_mock' && (
-                <div className="pt-2 border-t border-slate-100 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                      Standard Prelims Pattern
-                    </span>
-                    <span className="text-[10px] font-bold text-[#005CE6] bg-[#BCEBFC]/50 px-2 py-0.5 rounded-full">
-                      TCS iON
-                    </span>
-                  </div>
-                  <div className="space-y-1.5 text-[11px]">
-                    <div className="flex justify-between items-center bg-[#F0FAFF] px-2.5 py-1.5 rounded-lg border border-[#BCEBFC]/60">
-                      <span className="text-slate-700">Q1–Q5: Simplification &amp; Approx</span>
-                      <span className="font-mono font-bold text-[#005CE6]">5 Qs</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-[#F0FAFF] px-2.5 py-1.5 rounded-lg border border-[#BCEBFC]/60">
-                      <span className="text-slate-700">Q6–Q10: Quadratic Equations</span>
-                      <span className="font-mono font-bold text-[#005CE6]">5 Qs</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-[#F0FAFF] px-2.5 py-1.5 rounded-lg border border-[#BCEBFC]/60">
-                      <span className="text-slate-700">Q11–Q15: Number Series (Missing/Wrong)</span>
-                      <span className="font-mono font-bold text-[#005CE6]">5 Qs</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-[#F0FAFF] px-2.5 py-1.5 rounded-lg border border-[#BCEBFC]/60">
-                      <span className="text-slate-700">Q16–Q20: Tabular DI Set</span>
-                      <span className="font-mono font-bold text-[#005CE6]">5 Qs</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-[#F0FAFF] px-2.5 py-1.5 rounded-lg border border-[#BCEBFC]/60">
-                      <span className="text-slate-700">Q21–Q25: Pie Chart DI Set</span>
-                      <span className="font-mono font-bold text-[#005CE6]">5 Qs</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-[#F0FAFF] px-2.5 py-1.5 rounded-lg border border-[#BCEBFC]/60">
-                      <span className="text-slate-700">Q26–Q35: Core Arithmetic Probs</span>
-                      <span className="font-mono font-bold text-[#005CE6]">10 Qs</span>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Freshness Chip Badge */}
