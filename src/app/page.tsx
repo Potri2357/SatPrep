@@ -38,7 +38,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 mb-10 leading-relaxed font-normal">
-            Practice calibrated questions in an exact TCS-iON exam environment. Server-authoritative timer, psychometric distractor explanations, and zero mock latency.
+            Practice calibrated questions in an authentic bank exam environment. Server-authoritative timer, psychometric distractor explanations, and zero mock latency.
           </p>
 
           {/* CTA Chip Buttons Strip (Large, Distinct & Prominent) */}
@@ -260,7 +260,7 @@ export default function LandingPage() {
             Ready to Benchmark Your Exam Readiness?
           </h2>
           <p className="text-blue-100/90 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Experience authentic TCS-iON banking interface simulations with real-time analytics, percentile benchmarking, and detailed step-by-step explanations.
+            Experience authentic banking interface simulations with real-time analytics, percentile benchmarking, and detailed step-by-step explanations.
           </p>
           <div className="pt-4 flex justify-center">
             <Link

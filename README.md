@@ -15,7 +15,7 @@ Built in strict compliance with the **SatPrep Product Requirements Document (v1.
    - Frozen immutable bundles with SHA-256 integrity checksums.
 
 2. **Exam-Faithful Focus Mode Test Window (TW-01 to TW-20)**
-   - Resembles the real bank examination interface (TCS iON / IBPS standard) with SatPrep high-end aesthetic tokens.
+   - Resembles the real bank examination interface (Official IBPS standard) with SatPrep high-end aesthetic tokens.
    - Server-synced countdown timer in DM Mono (turns amber at 10m, red at 1m, pause prohibited).
    - 5-state Question Palette using shape + color:
      1. Not Visited (neutral tile)

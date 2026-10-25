@@ -67,15 +67,15 @@ export default function ExamInstructionsPage() {
       <Navbar />
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 z-10">
-        {/* Left 2 Cols: Instructions Body */}
-        <div className="lg:col-span-2 space-y-6">
+      <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-6 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 z-10 items-start">
+        {/* Left 2 Cols: Instructions Body (Scrollable Section) */}
+        <div className="lg:col-span-2 space-y-6 lg:max-h-[calc(100vh-140px)] lg:overflow-y-auto lg:pr-3 custom-scrollbar">
           {/* Exam Summary Banner */}
           <div className="p-6 sm:p-7 rounded-3xl neu-glass-card flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF]">
                 <Award className="w-3.5 h-3.5 text-[#2563EB]" />
-                <span>Standard TCS-iON Examination Pattern</span>
+                <span>Standard Bank Examination Pattern</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
                 {examName}
@@ -146,7 +146,7 @@ export default function ExamInstructionsPage() {
                 Question Palette Symbol States
               </h2>
               <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
-                TCS-iON 5-Symbol Standards
+                Standard 5-Symbol Standards
               </span>
             </div>
 
@@ -190,7 +190,7 @@ export default function ExamInstructionsPage() {
         </div>
 
         {/* Right Col: Candidate Profile & Readiness Checkbox */}
-        <div className="space-y-6">
+        <div className="space-y-6 lg:sticky lg:top-24 h-fit">
           {/* Candidate Card */}
           <div className="p-6 rounded-3xl neu-glass-card space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">

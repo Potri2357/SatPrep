@@ -270,7 +270,7 @@ export default function ExamTestWindow() {
     }
   };
 
-  // Action: Mark for Review & Next (Official TCS iON flow)
+  // Action: Mark for Review & Next (Official exam flow)
   const handleMarkForReviewAndNext = () => {
     if (!currentQ) return;
     const elapsed = getElapsedSeconds();
@@ -1017,7 +1017,7 @@ export default function ExamTestWindow() {
         </aside>
       </div>
 
-      {/* MODAL 1: QUESTION PAPER MODAL (Official TCS iON Skim View) */}
+      {/* MODAL 1: QUESTION PAPER MODAL (Official Exam Skim View) */}
       {showQuestionPaper && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-slate-200 max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl animate-in fade-in duration-150">
@@ -1115,7 +1115,7 @@ export default function ExamTestWindow() {
               Please review your question response statistics before final submission.
             </p>
 
-            {/* Official TCS iON Summary Table */}
+            {/* Official Exam Summary Table */}
             <div className="rounded-xl border border-slate-200 overflow-hidden text-xs">
               <table className="w-full text-left border-collapse">
                 <tbody>
