@@ -198,12 +198,11 @@ export default function ExamInstructionsPage() {
             </h2>
 
             <div className="flex items-center gap-3.5 p-3.5 rounded-2xl neu-inset">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2563EB] to-[#1D4ED8] text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-blue-500/20">
-                AS
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#005CE6] to-[#0096D6] text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-blue-500/20">
+                SM
               </div>
               <div className="overflow-hidden">
-                <div className="font-bold text-slate-900 text-sm">Aditya Sharma</div>
-                <div className="text-[11px] text-slate-500 font-mono">Roll: 2026-IBPS-9021</div>
+                <div className="font-bold text-slate-900 text-sm">Sathyamoorthi M</div>
                 <div className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full inline-block mt-0.5 border border-emerald-200">
                   Verified Candidate
                 </div>

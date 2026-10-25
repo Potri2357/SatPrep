@@ -496,8 +496,8 @@ export const INITIAL_KEYS: Record<string, QuestionKey> = {
 class SatPrepStore {
   private user: UserProfile = {
     id: 'user-default-1',
-    name: 'Aditya Sharma',
-    email: 'aditya.sharma@example.com',
+    name: 'Sathyamoorthi M',
+    email: 'sathyamoorthi.m@example.com',
     role: 'student',
     target_exams: ['IBPS PO', 'SBI PO'],
     exam_date: '2026-11-15',

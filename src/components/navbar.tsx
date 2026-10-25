@@ -114,10 +114,10 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
               aria-expanded={profileDropdownOpen}
             >
               <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#005CE6] to-[#0096D6] text-white font-bold flex items-center justify-center text-xs shadow-xs">
-                AS
+                SM
               </div>
               <div className="hidden sm:block text-left">
-                <div className="text-xs font-bold text-slate-800 leading-tight">Aditya S.</div>
+                <div className="text-xs font-bold text-slate-800 leading-tight">Sathyamoorthi M.</div>
                 <div className="text-[10px] text-slate-400 leading-none">IBPS PO 2026</div>
               </div>
               <ChevronDown
@@ -132,8 +132,8 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
             {profileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
                 <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 mb-1">
-                  <div className="font-bold text-xs text-slate-900">Aditya Sharma</div>
-                  <div className="text-[11px] text-slate-500 truncate">aditya@satprep.in</div>
+                  <div className="font-bold text-xs text-slate-900">Sathyamoorthi M</div>
+                  <div className="text-[11px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
                   <div className="text-[10px] font-semibold text-[#005CE6] mt-1">Target: IBPS PO Prelims 2026</div>
                 </div>
 

@@ -19,8 +19,8 @@ import {
 } from 'lucide-react';
 
 export default function ProfilePage() {
-  const [name, setName] = useState('Aditya Sharma');
-  const [email, setEmail] = useState('aditya.sharma@example.com');
+  const [name, setName] = useState('Sathyamoorthi M');
+  const [email, setEmail] = useState('sathyamoorthi.m@example.com');
   const [targetExams, setTargetExams] = useState('IBPS PO 2026, SBI PO 2026');
   const [dailyGoal, setDailyGoal] = useState('40 Questions');
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -56,8 +56,8 @@ export default function ProfilePage() {
         {/* Profile Card */}
         <div className="p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-6">
           <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#2563EB] to-[#1D4ED8] text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
-              AS
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#005CE6] to-[#0096D6] text-white font-extrabold text-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+              SM
             </div>
             <div>
               <h2 className="text-lg font-bold text-slate-900">{name}</h2>

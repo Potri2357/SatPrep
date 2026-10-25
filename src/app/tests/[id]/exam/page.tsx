@@ -499,11 +499,10 @@ export default function ExamTestWindow() {
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-white text-[#005CE6] font-extrabold text-xs flex items-center justify-center shadow-xs">
-              AS
+              SM
             </div>
             <div className="hidden lg:block text-left leading-tight">
-              <div className="text-xs font-bold text-white">Aditya Sharma</div>
-              <div className="text-[10px] text-blue-200 font-mono">Roll: 2601094821</div>
+              <div className="text-xs font-bold text-white">Sathyamoorthi M</div>
             </div>
           </div>
 
