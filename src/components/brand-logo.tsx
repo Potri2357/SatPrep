@@ -44,21 +44,27 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           <clipPath id="brand-lower-right-clip">
             <polygon points="120,-20 120,120 -20,120" />
           </clipPath>
+
+          {/* Highlight ring gradient */}
+          <linearGradient id="brand-ring-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#005CE6" />
+            <stop offset="100%" stopColor="#0096D6" />
+          </linearGradient>
         </defs>
 
-        {/* Outer Ice Disc with subtle blue ring */}
+        {/* Outer Ice Disc with highlighted gradient ring */}
         <circle
           cx="50"
           cy="50"
           r="47"
           fill={isDark ? '#1E293B' : ice100}
-          stroke={isDark ? '#3B82F6' : iceRing}
-          strokeWidth="1.5"
+          stroke={isDark ? '#3B82F6' : 'url(#brand-ring-grad)'}
+          strokeWidth="2.5"
         />
         <circle cx="50" cy="50" r="46" fill="url(#brand-logo-grid)" />
 
         {/* The Rounded Plus Mark (Composite of horizontal and vertical capsule bars) */}
-        {/* Upper-Left half in Brand Royal Blue (#2563EB) */}
+        {/* Upper-Left half in Brand Royal Blue (#005CE6) */}
         <g clipPath="url(#brand-upper-left-clip)">
           <rect x="41" y="22" width="18" height="56" rx="9" fill={blue500} />
           <rect x="22" y="41" width="56" height="18" rx="9" fill={blue500} />
@@ -74,11 +80,11 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         <circle cx="50" cy="50" r="2.5" fill="#FFFFFF" fillOpacity="0.4" />
       </svg>
 
-      {/* Wordmark (Sat in solid Deep Navy #0F172A, Prep in Royal Blue #2563EB) */}
+      {/* Wordmark (Sat in solid Deep Navy #0F172A, Prep in Gradient Royal Blue #005CE6) */}
       {showWordmark && (
         <span className="font-extrabold tracking-tight text-xl font-['DM_Sans'] leading-none">
           <span className={isDark ? 'text-white' : 'text-[#0F172A]'}>Sat</span>
-          <span className={isDark ? 'text-blue-300' : 'text-[#2563EB]'}>Prep</span>
+          <span className={isDark ? 'text-blue-300' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6]'}>Prep</span>
         </span>
       )}
     </div>
