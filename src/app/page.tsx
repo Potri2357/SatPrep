@@ -6,7 +6,6 @@ import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import {
   ArrowRight,
-  CheckCircle2,
   ShieldCheck,
   Zap,
   BarChart3,
@@ -58,22 +57,6 @@ export default function LandingPage() {
               <Award className="w-5 h-5 text-[#005CE6] group-hover:scale-110 transition-transform" />
               <span>View Exam Results</span>
             </Link>
-          </div>
-
-          {/* Trust Metrics Pill Strip */}
-          <div className="mt-14 inline-flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs font-semibold text-slate-600 bg-white/80 backdrop-blur-md px-6 py-3 rounded-full border border-[#BFDBFE]/60 shadow-xs">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
-              <span>100% Verified KaTeX Math</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
-              <span>Authentic TCS-iON 5-Symbol Palette</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#10B981]" />
-              <span>Continuous Server Autosave</span>
-            </div>
           </div>
         </div>
 

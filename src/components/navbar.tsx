@@ -12,6 +12,10 @@ import {
   Shield,
   Award,
   LogOut,
+  Home,
+  Layers,
+  BookOpen,
+  BarChart2,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -58,12 +62,12 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Primary navigation destinations
+  // Primary navigation destinations with icons
   const navItems = [
-    { title: 'Home', href: '/' },
-    { title: 'Mock Tests', href: '/tests/new' },
-    { title: 'Practice', href: '/practice' },
-    { title: 'Progress', href: '/profile' },
+    { title: 'Home', href: '/', icon: Home },
+    { title: 'Mock Tests', href: '/tests/new', icon: Layers },
+    { title: 'Practice', href: '/practice', icon: BookOpen },
+    { title: 'Progress', href: '/profile', icon: BarChart2 },
   ];
 
   const isItemActive = (href: string) => {
@@ -73,9 +77,9 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
   return (
     <header className={cn("sticky top-0 z-50 w-full bg-[#F7FDFF]/90 backdrop-blur-xl border-b border-[#BCEBFC]/80 shadow-[0_1px_3px_rgba(0,92,230,0.03),0_4px_16px_rgba(0,92,230,0.03)] transition-all", className)}>
-      <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Left: Clean Brand Logo & Minimalist Navigation */}
-        <div className="flex items-center gap-8 lg:gap-10">
+      <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
+        {/* Left: Brand Logo */}
+        <div className="flex items-center">
           <Link
             href="/"
             className="flex items-center gap-2.5 transition-opacity hover:opacity-90 focus:outline-none"
@@ -86,31 +90,33 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
               SatPrep
             </span>
           </Link>
-
-          {/* Desktop Clean Navigation (No pill enclosures or menu clutter) */}
-          <nav className="hidden md:flex items-center gap-7" aria-label="Main Navigation">
-            {navItems.map((item) => {
-              const active = isItemActive(item.href);
-              return (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className={cn(
-                    "text-[13.5px] transition-colors duration-150 relative py-1.5",
-                    active
-                      ? "text-[#005CE6] font-bold"
-                      : "text-slate-600 font-medium hover:text-[#005CE6]"
-                  )}
-                >
-                  <span>{item.title}</span>
-                  {active && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#005CE6] rounded-full" />
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
         </div>
+
+        {/* Center: Centered Navigation Options with Icons */}
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 absolute left-1/2 -translate-x-1/2" aria-label="Main Navigation">
+          {navItems.map((item) => {
+            const active = isItemActive(item.href);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.title}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-1.5 text-[13.5px] transition-colors duration-150 relative py-1.5 group",
+                  active
+                    ? "text-[#005CE6] font-bold"
+                    : "text-slate-600 font-medium hover:text-[#005CE6]"
+                )}
+              >
+                <Icon className={cn("w-4 h-4 transition-colors", active ? "text-[#005CE6]" : "text-slate-400 group-hover:text-[#005CE6]")} />
+                <span>{item.title}</span>
+                {active && (
+                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#005CE6] rounded-full" />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
 
         {/* Right: Clean Candidate Avatar Only */}
         <div className="flex items-center gap-3 shrink-0">
@@ -208,18 +214,20 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
         <div className="md:hidden border-t border-[#BCEBFC] bg-[#F7FDFF] px-4 py-3 space-y-1 shadow-lg animate-in slide-in-from-top-2 duration-150">
           {navItems.map((item) => {
             const active = isItemActive(item.href);
+            const Icon = item.icon;
             return (
               <Link
                 key={item.title}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  "block px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors",
+                  "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors",
                   active
                     ? "text-[#005CE6] bg-[#005CE6]/10 font-bold"
                     : "text-slate-700 hover:bg-slate-100/60"
                 )}
               >
+                <Icon className={cn("w-4 h-4", active ? "text-[#005CE6]" : "text-slate-400")} />
                 <span>{item.title}</span>
               </Link>
             );
