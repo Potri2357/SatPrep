@@ -8,15 +8,10 @@ import { cn } from '@/lib/utils';
 import {
   Menu,
   X,
-  Layers,
-  BookOpen,
   User,
   Shield,
   Award,
   LogOut,
-  Home,
-  BarChart2,
-  CheckCircle2,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -27,7 +22,7 @@ export function CandidateAvatar({ size = 36, className = "" }: { size?: number; 
   return (
     <div
       className={cn(
-        "rounded-full bg-gradient-to-tr from-[#005CE6] via-[#0096D6] to-[#60CEF8] p-[2px] shadow-sm transition-all duration-200 hover:shadow-md hover:scale-105 active:scale-95 shrink-0 select-none",
+        "rounded-full bg-gradient-to-tr from-[#005CE6] via-[#0096D6] to-[#60CEF8] p-[2px] shadow-2xs transition-all duration-200 hover:scale-105 active:scale-95 shrink-0 select-none",
         className
       )}
       style={{ width: size, height: size }}
@@ -65,10 +60,10 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
   // Primary navigation destinations
   const navItems = [
-    { title: 'Home', href: '/', icon: Home },
-    { title: 'Mock Tests', href: '/tests/new', icon: Layers },
-    { title: 'Practice', href: '/practice', icon: BookOpen },
-    { title: 'Progress', href: '/profile', icon: BarChart2 },
+    { title: 'Home', href: '/' },
+    { title: 'Mock Tests', href: '/tests/new' },
+    { title: 'Practice', href: '/practice' },
+    { title: 'Progress', href: '/profile' },
   ];
 
   const isItemActive = (href: string) => {
@@ -77,55 +72,48 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   };
 
   return (
-    <header className={cn("sticky top-0 z-50 w-full bg-[#08152D]/95 backdrop-blur-2xl border-b border-[#005CE6]/30 shadow-[0_4px_30px_rgba(0,18,50,0.22)] transition-all", className)}>
+    <header className={cn("sticky top-0 z-50 w-full bg-[#F7FDFF]/90 backdrop-blur-xl border-b border-[#BCEBFC]/80 shadow-[0_1px_3px_rgba(0,92,230,0.03),0_4px_16px_rgba(0,92,230,0.03)] transition-all", className)}>
       <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Left: Brand Logo & Segmented Nav */}
-        <div className="flex items-center gap-6 lg:gap-8">
+        {/* Left: Clean Brand Logo & Minimalist Navigation */}
+        <div className="flex items-center gap-8 lg:gap-10">
           <Link
             href="/"
-            className="flex items-center gap-2.5 transition-all hover:opacity-95 focus:outline-none group"
+            className="flex items-center gap-2.5 transition-opacity hover:opacity-90 focus:outline-none"
             aria-label="SatPrep - Banking Exam Prep"
           >
-            <div className="transition-transform group-hover:scale-105">
-              <BrandLogo size={32} showWordmark={false} />
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-[17px] tracking-tight text-white">
-                SatPrep
-              </span>
-              <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md bg-[#005CE6] text-white text-[10px] font-mono font-bold tracking-wider uppercase border border-[#60CEF8]/40 shadow-xs">
-                Bank Prep
-              </span>
-            </div>
+            <BrandLogo size={32} showWordmark={false} />
+            <span className="font-extrabold text-[18px] tracking-tight text-slate-900">
+              SatPrep
+            </span>
           </Link>
 
-          {/* Desktop Segmented Navigation Bar (Frosted Navy Pills) */}
-          <nav className="hidden md:flex items-center p-1 bg-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.12] shadow-inner" aria-label="Main Navigation">
+          {/* Desktop Clean Navigation (No pill enclosures or menu clutter) */}
+          <nav className="hidden md:flex items-center gap-7" aria-label="Main Navigation">
             {navItems.map((item) => {
               const active = isItemActive(item.href);
-              const Icon = item.icon;
               return (
                 <Link
                   key={item.title}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all duration-150 select-none",
+                    "text-[13.5px] transition-colors duration-150 relative py-1.5",
                     active
-                      ? "bg-[#005CE6] text-white font-bold shadow-md shadow-[#005CE6]/40"
-                      : "text-blue-100/75 font-semibold hover:text-white hover:bg-white/[0.10]"
+                      ? "text-[#005CE6] font-bold"
+                      : "text-slate-600 font-medium hover:text-[#005CE6]"
                   )}
                 >
-                  <Icon className={cn("w-3.5 h-3.5 shrink-0", active ? "text-white" : "text-blue-200/60")} />
                   <span>{item.title}</span>
+                  {active && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#005CE6] rounded-full" />
+                  )}
                 </Link>
               );
             })}
           </nav>
         </div>
 
-        {/* Right: User Profile Avatar + Mobile Toggle (Removed Start Test) */}
+        {/* Right: Clean Candidate Avatar Only */}
         <div className="flex items-center gap-3 shrink-0">
-          {/* User Account Controls (Avatar Icon Only) */}
           <div className="relative" ref={dropdownRef}>
             <button
               type="button"
@@ -135,81 +123,69 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                 setProfileDropdownOpen((prev) => !prev);
               }}
               className={cn(
-                "p-0.5 rounded-full transition-all cursor-pointer select-none focus:outline-none relative flex items-center justify-center",
-                profileDropdownOpen
-                  ? "ring-2 ring-[#60CEF8] ring-offset-2 ring-offset-[#08152D] shadow-sm"
-                  : "hover:ring-2 hover:ring-[#60CEF8]/50 hover:ring-offset-1 hover:ring-offset-[#08152D]"
+                "p-0.5 rounded-full border border-[#BCEBFC] hover:border-[#005CE6] hover:ring-2 hover:ring-[#005CE6]/20 transition-all cursor-pointer select-none focus:outline-none flex items-center justify-center",
+                profileDropdownOpen ? "border-[#005CE6] ring-2 ring-[#005CE6]/25 shadow-xs" : ""
               )}
               aria-label="Candidate Profile Menu"
               aria-expanded={profileDropdownOpen}
               title="Sathyamoorthi M (Click for Profile Menu)"
             >
-              <CandidateAvatar size={38} />
-              {/* Online pulse indicator dot */}
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#08152D]" />
+              <CandidateAvatar size={36} />
             </button>
 
-            {/* Dropdown Menu (Styled Dark Frosted Glass) */}
+            {/* Clean Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2.5 w-72 rounded-2xl bg-[#0B1A35]/98 backdrop-blur-2xl border border-blue-800/60 shadow-[0_20px_60px_rgba(0,10,30,0.6)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1 text-white">
-                {/* Profile Header (Target line completely removed) */}
-                <div className="p-3 rounded-xl bg-blue-950/80 border border-blue-800/80 flex items-center gap-3">
-                  <CandidateAvatar size={38} />
+              <div className="absolute right-0 mt-2.5 w-64 rounded-2xl bg-white/98 backdrop-blur-2xl border border-[#BCEBFC] shadow-[0_12px_40px_rgba(0,92,230,0.08)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
+                {/* Profile Header (Clean: No Verified Student badge, No green dot, No target line) */}
+                <div className="p-3 rounded-xl bg-[#F0FAFF] border border-[#BCEBFC]/60 flex items-center gap-3">
+                  <CandidateAvatar size={36} />
                   <div className="min-w-0 flex-1">
-                    <div className="font-bold text-xs text-white truncate">Sathyamoorthi M</div>
-                    <div className="text-[11px] text-blue-200/80 truncate">sathyamoorthi@satprep.in</div>
-                    <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/40">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                      <span>Verified Student</span>
-                    </div>
+                    <div className="font-bold text-xs text-slate-900 truncate">Sathyamoorthi M</div>
+                    <div className="text-[11px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
                   </div>
                 </div>
 
-                <div className="px-2 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-300/70">
+                <div className="px-2 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Student Portal
                 </div>
 
                 <Link
                   href="/profile"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-blue-100 hover:text-white hover:bg-white/10 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-[#F0FAFF] transition-colors"
                 >
-                  <User className="w-3.5 h-3.5 text-blue-300" />
-                  <span>Candidate Profile &amp; Settings</span>
+                  <User className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Profile &amp; Settings</span>
                 </Link>
 
                 <Link
                   href="/tests/result/sample-attempt-1"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-blue-100 hover:text-white hover:bg-white/10 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-[#F0FAFF] transition-colors"
                 >
-                  <Award className="w-3.5 h-3.5 text-blue-300" />
-                  <span>Exam Results &amp; Analytics</span>
+                  <Award className="w-3.5 h-3.5 text-slate-400" />
+                  <span>Exam Results</span>
                 </Link>
 
-                <div className="h-px bg-blue-900/60 my-1" />
-
-                <div className="px-2 pt-1 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-300/70">
-                  Administration
-                </div>
+                <div className="h-px bg-slate-100 my-1" />
 
                 <Link
                   href="/admin"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-blue-100 hover:text-white hover:bg-white/10 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-[#F0FAFF] transition-colors"
                 >
-                  <Shield className="w-3.5 h-3.5 text-blue-300" />
+                  <Shield className="w-3.5 h-3.5 text-slate-400" />
                   <span>Admin Console</span>
                 </Link>
 
-                <div className="h-px bg-blue-900/60 my-1" />
+                <div className="h-px bg-slate-100 my-1" />
 
                 <Link
                   href="/auth"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:bg-rose-950/40 hover:text-rose-200 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors"
                 >
-                  <LogOut className="w-3.5 h-3.5 text-rose-400" />
+                  <LogOut className="w-3.5 h-3.5 text-rose-500" />
                   <span>Sign Out</span>
                 </Link>
               </div>
@@ -219,7 +195,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
             aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -227,31 +203,27 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      {/* Mobile Drawer (Deep Cobalt Frosted Sheet) */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-blue-900/50 bg-[#08152D]/98 backdrop-blur-2xl px-4 py-3 space-y-2 shadow-2xl animate-in slide-in-from-top-2 duration-150">
-          <div className="grid grid-cols-2 gap-1.5 pb-1">
-            {navItems.map((item) => {
-              const active = isItemActive(item.href);
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors",
-                    active
-                      ? "text-white bg-[#005CE6] font-bold shadow-xs"
-                      : "text-blue-100/80 hover:bg-white/10"
-                  )}
-                >
-                  <Icon className={cn("w-4 h-4 shrink-0", active ? "text-white" : "text-blue-300/70")} />
-                  <span>{item.title}</span>
-                </Link>
-              );
-            })}
-          </div>
+        <div className="md:hidden border-t border-[#BCEBFC] bg-[#F7FDFF] px-4 py-3 space-y-1 shadow-lg animate-in slide-in-from-top-2 duration-150">
+          {navItems.map((item) => {
+            const active = isItemActive(item.href);
+            return (
+              <Link
+                key={item.title}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={cn(
+                  "block px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors",
+                  active
+                    ? "text-[#005CE6] bg-[#005CE6]/10 font-bold"
+                    : "text-slate-700 hover:bg-slate-100/60"
+                )}
+              >
+                <span>{item.title}</span>
+              </Link>
+            );
+          })}
         </div>
       )}
     </header>
