@@ -354,9 +354,85 @@ export default function ExamTestWindow() {
   const counts = {
     answered: Object.values(answers).filter((a) => a.state === 'answered').length,
     not_answered: Object.values(answers).filter((a) => a.state === 'not_answered').length,
-    not_visited: Object.values(answers).filter((a) => a.state === 'not_visited').length,
     marked_for_review: Object.values(answers).filter((a) => a.state === 'marked_for_review').length,
     answered_and_marked: Object.values(answers).filter((a) => a.state === 'answered_and_marked').length,
+    get not_visited() {
+      return Math.max(0, questions.length - (this.answered + this.not_answered + this.marked_for_review + this.answered_and_marked));
+    },
+  };
+
+  // Reusable Question Palette Button Renderer
+  const renderPaletteButton = (q: AssembledQuestion, idx: number) => {
+    const isCurrent = idx === currentIdx;
+
+    if (isReviewMode && reviewQuestions.length > 0) {
+      const revQ = reviewQuestions[idx];
+      const isCorrect = revQ?.is_correct;
+      const answered = !!revQ?.your_answer;
+
+      let baseStyle = "bg-slate-100 text-slate-500 border border-slate-200/90";
+      if (isCorrect) {
+        baseStyle = "bg-emerald-500 text-white border border-emerald-600 shadow-2xs font-bold";
+      } else if (answered) {
+        baseStyle = "bg-rose-500 text-white border border-rose-600 shadow-2xs font-bold";
+      }
+
+      return (
+        <button
+          key={q.id}
+          onClick={() => {
+            handlePaletteJump(idx);
+            setIsMobilePaletteOpen(false);
+          }}
+          className={cn(
+            "h-10 w-full rounded-xl font-mono text-xs font-semibold flex items-center justify-center transition-all cursor-pointer relative",
+            baseStyle,
+            isCurrent && "relative z-10 border-2 border-[#005CE6] ring-2 ring-[#005CE6]/30 shadow-xs font-black"
+          )}
+        >
+          {idx + 1}
+        </button>
+      );
+    }
+
+    const ans = answers[q.id];
+    const state = ans?.state || 'not_visited';
+
+    let stateStyle = "bg-[#F8FAFC] text-slate-700 border border-slate-200/90 hover:bg-[#F0FAFF] hover:border-[#60CEF8] hover:text-[#005CE6] shadow-2xs";
+
+    if (state === 'answered') {
+      stateStyle = "bg-emerald-600 text-white font-bold border border-emerald-700/80 shadow-2xs hover:bg-emerald-700";
+    } else if (state === 'not_answered') {
+      stateStyle = "bg-rose-600 text-white font-bold border border-rose-700/80 shadow-2xs hover:bg-rose-700";
+    } else if (state === 'marked_for_review') {
+      stateStyle = "bg-purple-600 text-white font-bold border border-purple-700/80 shadow-2xs hover:bg-purple-700";
+    } else if (state === 'answered_and_marked') {
+      stateStyle = "bg-purple-600 text-white font-bold border border-purple-700/80 shadow-2xs hover:bg-purple-700";
+    }
+
+    return (
+      <button
+        key={q.id}
+        onClick={() => {
+          handlePaletteJump(idx);
+          setIsMobilePaletteOpen(false);
+        }}
+        className={cn(
+          "h-10 w-full rounded-xl font-mono text-xs font-semibold flex items-center justify-center transition-all cursor-pointer relative",
+          stateStyle,
+          isCurrent && (
+            state === 'not_visited'
+              ? "relative z-10 bg-[#F0FAFF] text-[#005CE6] border-2 border-[#005CE6] ring-2 ring-[#005CE6]/30 font-black shadow-xs"
+              : "relative z-10 border-2 border-white ring-2 ring-[#005CE6] font-black shadow-xs"
+          )
+        )}
+      >
+        {idx + 1}
+        {state === 'answered_and_marked' && (
+          <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 ring-1.5 ring-white" />
+        )}
+      </button>
+    );
   };
 
   // Fullscreen Handler
@@ -845,93 +921,78 @@ export default function ExamTestWindow() {
           )}
         </main>
 
-        {/* RIGHT PALETTE RAIL (Authentic TCS iON 5-State Legend & Grid) */}
-        <aside className="w-80 bg-white border-l border-slate-200 p-5 hidden lg:flex flex-col justify-between shrink-0 z-20">
+        {/* RIGHT PALETTE RAIL (Improved Modern Status Legend & Grid) */}
+        <aside className="w-80 bg-white border-l border-slate-200 p-4 sm:p-5 hidden lg:flex flex-col justify-between shrink-0 z-20">
           <div className="space-y-4">
-
-            {/* TCS iON 5-Symbol Status Legend */}
-            <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 bg-slate-50/70 p-3 rounded-xl border border-slate-200/80">
-              <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-md bg-emerald-600 text-white font-mono text-[10px] font-bold flex items-center justify-center">
-                  {counts.answered}
+            {/* Status Summary & Counts Card */}
+            <div className="p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/80 space-y-2.5">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                <span>Question Status</span>
+                <span className="font-mono text-[11px] font-semibold text-[#005CE6] bg-[#005CE6]/10 px-2 py-0.5 rounded-md border border-[#005CE6]/20">
+                  {counts.answered} / {questions.length} Attempted
                 </span>
-                <span>Answered</span>
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-md bg-rose-600 text-white font-mono text-[10px] font-bold flex items-center justify-center">
-                  {counts.not_answered}
-                </span>
-                <span>Not Answered</span>
+              {/* Progress bar */}
+              <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                <div
+                  className="bg-[#005CE6] h-1.5 rounded-full transition-all duration-300"
+                  style={{ width: `${questions.length > 0 ? (counts.answered / questions.length) * 100 : 0}%` }}
+                />
               </div>
 
-              <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-md bg-slate-200 text-slate-700 font-mono text-[10px] font-bold flex items-center justify-center">
-                  {counts.not_visited}
-                </span>
-                <span>Not Visited</span>
-              </div>
-
-              <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center">
-                  {counts.marked_for_review}
-                </span>
-                <span>Marked for Review</span>
-              </div>
-
-              <div className="col-span-2 flex items-center gap-1.5 pt-1 border-t border-slate-200/60">
-                <div className="relative">
-                  <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center">
-                    {counts.answered_and_marked}
+              {/* 5 Status Legend Chips */}
+              <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600 pt-0.5">
+                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                  <span className="w-5 h-5 rounded-md bg-emerald-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {counts.answered}
                   </span>
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white" />
+                  <span className="truncate font-medium">Answered</span>
                 </div>
-                <span className="text-[10px] text-slate-500 leading-tight">
-                  Ans &amp; Marked for Review (Evaluated)
-                </span>
+
+                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                  <span className="w-5 h-5 rounded-md bg-rose-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {counts.not_answered}
+                  </span>
+                  <span className="truncate font-medium">Not Answered</span>
+                </div>
+
+                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                  <span className="w-5 h-5 rounded-md bg-slate-200 text-slate-700 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {counts.not_visited}
+                  </span>
+                  <span className="truncate font-medium">Not Visited</span>
+                </div>
+
+                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                  <span className="w-5 h-5 rounded-md bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {counts.marked_for_review}
+                  </span>
+                  <span className="truncate font-medium">Review</span>
+                </div>
+
+                <div className="col-span-2 flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                  <div className="relative shrink-0">
+                    <span className="w-5 h-5 rounded-md bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center">
+                      {counts.answered_and_marked}
+                    </span>
+                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-white" />
+                  </div>
+                  <span className="text-[10px] text-slate-600 truncate font-medium">
+                    Ans &amp; Review (Evaluated)
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* 5-Column Question Grid */}
             <div className="space-y-1.5">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Choose a Question:
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-400 px-1">
+                <span>Select Question:</span>
+                <span className="font-mono text-[10px] font-normal text-slate-400">{questions.length} Qs</span>
               </div>
-              <div className="grid grid-cols-5 gap-2 max-h-[calc(100vh-420px)] overflow-y-auto pr-1">
-                {questions.map((q, idx) => {
-                  const ans = answers[q.id];
-                  const state = ans?.state || 'not_visited';
-                  const isCurrent = idx === currentIdx;
-
-                  // Official TCS iON Color & Shape
-                  let tileStyle = 'bg-slate-100 text-slate-700 border border-slate-200 rounded-md';
-                  if (state === 'answered') {
-                    tileStyle = 'bg-emerald-600 text-white rounded-md';
-                  } else if (state === 'not_answered') {
-                    tileStyle = 'bg-rose-600 text-white rounded-md';
-                  } else if (state === 'marked_for_review') {
-                    tileStyle = 'bg-purple-600 text-white rounded-full';
-                  } else if (state === 'answered_and_marked') {
-                    tileStyle = 'bg-purple-600 text-white rounded-full ring-2 ring-emerald-400';
-                  }
-
-                  return (
-                    <button
-                      key={q.id}
-                      onClick={() => handlePaletteJump(idx)}
-                      className={cn(
-                        "w-10 h-10 font-mono font-bold text-xs flex items-center justify-center transition-all cursor-pointer relative",
-                        tileStyle,
-                        isCurrent && "ring-2 ring-blue-600 ring-offset-2 scale-105 font-extrabold"
-                      )}
-                    >
-                      {idx + 1}
-                      {state === 'answered_and_marked' && (
-                        <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400" />
-                      )}
-                    </button>
-                  );
-                })}
+              <div className="grid grid-cols-5 gap-2 max-h-[calc(100vh-420px)] overflow-y-auto p-1.5 rounded-2xl border border-slate-200/70 bg-slate-50/50">
+                {questions.map((q, idx) => renderPaletteButton(q, idx))}
               </div>
             </div>
           </div>
@@ -948,9 +1009,9 @@ export default function ExamTestWindow() {
             ) : (
               <button
                 onClick={() => setShowSubmitModal(true)}
-                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+                className="w-full py-2.5 rounded-xl bg-[#005CE6] hover:bg-[#0047b3] text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-xs hover:shadow"
               >
-                Submit Exam
+                Submit Examination
               </button>
             )}
           </div>
@@ -1118,25 +1179,8 @@ export default function ExamTestWindow() {
               </div>
 
               {/* 5 Column Grid */}
-              <div className="grid grid-cols-5 gap-2">
-                {questions.map((q, idx) => {
-                  const state = answers[q.id]?.state || 'not_visited';
-                  let tileStyle = 'bg-slate-100 text-slate-700 border border-slate-200 rounded-md';
-                  if (state === 'answered') tileStyle = 'bg-emerald-600 text-white rounded-md';
-                  else if (state === 'not_answered') tileStyle = 'bg-rose-600 text-white rounded-md';
-                  else if (state === 'marked_for_review') tileStyle = 'bg-purple-600 text-white rounded-full';
-                  else if (state === 'answered_and_marked') tileStyle = 'bg-purple-600 text-white rounded-full ring-2 ring-emerald-400';
-
-                  return (
-                    <button
-                      key={q.id}
-                      onClick={() => handlePaletteJump(idx)}
-                      className={cn("w-10 h-10 font-mono font-bold text-xs flex items-center justify-center", tileStyle)}
-                    >
-                      {idx + 1}
-                    </button>
-                  );
-                })}
+              <div className="grid grid-cols-5 gap-2 p-1.5 rounded-2xl border border-slate-200/70 bg-slate-50/50">
+                {questions.map((q, idx) => renderPaletteButton(q, idx))}
               </div>
             </div>
 
@@ -1145,9 +1189,9 @@ export default function ExamTestWindow() {
                 setIsMobilePaletteOpen(false);
                 setShowSubmitModal(true);
               }}
-              className="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold uppercase tracking-wider mt-6 shadow-sm"
+              className="w-full py-2.5 rounded-xl bg-[#005CE6] hover:bg-[#0047b3] text-white text-xs font-bold uppercase tracking-wider mt-6 shadow-xs"
             >
-              Submit Exam
+              Submit Examination
             </button>
           </div>
         </div>
