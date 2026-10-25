@@ -49,18 +49,18 @@ export default function LandingPage() {
             Practice calibrated questions in an exact TCS-iON exam environment. Server-authoritative timer, psychometric distractor explanations, and zero mock latency.
           </p>
 
-          {/* CTA Buttons Strip */}
+          {/* CTA Chip Buttons Strip */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/dashboard"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm shadow-xl shadow-[#2563EB]/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="neu-chip-primary text-sm px-8 py-3.5"
             >
               <span>Launch Mock Test</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/tests/new"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white hover:bg-slate-50 border border-[#BFDBFE] text-slate-800 font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition-all hover:border-[#2563EB]/40"
+              className="chip-btn text-sm px-8 py-3.5"
             >
               <Layers className="w-4 h-4 text-[#2563EB]" />
               <span>Assemble Custom Test</span>
@@ -212,9 +212,9 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
               href="/tests/new"
-              className="p-6 rounded-3xl bg-gradient-to-b from-[#F0F6FF] to-white border border-[#BFDBFE] hover:shadow-lg hover:shadow-blue-500/5 transition-all group"
+              className="neu-glass-card p-6 rounded-3xl hover:scale-[1.02] transition-all group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-[#DBEAFE] text-[#2563EB] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-2xl bg-[#DBEAFE] text-[#2563EB] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
                 <Award className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
@@ -228,9 +228,9 @@ export default function LandingPage() {
 
             <Link
               href="/practice"
-              className="p-6 rounded-3xl bg-gradient-to-b from-[#F0F6FF] to-white border border-[#BFDBFE] hover:shadow-lg hover:shadow-blue-500/5 transition-all group"
+              className="neu-glass-card p-6 rounded-3xl hover:scale-[1.02] transition-all group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-[#D1FAE5] text-[#10B981] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-2xl bg-[#D1FAE5] text-[#10B981] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
                 <Target className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
@@ -244,9 +244,9 @@ export default function LandingPage() {
 
             <Link
               href="/tests/new"
-              className="p-6 rounded-3xl bg-gradient-to-b from-[#F0F6FF] to-white border border-[#BFDBFE] hover:shadow-lg hover:shadow-blue-500/5 transition-all group"
+              className="neu-glass-card p-6 rounded-3xl hover:scale-[1.02] transition-all group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-[#EDE9FE] text-[#8B5CF6] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-2xl bg-[#EDE9FE] text-[#8B5CF6] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
                 <BarChart3 className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">

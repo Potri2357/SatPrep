@@ -88,8 +88,8 @@ export default function StudentDashboard() {
 
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-8 relative z-10">
-        {/* Welcome & Exam Countdown Banner (Glassmorphism) */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 sm:p-7 rounded-3xl bg-white/85 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(37,99,235,0.05)]">
+        {/* Welcome & Exam Countdown Banner (Glassmorphism + Neumorphism) */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 sm:p-7 rounded-3xl neu-glass-card">
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A]">
               Good morning, Aditya
@@ -101,7 +101,7 @@ export default function StudentDashboard() {
           <div className="flex items-center gap-3">
             <Link
               href="/tests/new"
-              className="px-6 py-3 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-bold flex items-center gap-2 shadow-lg shadow-[#2563EB]/25 transition-all hover:scale-[1.01]"
+              className="neu-chip-primary"
             >
               <Zap className="w-4 h-4" />
               <span>Build Custom Test</span>
@@ -112,7 +112,7 @@ export default function StudentDashboard() {
         {/* Bento Grid: Today's Goal Ring + Quick Starts */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Col 1: Today's Goal & Mastery */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white/85 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(37,99,235,0.05)] space-y-5">
+          <div className="p-6 sm:p-7 rounded-3xl neu-glass-card space-y-5">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-bold text-[#0F172A]">Today&apos;s Quant Goal</h2>
               <span className="text-xs font-bold text-[#2563EB] bg-[#EFF6FF] px-2.5 py-0.5 rounded-full border border-[#BFDBFE]">
@@ -157,7 +157,7 @@ export default function StudentDashboard() {
           </div>
 
           {/* Col 2 & 3: Quick Start Mocks in Clean White & Blue */}
-          <div className="lg:col-span-2 p-6 sm:p-7 rounded-3xl bg-white/85 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(37,99,235,0.05)] space-y-4">
+          <div className="lg:col-span-2 p-6 sm:p-7 rounded-3xl neu-glass-card space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-bold text-[#0F172A]">Instant Launch Modes</h2>
@@ -169,13 +169,13 @@ export default function StudentDashboard() {
               {/* Full Mock Card */}
               <div
                 onClick={() => handleQuickMock('full_mock')}
-                className="p-5 rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#EFF6FF] to-white hover:border-[#2563EB] cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md group"
+                className="p-5 rounded-2xl border border-[#BFDBFE]/80 bg-white/70 backdrop-blur-md shadow-[4px_4px_14px_rgba(37,99,235,0.05),-4px_-4px_14px_rgba(255,255,255,0.95)] hover:border-[#2563EB] cursor-pointer transition-all hover:scale-[1.01] group"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="px-3 py-0.5 rounded-full text-[11px] font-bold bg-[#DBEAFE] text-[#1E40AF]">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-bold neu-pill text-[#1E40AF]">
                     Full Exam Pattern
                   </span>
-                  <div className="w-8 h-8 rounded-full bg-[#2563EB] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-[#2563EB]/25">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#2563EB] to-[#1D4ED8] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-[#2563EB]/25">
                     <Play className="w-4 h-4 fill-white" />
                   </div>
                 </div>
@@ -186,10 +186,10 @@ export default function StudentDashboard() {
               {/* Topic Speed Drill */}
               <div
                 onClick={() => handleQuickMock('topic_test')}
-                className="p-5 rounded-2xl border border-[#BFDBFE] bg-gradient-to-br from-[#EFF6FF] to-white hover:border-[#2563EB] cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md group"
+                className="p-5 rounded-2xl border border-[#BFDBFE]/80 bg-white/70 backdrop-blur-md shadow-[4px_4px_14px_rgba(37,99,235,0.05),-4px_-4px_14px_rgba(255,255,255,0.95)] hover:border-[#2563EB] cursor-pointer transition-all hover:scale-[1.01] group"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="px-3 py-0.5 rounded-full text-[11px] font-bold bg-[#D1FAE5] text-[#065F46]">
+                  <span className="px-3 py-1 rounded-full text-[11px] font-bold neu-pill text-[#065F46]">
                     Speed Ramp
                   </span>
                   <div className="w-8 h-8 rounded-full bg-[#10B981] text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md shadow-[#10B981]/25">
@@ -204,10 +204,10 @@ export default function StudentDashboard() {
         </div>
 
         {/* Actionable Weak-Area Remediation Strip */}
-        <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-r from-red-500/10 via-amber-500/5 to-white border border-red-200/80 shadow-sm">
+        <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-r from-red-500/10 via-amber-500/5 to-white/90 backdrop-blur-xl border border-red-200/80 shadow-[6px_6px_20px_rgba(239,68,68,0.06),-6px_-6px_20px_rgba(255,255,255,0.95)]">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-11 h-11 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center shrink-0 shadow-sm">
+              <div className="w-11 h-11 rounded-2xl bg-red-100/80 border border-red-200 text-red-600 flex items-center justify-center shrink-0 shadow-xs">
                 <AlertCircle className="w-6 h-6" />
               </div>
               <div>
@@ -222,7 +222,7 @@ export default function StudentDashboard() {
 
             <button
               onClick={() => handleQuickMock('weak_area')}
-              className="px-6 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold shrink-0 flex items-center gap-2 shadow-md shadow-red-600/20 transition-all hover:scale-[1.02]"
+              className="px-6 py-2.5 rounded-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white text-xs font-bold shrink-0 flex items-center gap-2 shadow-[4px_4px_12px_rgba(239,68,68,0.3),-2px_-2px_8px_rgba(255,255,255,0.8)] transition-all hover:scale-[1.02]"
             >
               <span>Practise Weak Topic Now</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -231,10 +231,10 @@ export default function StudentDashboard() {
         </div>
 
         {/* Recent Results & Progress in Clean White Card */}
-        <div className="p-6 sm:p-7 rounded-3xl bg-white/85 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(37,99,235,0.05)] space-y-4">
+        <div className="p-6 sm:p-7 rounded-3xl neu-glass-card space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-[#0F172A]">Recent Test Results</h2>
-            <Link href="/practice" className="text-xs font-bold text-[#2563EB] hover:underline flex items-center gap-1">
+            <Link href="/practice" className="chip-btn text-xs">
               <span>View All Attempts</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
@@ -264,7 +264,7 @@ export default function StudentDashboard() {
 
                   <Link
                     href={`/tests/result/sample-attempt-1`}
-                    className="px-4 py-2 rounded-full text-xs font-bold bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#1E40AF] border border-[#BFDBFE] transition-colors"
+                    className="chip-btn text-xs text-[#1E40AF]"
                   >
                     View Analysis
                   </Link>

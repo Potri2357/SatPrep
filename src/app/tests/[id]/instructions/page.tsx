@@ -71,9 +71,9 @@ export default function ExamInstructionsPage() {
         {/* Left 2 Cols: Instructions Body */}
         <div className="lg:col-span-2 space-y-6">
           {/* Exam Summary Banner */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="p-6 sm:p-7 rounded-3xl neu-glass-card flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF]">
                 <Award className="w-3.5 h-3.5 text-[#2563EB]" />
                 <span>Standard TCS-iON Examination Pattern</span>
               </div>
@@ -86,15 +86,15 @@ export default function ExamInstructionsPage() {
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-              <div className="px-4 py-3 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60 text-center shadow-xs">
+              <div className="px-4 py-3 rounded-2xl neu-pill text-center">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Duration</span>
                 <span className="text-base font-extrabold font-mono text-[#2563EB]">{durationMin} Mins</span>
               </div>
-              <div className="px-4 py-3 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60 text-center shadow-xs">
+              <div className="px-4 py-3 rounded-2xl neu-pill text-center">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Questions</span>
                 <span className="text-base font-extrabold font-mono text-slate-900">{questionCount} Qs</span>
               </div>
-              <div className="px-4 py-3 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60 text-center shadow-xs">
+              <div className="px-4 py-3 rounded-2xl neu-pill text-center">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Marks</span>
                 <span className="text-base font-extrabold font-mono text-slate-900">{totalMarks}.00</span>
               </div>
@@ -192,12 +192,12 @@ export default function ExamInstructionsPage() {
         {/* Right Col: Candidate Profile & Readiness Checkbox */}
         <div className="space-y-6">
           {/* Candidate Card */}
-          <div className="p-6 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
+          <div className="p-6 rounded-3xl neu-glass-card space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Candidate Profile Verification
             </h2>
 
-            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60">
+            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl neu-inset">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2563EB] to-[#1D4ED8] text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-blue-500/20">
                 AS
               </div>
@@ -212,7 +212,7 @@ export default function ExamInstructionsPage() {
 
             {/* Device & Session Diagnostic */}
             <div className="pt-1 space-y-2 text-xs">
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
                 <div className="flex items-center gap-2 text-slate-600">
                   <Monitor className="w-4 h-4 text-emerald-600" />
                   <span>Display Resolution</span>
@@ -220,7 +220,7 @@ export default function ExamInstructionsPage() {
                 <span className="font-bold text-emerald-700 font-mono">1920 x 1080 (HD)</span>
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
                 <div className="flex items-center gap-2 text-slate-600">
                   <Wifi className="w-4 h-4 text-emerald-600" />
                   <span>Network Latency</span>
@@ -243,11 +243,11 @@ export default function ExamInstructionsPage() {
                 </span>
               </label>
 
-              {/* Ready to Begin Button */}
+              {/* Ready to Begin Button (Chip UI Primary) */}
               <button
                 onClick={handleStartExam}
                 disabled={!hasAgreed}
-                className="w-full h-12 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.01]"
+                className="w-full neu-chip-primary disabled:opacity-40 disabled:cursor-not-allowed uppercase tracking-wider text-xs py-3.5"
               >
                 <span>I am ready to begin</span>
                 <ArrowRight className="w-4 h-4" />

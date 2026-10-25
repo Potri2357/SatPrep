@@ -147,8 +147,8 @@ export default function NewTestBuilderPage() {
             </p>
           </div>
 
-          {/* Section 1: Exam & Mode Picker (Glass Card) */}
-          <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-5">
+          {/* Section 1: Exam & Mode Picker (Neumorphic Glass Card) */}
+          <div className="p-6 sm:p-7 rounded-3xl neu-glass-card space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">1</span>
@@ -196,7 +196,7 @@ export default function NewTestBuilderPage() {
               <label className="block text-xs font-bold text-slate-700 mb-2">
                 Test Mode
               </label>
-              <div className="p-1 rounded-full bg-slate-100 border border-slate-200 flex gap-1">
+              <div className="p-1 rounded-full neu-inset flex gap-1">
                 {[
                   { id: 'topic_test', label: 'Topic Drill' },
                   { id: 'sectional', label: 'Sectional (20 min)' },
@@ -209,8 +209,8 @@ export default function NewTestBuilderPage() {
                       onClick={() => setMode(m.id as any)}
                       className={`flex-1 py-2 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md shadow-blue-500/25 scale-[1.01]'
-                          : 'text-slate-600 hover:text-blue-600'
+                          ? 'neu-chip-primary text-white scale-[1.01]'
+                          : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
                       }`}
                     >
                       {m.label}
@@ -221,8 +221,8 @@ export default function NewTestBuilderPage() {
             </div>
           </div>
 
-          {/* Section 2: Question Source & Chips Configuration (Glass Card) */}
-          <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-6">
+          {/* Section 2: Question Source & Chips Configuration (Neumorphic Glass Card) */}
+          <div className="p-6 sm:p-7 rounded-3xl neu-glass-card space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">2</span>
@@ -230,13 +230,13 @@ export default function NewTestBuilderPage() {
               </span>
 
               {/* Source Toggle Pills */}
-              <div className="p-1 rounded-full bg-slate-100 border border-slate-200 flex gap-1 self-start sm:self-auto">
+              <div className="p-1 rounded-full neu-inset flex gap-1 self-start sm:self-auto">
                 <button
                   onClick={() => setSourceType('auto')}
                   className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                     sourceType === 'auto'
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md shadow-blue-500/20'
-                      : 'text-slate-600 hover:text-blue-600'
+                      ? 'neu-chip-primary text-white'
+                      : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
                   }`}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
@@ -246,8 +246,8 @@ export default function NewTestBuilderPage() {
                   onClick={() => setSourceType('manual')}
                   className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
                     sourceType === 'manual'
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md shadow-blue-500/20'
-                      : 'text-slate-600 hover:text-blue-600'
+                      ? 'neu-chip-primary text-white'
+                      : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
                   }`}
                 >
                   <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -531,7 +531,7 @@ export default function NewTestBuilderPage() {
 
         {/* Right Col: Glassmorphic Live Summary Rail */}
         <div className="space-y-6">
-          <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-md sticky top-24 space-y-5">
+          <div className="p-6 sm:p-7 rounded-3xl neu-glass-card sticky top-24 space-y-5">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-extrabold text-slate-900">
                 Test Summary
@@ -569,7 +569,7 @@ export default function NewTestBuilderPage() {
             </div>
 
             {/* Freshness Chip Badge */}
-            <div className="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200 flex items-center justify-between text-xs">
+            <div className="p-3.5 rounded-2xl neu-inset flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-blue-600" />
                 <span className="font-bold text-blue-900">Unseen Questions</span>
@@ -579,11 +579,11 @@ export default function NewTestBuilderPage() {
               </span>
             </div>
 
-            {/* Launch Action */}
+            {/* Launch Action (Chip UI Primary) */}
             <button
               onClick={handleBuildTest}
               disabled={isSubmitting || (sourceType === 'manual' && basketQids.length === 0)}
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+              className="w-full neu-chip-primary uppercase tracking-wider text-xs py-3.5 disabled:opacity-50"
             >
               <span>{isSubmitting ? 'Freezing Bundle...' : 'Assemble & Freeze Test'}</span>
               <ArrowRight className="w-4 h-4" />

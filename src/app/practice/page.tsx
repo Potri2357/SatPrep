@@ -69,34 +69,34 @@ export default function PracticeHubPage() {
           </p>
         </div>
 
-        {/* Navigation Tabs (Chips) */}
-        <div className="flex rounded-2xl p-1 bg-white border border-blue-100 shadow-xs max-w-md">
+        {/* Navigation Tabs (Chips with Neumorphic Inset) */}
+        <div className="flex rounded-full p-1.5 neu-inset max-w-md">
           <button
             onClick={() => setActiveTab('topics')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
+            className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
               activeTab === 'topics'
-                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm'
-                : 'text-slate-600 hover:text-blue-600'
+                ? 'neu-chip-primary text-white'
+                : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
             }`}
           >
-            Topic Practice (Instant)
+            Topic Practice
           </button>
           <button
             onClick={() => setActiveTab('bookmarks')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
+            className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
               activeTab === 'bookmarks'
-                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm'
-                : 'text-slate-600 hover:text-blue-600'
+                ? 'neu-chip-primary text-white'
+                : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
             }`}
           >
             Bookmarks (12)
           </button>
           <button
             onClick={() => setActiveTab('revision')}
-            className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${
+            className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
               activeTab === 'revision'
-                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm'
-                : 'text-slate-600 hover:text-blue-600'
+                ? 'neu-chip-primary text-white'
+                : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
             }`}
           >
             Spaced Revision (5)
@@ -135,9 +135,9 @@ export default function PracticeHubPage() {
 
             {/* Instant Feedback Question Area */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-6">
+              <div className="p-6 sm:p-8 rounded-3xl neu-glass-card space-y-6">
                 <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-4">
-                  <span className="font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                  <span className="font-bold px-3 py-1 rounded-full neu-pill text-blue-700">
                     Instant Feedback Drill
                   </span>
                   <span className="text-slate-500 font-mono">Question {practiceIdx + 1} of {Math.max(1, topicQuestions.length)}</span>
@@ -153,12 +153,12 @@ export default function PracticeHubPage() {
                     const isSelected = chosenOpt === opt.id;
                     const isCorrect = currentKey && opt.id === currentKey.correct_option;
 
-                    let optStyle = 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/30 text-slate-800';
+                    let optStyle = 'border-slate-200/80 bg-white/70 hover:border-blue-400 hover:bg-blue-50/40 text-slate-800 shadow-[3px_3px_10px_rgba(37,99,235,0.04),-3px_-3px_10px_rgba(255,255,255,0.9)]';
                     if (chosenOpt) {
                       if (isCorrect) {
-                        optStyle = 'border-emerald-300 bg-emerald-50 text-emerald-900 font-bold shadow-xs';
+                        optStyle = 'border-emerald-300 bg-emerald-50 text-emerald-900 font-bold shadow-[inset_2px_2px_6px_rgba(16,185,129,0.15)]';
                       } else if (isSelected && !isCorrect) {
-                        optStyle = 'border-rose-300 bg-rose-50 text-rose-900 font-bold shadow-xs';
+                        optStyle = 'border-rose-300 bg-rose-50 text-rose-900 font-bold shadow-[inset_2px_2px_6px_rgba(239,68,68,0.15)]';
                       }
                     }
 
@@ -190,7 +190,7 @@ export default function PracticeHubPage() {
 
                 {/* Immediate Explanation Drawer */}
                 {showSolution && currentKey && (
-                  <div className="p-5 rounded-2xl bg-blue-50/50 border border-blue-100 space-y-3 text-xs animate-in fade-in">
+                  <div className="p-5 rounded-2xl neu-inset space-y-3 text-xs animate-in fade-in">
                     <div className="font-bold text-emerald-700 flex items-center gap-1.5 text-sm">
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Correct Key: Option {currentKey.correct_option.toUpperCase()}</span>
@@ -199,7 +199,7 @@ export default function PracticeHubPage() {
                       <MathRenderer content={currentKey.solution} />
                     </div>
                     {currentKey.shortcut && (
-                      <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-medium">
+                      <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 font-medium">
                         <strong>Shortcut:</strong> {currentKey.shortcut}
                       </div>
                     )}
@@ -210,7 +210,7 @@ export default function PracticeHubPage() {
                 {chosenOpt && (
                   <button
                     onClick={handleNextPractice}
-                    className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-blue-500/25 transition-all hover:scale-[1.01]"
+                    className="w-full neu-chip-primary uppercase tracking-wider text-xs py-3.5"
                   >
                     <span>Next Question</span>
                     <ArrowRight className="w-4 h-4" />
