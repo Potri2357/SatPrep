@@ -34,6 +34,8 @@ export default function ResultAnalysisPage() {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [snapshot, setSnapshot] = useState<ResultSnapshot | null>(null);
+  const [progress, setProgress] = useState<number>(30);
+  const [activeStep, setActiveStep] = useState<number>(1);
 
   // Filter for Questions Review
   const [filter, setFilter] = useState<'all' | 'correct' | 'wrong' | 'skipped' | 'slow'>('all');
@@ -49,26 +51,58 @@ export default function ResultAnalysisPage() {
   const [reportSubmitted, setReportSubmitted] = useState<boolean>(false);
 
   useEffect(() => {
+    let isMounted = true;
+    let fetchedSnapshot: ResultSnapshot | null = null;
+
+    // Smooth live progress stages
+    const t1 = setTimeout(() => { if (isMounted) { setProgress(60); setActiveStep(2); } }, 350);
+    const t2 = setTimeout(() => { if (isMounted) { setProgress(85); setActiveStep(3); } }, 750);
+    const t3 = setTimeout(() => { if (isMounted) { setProgress(100); setActiveStep(4); } }, 1150);
+
     const fetchResult = async () => {
       try {
         const res = await fetch(`/api/test/result/${attemptId}`);
         const data = await res.json();
         if (data.success && data.snapshot) {
-          setSnapshot(data.snapshot);
-          // By default focus first wrong question
-          const firstWrongIdx = data.snapshot.questions_review.findIndex((q: any) => !q.is_correct && q.your_answer);
-          if (firstWrongIdx !== -1) {
-            setSelectedQIndex(firstWrongIdx);
-          }
+          fetchedSnapshot = data.snapshot;
         }
-      } catch {
-        // Fallback
-      } finally {
-        setLoading(false);
+      } catch (e) {
+        console.error('Fetch result error:', e);
       }
     };
 
     fetchResult();
+
+    // Transition smoothly after calibration animation completes (~1.4s)
+    const completionTimer = setTimeout(() => {
+      if (!isMounted) return;
+      if (fetchedSnapshot) {
+        setSnapshot(fetchedSnapshot);
+        const firstWrongIdx = fetchedSnapshot.questions_review.findIndex((q: any) => !q.is_correct && q.your_answer);
+        if (firstWrongIdx !== -1) {
+          setSelectedQIndex(firstWrongIdx);
+        }
+      } else {
+        // Fallback retry
+        fetch(`/api/test/result/${attemptId}`)
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.snapshot && isMounted) {
+              setSnapshot(data.snapshot);
+            }
+          })
+          .catch(() => {});
+      }
+      setLoading(false);
+    }, 1400);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(completionTimer);
+    };
   }, [attemptId]);
 
   const toggleSolution = (qid: string) => {
@@ -103,16 +137,98 @@ export default function ResultAnalysisPage() {
   };
 
   if (loading || !snapshot) {
+    const steps = [
+      { num: 1, title: 'Aggregating Section Responses', desc: 'Verified candidate submissions & autosave records' },
+      { num: 2, title: 'Applying Scoring Scheme', desc: '+1.00 for correct, -0.25 negative marking deduction' },
+      { num: 3, title: 'Calibrating Cohort Percentile', desc: 'Benchmarking against active banking exam aspirants' },
+      { num: 4, title: 'Compiling Comprehensive Scorecard', desc: 'Preparing topic analytics, speed trends & solutions' },
+    ];
+
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="glass-panel p-8 rounded-3xl text-center space-y-4 max-w-sm mx-auto z-10 border border-blue-100 shadow-xl shadow-blue-500/5">
-          <div className="flex justify-center">
-            <BrandLogo size={44} showWordmark={false} />
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between text-[#0F172A] relative overflow-hidden">
+        {/* Soft Ambient Glows */}
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Unified Navbar */}
+        <Navbar />
+
+        {/* Main Content */}
+        <main className="max-w-md sm:max-w-lg mx-auto w-full pt-8 pb-12 px-4 text-center space-y-6 z-10 my-auto">
+          {/* Animated Brand Motif with Radial Pulse */}
+          <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-[#005CE6]/15 animate-ping" />
+            <div className="relative z-10 transition-transform duration-500">
+              <BrandLogo size={56} showWordmark={false} />
+            </div>
           </div>
-          <div className="text-base font-bold text-slate-900">Computing Scorecard...</div>
-          <div className="text-xs text-blue-600 font-mono animate-pulse">Running psychometric calibration &amp; topic breakdown</div>
-        </div>
+
+          {/* Heading & Subtitle */}
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-blue-50 text-[#005CE6] border border-blue-200">
+              <Zap className="w-3.5 h-3.5 text-[#005CE6] animate-pulse" />
+              <span>Real-Time Scoring Engine</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+              Computing Your Scorecard...
+            </h1>
+
+            <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
+              Evaluating sectional accuracy, percentile ranking, and psychometric topic breakdown.
+            </p>
+          </div>
+
+          {/* Card with Progress Bar & Live Stepped Checklist */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#BCEBFC] shadow-[0_8px_30px_rgba(0,92,230,0.06)] text-left space-y-4">
+            {/* Live Progress Bar */}
+            <div className="space-y-2 pb-2 border-b border-slate-100">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-semibold text-slate-600">Calibration Progress</span>
+                <span className="font-mono font-bold text-[#005CE6]">{progress}%</span>
+              </div>
+              <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/60">
+                <div
+                  className="h-full bg-gradient-to-r from-[#005CE6] via-[#0096D6] to-[#60CEF8] rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Stepped Checklist */}
+            <div className="space-y-3 pt-1">
+              {steps.map((st) => {
+                const isCompleted = activeStep > st.num || progress === 100;
+                const isCurrent = activeStep === st.num && progress < 100;
+                return (
+                  <div key={st.num} className="flex items-start gap-3">
+                    <div className="mt-0.5 shrink-0">
+                      {isCompleted ? (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      ) : isCurrent ? (
+                        <div className="w-4 h-4 rounded-full border-2 border-[#005CE6] border-t-transparent animate-spin" />
+                      ) : (
+                        <div className="w-4 h-4 rounded-full border-2 border-slate-200" />
+                      )}
+                    </div>
+                    <div>
+                      <div className={cn("text-xs font-bold", isCompleted || isCurrent ? "text-slate-900" : "text-slate-400")}>
+                        {st.title}
+                      </div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">
+                        {st.desc}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </main>
+
+        <footer className="py-6 text-xs text-center text-slate-400">
+          SatPrep &bull; Official Examination Analytics
+        </footer>
       </div>
     );
   }

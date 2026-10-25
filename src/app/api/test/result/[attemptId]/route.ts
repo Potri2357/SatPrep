@@ -8,9 +8,5 @@ export async function GET(
   const { attemptId } = await params;
   const snapshot = globalStore.getResultSnapshot(attemptId);
 
-  if (!snapshot) {
-    return NextResponse.json({ success: false, error: 'Snapshot not found or not submitted' }, { status: 404 });
-  }
-
   return NextResponse.json({ success: true, snapshot });
 }
