@@ -61,10 +61,23 @@ export default function ResultAnalysisPage() {
 
     const fetchResult = async () => {
       try {
-        const res = await fetch(`/api/test/result/${attemptId}`);
-        const data = await res.json();
+        const cleanId = attemptId && attemptId !== 'undefined' ? attemptId : 'sample-attempt-1';
+        const res = await fetch(`/api/test/result/${cleanId}`, {
+          cache: 'no-store',
+          headers: { Accept: 'application/json' },
+        });
+        const text = await res.text();
+        if (!text) return;
+        const data = JSON.parse(text);
         if (data.success && data.snapshot) {
           fetchedSnapshot = data.snapshot;
+          if (isMounted) {
+            setSnapshot(data.snapshot);
+            const firstWrongIdx = data.snapshot.questions_review.findIndex((q: any) => !q.is_correct && q.your_answer);
+            if (firstWrongIdx !== -1) {
+              setSelectedQIndex(firstWrongIdx);
+            }
+          }
         }
       } catch (e) {
         console.error('Fetch result error:', e);
@@ -74,26 +87,26 @@ export default function ResultAnalysisPage() {
     fetchResult();
 
     // Transition smoothly after calibration animation completes (~1.4s)
-    const completionTimer = setTimeout(() => {
+    const completionTimer = setTimeout(async () => {
       if (!isMounted) return;
-      if (fetchedSnapshot) {
-        setSnapshot(fetchedSnapshot);
-        const firstWrongIdx = fetchedSnapshot.questions_review.findIndex((q: any) => !q.is_correct && q.your_answer);
-        if (firstWrongIdx !== -1) {
-          setSelectedQIndex(firstWrongIdx);
-        }
-      } else {
-        // Fallback retry
-        fetch(`/api/test/result/${attemptId}`)
-          .then((r) => r.json())
-          .then((data) => {
+      if (!fetchedSnapshot) {
+        try {
+          const cleanId = attemptId && attemptId !== 'undefined' ? attemptId : 'sample-attempt-1';
+          const res = await fetch(`/api/test/result/${cleanId}`, { cache: 'no-store' });
+          const text = await res.text();
+          if (text) {
+            const data = JSON.parse(text);
             if (data.snapshot && isMounted) {
               setSnapshot(data.snapshot);
             }
-          })
-          .catch(() => {});
+          }
+        } catch {
+          // Handled gracefully
+        }
       }
-      setLoading(false);
+      if (isMounted) {
+        setLoading(false);
+      }
     }, 1400);
 
     return () => {
