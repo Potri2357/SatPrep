@@ -23,6 +23,29 @@ interface NavbarProps {
   className?: string;
 }
 
+export function CandidateAvatar({ size = 36, className = "" }: { size?: number; className?: string }) {
+  return (
+    <div
+      className={cn(
+        "rounded-full bg-gradient-to-tr from-[#005CE6] via-[#0096D6] to-[#60CEF8] p-[2px] shadow-xs transition-all duration-200 hover:shadow-md hover:scale-105 active:scale-95 shrink-0 select-none",
+        className
+      )}
+      style={{ width: size, height: size }}
+    >
+      <div className="w-full h-full rounded-full bg-white overflow-hidden flex items-center justify-center">
+        <svg viewBox="0 0 40 40" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="20" fill="#F0F7FF" />
+          <path d="M6 38C6 30.268 12.268 24 20 24C27.732 24 34 30.268 34 38" fill="#005CE6" />
+          <path d="M16 24L20 29L24 24" stroke="#BCEBFC" strokeWidth="1.5" strokeLinecap="round" />
+          <rect x="17.5" y="19" width="5" height="6" rx="2" fill="#F4B28C" />
+          <circle cx="20" cy="14" r="6.5" fill="#F4B28C" />
+          <path d="M13.5 13.5C13.5 9.5 16.5 7 20 7C23.5 7 26.5 9.5 26.5 13.5C26.5 14 26 14.5 25 13.5C23.5 12 21 11.5 18 12C15.5 12.5 14 13.5 13.5 13.5Z" fill="#1E293B" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -100,41 +123,36 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
         {/* Right: User Profile Menu & Mobile Toggle */}
         <div className="flex items-center gap-3 shrink-0">
-          {/* User Account Controls */}
+          {/* User Account Controls (Avatar Icon Only) */}
           <div className="relative" ref={dropdownRef}>
             <button
-              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setProfileDropdownOpen((prev) => !prev);
+              }}
               className={cn(
-                "flex items-center gap-2 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border transition-all cursor-pointer select-none",
-                profileDropdownOpen
-                  ? "border-[#005CE6] bg-blue-50/50 ring-2 ring-[#005CE6]/20"
-                  : "border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50"
+                "p-0.5 rounded-full transition-all cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-[#005CE6]/40 flex items-center justify-center",
+                profileDropdownOpen ? "ring-2 ring-[#005CE6] shadow-sm" : "hover:ring-2 hover:ring-[#005CE6]/30"
               )}
-              aria-label="User menu"
+              aria-label="Candidate Profile Menu"
               aria-expanded={profileDropdownOpen}
+              title="Sathyamoorthi M (Click for Profile Menu)"
             >
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#005CE6] to-[#0096D6] text-white font-bold flex items-center justify-center text-xs shadow-xs">
-                SM
-              </div>
-              <div className="hidden sm:block text-left">
-                <div className="text-xs font-bold text-slate-800 leading-tight">Sathyamoorthi M.</div>
-                <div className="text-[10px] text-slate-400 leading-none">IBPS PO 2026</div>
-              </div>
-              <ChevronDown
-                className={cn(
-                  "w-3.5 h-3.5 text-slate-400 transition-transform duration-200",
-                  profileDropdownOpen && "rotate-180 text-[#005CE6]"
-                )}
-              />
+              <CandidateAvatar size={38} />
             </button>
 
             {/* Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
-                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 mb-1">
-                  <div className="font-bold text-xs text-slate-900">Sathyamoorthi M</div>
-                  <div className="text-[11px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
-                  <div className="text-[10px] font-semibold text-[#005CE6] mt-1">Target: IBPS PO Prelims 2026</div>
+              <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
+                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 mb-1 flex items-center gap-3">
+                  <CandidateAvatar size={34} />
+                  <div className="min-w-0 flex-1">
+                    <div className="font-bold text-xs text-slate-900 truncate">Sathyamoorthi M</div>
+                    <div className="text-[10px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
+                    <div className="text-[10px] font-semibold text-[#005CE6] mt-0.5">Target: IBPS PO Prelims 2026</div>
+                  </div>
                 </div>
 
                 <div className="px-2 pt-1 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
