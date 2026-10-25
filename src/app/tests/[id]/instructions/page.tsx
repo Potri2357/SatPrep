@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import {
   Check,
@@ -62,31 +63,8 @@ export default function ExamInstructionsPage() {
       <div className="absolute top-10 right-1/4 w-[500px] h-[500px] bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Neat & Clean Top Header (Consistent White Glassmorphism) */}
-      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-[#E2E8F0]/80 shadow-[0_4px_20px_rgb(37,99,235,0.03)] px-6 h-16 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
-            <BrandLogo size={34} showWordmark={true} />
-          </Link>
-          <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
-            Candidate Verification &amp; Instructions
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span className="font-semibold text-emerald-800">Proctored Terminal</span>
-          </div>
-
-          <Link
-            href="/dashboard"
-            className="text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-xs"
-          >
-            Exit to Dashboard
-          </Link>
-        </div>
-      </header>
+      {/* Consistent Unified Navbar */}
+      <Navbar />
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 grid grid-cols-1 lg:grid-cols-3 gap-8 z-10">

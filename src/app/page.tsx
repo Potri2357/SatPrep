@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import {
   ArrowRight,
@@ -21,47 +22,8 @@ import {
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F0F6FF] via-[#FFFFFF] to-[#F8FAFC] text-[#0F172A] selection:bg-[#2563EB] selection:text-white">
-      {/* Navigation */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/85 border-b border-[#E2E8F0]/80 shadow-[0_4px_20px_rgb(37,99,235,0.03)]">
-        <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
-          <Link href="/" className="transition-transform hover:scale-[1.02]">
-            <BrandLogo size={38} showWordmark={true} />
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-7 text-sm font-semibold text-slate-600">
-            <Link href="/dashboard" className="hover:text-[#2563EB] transition-colors">
-              Dashboard
-            </Link>
-            <Link href="/tests/new" className="hover:text-[#2563EB] transition-colors">
-              Exam Simulator
-            </Link>
-            <Link href="/practice" className="hover:text-[#2563EB] transition-colors">
-              Practice Drills
-            </Link>
-            <Link
-              href="/admin"
-              className="text-xs px-3 py-1.5 rounded-full bg-[#EFF6FF] hover:bg-[#DBEAFE] text-[#1E40AF] font-bold border border-[#BFDBFE] transition-colors"
-            >
-              Admin Console
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-3.5">
-            <Link
-              href="/auth"
-              className="text-sm font-semibold text-slate-700 hover:text-[#2563EB] transition-colors px-3 py-2"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/dashboard"
-              className="px-5 py-2.5 rounded-full text-sm font-bold bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-lg shadow-[#2563EB]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Start Practicing Free
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Consistent Unified Navbar */}
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 overflow-hidden bg-grid-pattern">

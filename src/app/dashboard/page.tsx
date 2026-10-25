@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import {
   Play,
@@ -82,48 +83,8 @@ export default function StudentDashboard() {
       <div className="absolute top-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-80 right-10 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Header (Glassmorphic White & Blue) */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-[#E2E8F0]/80 shadow-[0_4px_20px_rgb(37,99,235,0.03)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
-              <BrandLogo size={34} showWordmark={true} />
-            </Link>
-            <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
-              <Link href="/dashboard" className="text-[#2563EB] border-b-2 border-[#2563EB] pb-1">
-                Dashboard
-              </Link>
-              <Link href="/tests/new" className="text-slate-600 hover:text-[#2563EB] transition-colors">
-                Create Test
-              </Link>
-              <Link href="/practice" className="text-slate-600 hover:text-[#2563EB] transition-colors">
-                Practice
-              </Link>
-              <Link href="/profile" className="text-slate-600 hover:text-[#2563EB] transition-colors">
-                Profile
-              </Link>
-              <Link href="/admin" className="text-xs px-3 py-1 rounded-full bg-[#EFF6FF] text-[#1E40AF] font-bold border border-[#BFDBFE] hover:bg-[#DBEAFE] transition-colors">
-                Admin Console
-              </Link>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-3.5">
-            {/* Streak Counter */}
-            <div className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-bold text-amber-700 shadow-sm">
-              <Flame className="w-4 h-4 fill-amber-500 text-amber-500" />
-              <span>{streakDays} Day Streak</span>
-            </div>
-
-            {/* Candidate Avatar */}
-            <Link href="/profile" className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-[#EFF6FF] border-2 border-[#2563EB] text-xs font-extrabold text-[#1E40AF] flex items-center justify-center shadow-sm">
-                AS
-              </div>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Consistent Unified Navbar */}
+      <Navbar />
 
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-8 relative z-10">

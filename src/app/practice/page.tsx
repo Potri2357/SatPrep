@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import { INITIAL_TOPICS, INITIAL_QUESTIONS, INITIAL_KEYS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
@@ -51,22 +52,8 @@ export default function PracticeHubPage() {
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 left-10 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
 
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-blue-100 px-6 h-16 flex items-center justify-between">
-        <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
-          <BrandLogo size={34} showWordmark={true} />
-        </Link>
-        <div className="flex items-center gap-4 text-xs font-semibold">
-          <Link href="/dashboard" className="text-slate-600 hover:text-blue-600 transition-colors">
-            Dashboard
-          </Link>
-          <Link
-            href="/tests/new"
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
-          >
-            Timed Mock Tests
-          </Link>
-        </div>
-      </header>
+      {/* Consistent Unified Navbar */}
+      <Navbar />
 
       <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 space-y-8 z-10">
         <div>

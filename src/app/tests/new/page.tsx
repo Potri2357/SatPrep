@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import { INITIAL_TOPICS, INITIAL_EXAMS, INITIAL_QUESTIONS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
@@ -129,28 +130,8 @@ export default function NewTestBuilderPage() {
       <div className="absolute top-80 right-10 w-[450px] h-[450px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-20 left-10 w-80 h-80 bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Glassmorphic Sticky Header */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-blue-100 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
-              <BrandLogo size={34} showWordmark={true} />
-            </Link>
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-              <Sparkles className="w-3 h-3 text-blue-600" />
-              <span>Custom Test Setup</span>
-            </span>
-          </div>
-
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-blue-600 bg-white hover:bg-slate-50 border border-slate-200 shadow-xs transition-all"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Dashboard</span>
-          </Link>
-        </div>
-      </header>
+      {/* Consistent Unified Navbar */}
+      <Navbar />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">

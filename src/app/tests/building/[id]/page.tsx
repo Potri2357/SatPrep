@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import { CheckCircle2, ArrowRight, Clock, ShieldCheck, Sparkles } from 'lucide-react';
 
@@ -50,22 +51,13 @@ export default function BuildingTestPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between p-6 sm:p-12 text-slate-800 relative overflow-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between text-slate-800 relative overflow-hidden">
       {/* Ambient background glow */}
       <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
 
-      <header className="max-w-xl mx-auto w-full flex items-center justify-between z-10">
-        <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
-          <BrandLogo size={36} showWordmark={true} />
-        </Link>
-        <Link
-          href="/dashboard"
-          className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-600 shadow-xs transition-colors"
-        >
-          Continue in background
-        </Link>
-      </header>
+      {/* Consistent Unified Navbar */}
+      <Navbar />
 
       <main className="max-w-lg mx-auto w-full my-auto py-12 text-center space-y-8 z-10">
         {/* Animated Brand Plus Motif Loader */}

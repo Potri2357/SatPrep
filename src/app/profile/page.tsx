@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import {
   User,
@@ -34,19 +35,8 @@ export default function ProfilePage() {
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 left-10 w-96 h-96 bg-indigo-300/10 rounded-full blur-3xl pointer-events-none" />
 
-      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-[#E2E8F0]/80 shadow-[0_4px_20px_rgb(37,99,235,0.03)] px-6 h-16 flex items-center justify-between">
-        <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
-          <BrandLogo size={34} showWordmark={true} />
-        </Link>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/dashboard"
-            className="text-xs font-semibold px-4 py-2 rounded-full bg-[#EFF6FF] text-[#1E40AF] hover:bg-[#DBEAFE] border border-[#BFDBFE] transition-colors"
-          >
-            Return to Dashboard
-          </Link>
-        </div>
-      </header>
+      {/* Consistent Unified Navbar */}
+      <Navbar />
 
       <main className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 space-y-6 z-10">
         <div>
