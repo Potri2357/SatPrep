@@ -12,8 +12,6 @@ import {
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 import {
-  Flame,
-  Plus,
   Menu,
   X,
   Layers,
@@ -107,23 +105,8 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           </NavigationMenu>
         </div>
 
-        {/* Right: Streak Pill, New Test Chip & Profile Icon with Dropdown */}
+        {/* Right: Profile Icon with Dropdown (User & Admin) */}
         <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
-          {/* 5-Day Streak Pill (Matches user reference image exactly) */}
-          <div className="hidden lg:inline-flex streak-pill">
-            <Flame className="w-4 h-4 fill-amber-500 text-amber-500 shrink-0" />
-            <span>5 Day Streak</span>
-          </div>
-
-          {/* Quick New Test Chip Button (Matches user reference image exactly) */}
-          <Link
-            href="/tests/new"
-            className="hidden sm:inline-flex neu-chip-primary text-xs"
-          >
-            <Plus className="w-4 h-4 text-white stroke-[2.5]" />
-            <span>New Test</span>
-          </Link>
-
           {/* Profile Icon with Dropdown of User and Admin */}
           <div className="relative" ref={dropdownRef}>
             <button
@@ -258,21 +241,6 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden mt-2 rounded-3xl border border-[#BCEBFC] bg-white/98 backdrop-blur-2xl p-4 space-y-2 shadow-xl">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="streak-pill text-xs py-1 px-3">
-              <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-              <span>5 Day Streak</span>
-            </div>
-            <Link
-              href="/tests/new"
-              onClick={() => setMobileMenuOpen(false)}
-              className="neu-chip-primary text-xs py-1.5 px-4"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>New Test</span>
-            </Link>
-          </div>
-
           {centerNavItems.map((item) => {
             const active = isItemActive(item.href);
             const Icon = item.icon;
