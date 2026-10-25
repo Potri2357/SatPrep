@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { Navbar } from '@/components/navbar';
+import { Navbar, CandidateAvatar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import {
   Check,
@@ -75,7 +75,7 @@ export default function ExamInstructionsPage() {
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF]">
                 <Award className="w-3.5 h-3.5 text-[#2563EB]" />
-                <span>Standard Bank Examination Pattern</span>
+                <span>Official Examination Pattern</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
                 {examName}
@@ -139,14 +139,14 @@ export default function ExamInstructionsPage() {
             </div>
           </div>
 
-          {/* Question Palette Legend */}
+          {/* Question Status Legend */}
           <div className="p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">
-                Question Palette Symbol States
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600">
+                Question Status Legend
               </h2>
-              <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
-                Standard 5-Symbol Standards
+              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#005CE6] border border-[#BFDBFE]">
+                Status Reference
               </span>
             </div>
 
@@ -155,35 +155,50 @@ export default function ExamInstructionsPage() {
                 <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 shrink-0">
                   1
                 </div>
-                <span className="text-slate-600">You have not visited the question yet.</span>
+                <div>
+                  <div className="font-bold text-slate-800">Not Visited</div>
+                  <div className="text-slate-500 text-[11px]">You have not visited this question yet.</div>
+                </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-2xl border border-rose-200 bg-rose-50/50 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   2
                 </div>
-                <span className="text-slate-700">You have not answered the question.</span>
+                <div>
+                  <div className="font-bold text-rose-900">Not Answered</div>
+                  <div className="text-slate-600 text-[11px]">You have not answered this question.</div>
+                </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   3
                 </div>
-                <span className="text-slate-700">You have answered the question.</span>
+                <div>
+                  <div className="font-bold text-emerald-900">Answered</div>
+                  <div className="text-slate-600 text-[11px]">You have answered this question.</div>
+                </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/50 shadow-xs">
                 <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   4
                 </div>
-                <span className="text-slate-700">Marked for review without answering.</span>
+                <div>
+                  <div className="font-bold text-purple-900">Marked for Review</div>
+                  <div className="text-slate-600 text-[11px]">Marked for review without answering.</div>
+                </div>
               </div>
 
               <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/50 shadow-xs sm:col-span-2">
                 <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 ring-2 ring-emerald-400 shadow-sm">
                   5
                 </div>
-                <span className="text-slate-700 font-medium">Answered and marked for review (will be considered for evaluation).</span>
+                <div>
+                  <div className="font-bold text-purple-900">Answered &amp; Marked for Review</div>
+                  <div className="text-slate-600 text-[11px]">Answered and marked for review (will be evaluated).</div>
+                </div>
               </div>
             </div>
           </div>
@@ -194,37 +209,39 @@ export default function ExamInstructionsPage() {
           {/* Candidate Card */}
           <div className="p-6 rounded-3xl neu-glass-card space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
-              Candidate Profile Verification
+              Candidate Information
             </h2>
 
             <div className="flex items-center gap-3.5 p-3.5 rounded-2xl neu-inset">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#005CE6] to-[#0096D6] text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-blue-500/20">
-                SM
-              </div>
+              <CandidateAvatar size={44} />
               <div className="overflow-hidden">
                 <div className="font-bold text-slate-900 text-sm">Sathyamoorthi M</div>
-                <div className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full inline-block mt-0.5 border border-emerald-200">
-                  Verified Candidate
+                <div className="text-[11px] text-slate-500 font-medium truncate mt-0.5">
+                  Quantitative Aptitude Paper
                 </div>
               </div>
             </div>
 
-            {/* Device & Session Diagnostic */}
+            {/* System Compatibility & Connection Status */}
             <div className="pt-1 space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
                 <div className="flex items-center gap-2 text-slate-600">
                   <Monitor className="w-4 h-4 text-emerald-600" />
-                  <span>Display Resolution</span>
+                  <span>System Compatibility</span>
                 </div>
-                <span className="font-bold text-emerald-700 font-mono">1920 x 1080 (HD)</span>
+                <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" /> Compatible
+                </span>
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
                 <div className="flex items-center gap-2 text-slate-600">
                   <Wifi className="w-4 h-4 text-emerald-600" />
-                  <span>Network Latency</span>
+                  <span>Network Connection</span>
                 </div>
-                <span className="font-bold text-emerald-700 font-mono">24ms Ping</span>
+                <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" /> Stable
+                </span>
               </div>
             </div>
 
