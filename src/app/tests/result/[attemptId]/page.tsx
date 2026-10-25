@@ -7,6 +7,7 @@ import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import { MathRenderer } from '@/lib/math-renderer';
 import { ResultSnapshot } from '@/lib/types';
+import { cn } from '@/lib/utils';
 import {
   CheckCircle2,
   XCircle,
@@ -22,6 +23,8 @@ import {
   Lightbulb,
   ChevronDown,
   ChevronUp,
+  Check,
+  X,
 } from 'lucide-react';
 
 export default function ResultAnalysisPage() {
@@ -35,6 +38,7 @@ export default function ResultAnalysisPage() {
   // Filter for Questions Review
   const [filter, setFilter] = useState<'all' | 'correct' | 'wrong' | 'skipped' | 'slow'>('all');
   const [selectedQIndex, setSelectedQIndex] = useState<number>(0);
+  const [explanationTab, setExplanationTab] = useState<'solution' | 'shortcut' | 'traps'>('solution');
   const [expandedSolutions, setExpandedSolutions] = useState<Record<string, boolean>>({});
   const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({});
 
@@ -384,9 +388,12 @@ export default function ResultAnalysisPage() {
                     key={q.question_id}
                     onClick={() => {
                       const actualIdx = snapshot.questions_review.findIndex((item) => item.question_id === q.question_id);
-                      if (actualIdx !== -1) setSelectedQIndex(actualIdx);
+                      if (actualIdx !== -1) {
+                        setSelectedQIndex(actualIdx);
+                        setExplanationTab('solution');
+                      }
                     }}
-                    className={`w-9 h-9 rounded-xl font-mono text-xs font-bold transition-all flex items-center justify-center cursor-pointer ${chipColor} ${
+                    className={`w-8 h-8 rounded-lg font-mono text-xs font-bold transition-all flex items-center justify-center cursor-pointer ${chipColor} ${
                       isSelected ? 'ring-2 ring-[#005CE6] ring-offset-2 scale-105 shadow-xs font-extrabold' : ''
                     }`}
                   >
@@ -397,86 +404,97 @@ export default function ResultAnalysisPage() {
             </div>
           </div>
 
-          {/* Focused Question Explanation Card */}
+          {/* Focused Question Explanation Card (Compact, High-Density & Elegant) */}
           {snapshot.questions_review[selectedQIndex] && (() => {
             const activeQ = snapshot.questions_review[selectedQIndex];
             return (
-              <div className="p-6 sm:p-7 rounded-3xl neu-glass-card border border-blue-200 shadow-sm space-y-6">
-                {/* Question Header */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 text-xs">
-                  <div className="flex items-center gap-2.5">
-                    <span className="font-bold font-mono px-3 py-1 rounded-full bg-[#005CE6] text-white">
-                      Question {activeQ.position} of {snapshot.questions_review.length}
+              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#BCEBFC] shadow-sm space-y-4">
+                {/* Compact Question Header */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold font-mono px-2.5 py-0.5 rounded-full bg-[#005CE6] text-white text-[11px]">
+                      Q{activeQ.position} of {snapshot.questions_review.length}
                     </span>
-                    <span className="text-slate-700 capitalize font-bold text-xs bg-slate-100 px-2.5 py-1 rounded-lg">
+                    <span className="text-slate-700 capitalize font-bold text-xs bg-slate-100 px-2 py-0.5 rounded-md">
                       {activeQ.topic_name}
                     </span>
-                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-mono font-medium">
-                      Difficulty Level {activeQ.difficulty}
+                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-mono font-medium">
+                      Level {activeQ.difficulty}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {activeQ.is_correct ? (
-                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center gap-1.5 border border-emerald-200 text-xs">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        <span>Correct (+1.00 Marks)</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center gap-1 text-[11px]">
+                        <Check className="w-3 h-3 stroke-[3]" />
+                        <span>+1.00 Correct</span>
                       </span>
                     ) : activeQ.your_answer ? (
-                      <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-bold flex items-center gap-1.5 border border-rose-200 text-xs">
-                        <XCircle className="w-4 h-4 text-rose-600" />
-                        <span>Incorrect (-0.25 Marks)</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold flex items-center gap-1 text-[11px]">
+                        <X className="w-3 h-3 stroke-[3]" />
+                        <span>-0.25 Incorrect</span>
                       </span>
                     ) : (
-                      <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200">
-                        Skipped (0.00 Marks)
+                      <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold text-[11px]">
+                        0.00 Skipped
                       </span>
                     )}
-                    <span className="text-slate-500 font-mono text-[11px]">
+                    <span className="text-slate-400 font-mono text-[11px]">
                       Time: {activeQ.time_taken_sec}s
                     </span>
                   </div>
                 </div>
 
-                {/* Question Stem */}
-                <div className="py-2 text-base sm:text-lg font-medium text-slate-900 leading-relaxed">
+                {/* Question Stem (Compact & Readable) */}
+                <div className="py-1 text-sm sm:text-[15px] font-medium text-slate-900 leading-normal">
                   <MathRenderer content={activeQ.stem} />
                 </div>
 
-                {/* Options Comparison */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {/* Options List (Sleek Compact Rows) */}
+                <div className="space-y-2 pt-1">
                   {activeQ.options.map((opt) => {
                     const isCorrectOpt = opt.id === activeQ.correct_answer;
                     const isUserSelected = opt.id === activeQ.your_answer;
 
-                    let optClass = 'border-slate-200 bg-white text-slate-700';
+                    let optClass = 'border-slate-200 bg-white text-slate-700 hover:border-slate-300';
                     if (isCorrectOpt) {
-                      optClass = 'border-emerald-400 bg-emerald-50/70 text-emerald-950 font-bold ring-1 ring-emerald-300';
+                      optClass = 'border-emerald-300 bg-emerald-50/60 text-emerald-950 font-semibold ring-1 ring-emerald-300';
                     } else if (isUserSelected && !isCorrectOpt) {
-                      optClass = 'border-rose-400 bg-rose-50/70 text-rose-950 font-bold ring-1 ring-rose-300';
+                      optClass = 'border-rose-300 bg-rose-50/60 text-rose-950 font-semibold ring-1 ring-rose-300';
                     }
 
                     return (
                       <div
                         key={opt.id}
-                        className={`p-3.5 sm:p-4 rounded-2xl border text-xs sm:text-sm flex items-center justify-between transition-all ${optClass}`}
+                        className={`px-3.5 py-2 rounded-xl border text-xs flex items-center justify-between transition-all ${optClass}`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="font-bold uppercase font-mono text-xs">({opt.id})</span>
-                          <MathRenderer content={opt.text} />
+                          <span
+                            className={cn(
+                              "w-5 h-5 rounded-md font-mono text-[10px] font-bold flex items-center justify-center shrink-0 uppercase",
+                              isCorrectOpt
+                                ? "bg-emerald-600 text-white"
+                                : isUserSelected
+                                ? "bg-rose-600 text-white"
+                                : "bg-slate-100 text-slate-600"
+                            )}
+                          >
+                            {opt.id}
+                          </span>
+                          <div className="leading-snug text-xs sm:text-[13px]">
+                            <MathRenderer content={opt.text} />
+                          </div>
                         </div>
 
-                        <div className="text-[11px] font-bold">
+                        <div className="text-[10px] font-bold shrink-0 ml-2">
                           {isCorrectOpt && (
-                            <span className="flex items-center gap-1 text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Correct Key</span>
+                            <span className="text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <Check className="w-2.5 h-2.5 stroke-[3]" /> Correct Key
                             </span>
                           )}
                           {isUserSelected && !isCorrectOpt && (
-                            <span className="flex items-center gap-1 text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full">
-                              <XCircle className="w-3.5 h-3.5" />
-                              <span>Your Choice</span>
+                            <span className="text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded-full flex items-center gap-1">
+                              <X className="w-2.5 h-2.5 stroke-[3]" /> Your Answer
                             </span>
                           )}
                         </div>
@@ -485,40 +503,90 @@ export default function ResultAnalysisPage() {
                   })}
                 </div>
 
-                {/* Detailed Official Explanation Box */}
-                <div className="pt-4 border-t border-slate-200 space-y-4 text-xs">
-                  {/* Step-by-step Solution */}
-                  <div className="p-4 sm:p-5 rounded-2xl bg-[#F0FAFF] border border-[#BCEBFC] space-y-2">
-                    <div className="font-bold text-[#005CE6] flex items-center gap-2 text-xs uppercase tracking-wider">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>Official Step-by-Step Derivation</span>
+                {/* Sleek Segmented Solution & Explanation Panel */}
+                <div className="pt-3 border-t border-slate-100 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 text-xs font-semibold">
+                      <button
+                        type="button"
+                        onClick={() => setExplanationTab('solution')}
+                        className={cn(
+                          "px-3 py-1 rounded-lg transition-all text-xs cursor-pointer",
+                          explanationTab === 'solution'
+                            ? "bg-white text-[#005CE6] font-bold shadow-2xs"
+                            : "text-slate-600 hover:text-slate-900"
+                        )}
+                      >
+                        Step-by-Step Derivation
+                      </button>
+                      {activeQ.shortcut && (
+                        <button
+                          type="button"
+                          onClick={() => setExplanationTab('shortcut')}
+                          className={cn(
+                            "px-3 py-1 rounded-lg transition-all text-xs flex items-center gap-1 cursor-pointer",
+                            explanationTab === 'shortcut'
+                              ? "bg-white text-amber-700 font-bold shadow-2xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          )}
+                        >
+                          <Lightbulb className="w-3 h-3 text-amber-500" />
+                          <span>Speed Shortcut</span>
+                        </button>
+                      )}
+                      {activeQ.option_rationales && (
+                        <button
+                          type="button"
+                          onClick={() => setExplanationTab('traps')}
+                          className={cn(
+                            "px-3 py-1 rounded-lg transition-all text-xs cursor-pointer",
+                            explanationTab === 'traps'
+                              ? "bg-white text-purple-700 font-bold shadow-2xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          )}
+                        >
+                          Trap Diagnosis
+                        </button>
+                      )}
                     </div>
-                    <div className="leading-relaxed text-slate-800 text-sm">
-                      <MathRenderer content={activeQ.solution} />
-                    </div>
+
+                    <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">
+                      Switch tabs for shortcuts &amp; traps
+                    </span>
                   </div>
 
-                  {/* Shortcut Trick */}
-                  {activeQ.shortcut && (
-                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 space-y-1.5">
-                      <div className="font-bold flex items-center gap-2 text-amber-900 text-xs uppercase tracking-wider">
-                        <Lightbulb className="w-4 h-4 text-amber-600" />
-                        <span>Exam Speed Shortcut (15–20 Seconds)</span>
+                  {/* Active Explanation Content */}
+                  {explanationTab === 'solution' && (
+                    <div className="p-3.5 rounded-xl bg-[#F0FAFF] border border-[#BCEBFC] space-y-1.5 animate-in fade-in duration-150">
+                      <div className="text-[11px] font-bold text-[#005CE6] uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Official Step-by-Step Method</span>
                       </div>
-                      <p className="leading-relaxed text-xs">{activeQ.shortcut}</p>
+                      <div className="text-xs text-slate-800 leading-relaxed">
+                        <MathRenderer content={activeQ.solution} />
+                      </div>
                     </div>
                   )}
 
-                  {/* Wrong-Option Explanations */}
-                  {activeQ.option_rationales && (
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                      <div className="font-bold text-slate-800 text-xs">
-                        Distractor / Psychological Trap Analysis:
+                  {explanationTab === 'shortcut' && activeQ.shortcut && (
+                    <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 space-y-1 animate-in fade-in duration-150">
+                      <div className="text-[11px] font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                        <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+                        <span>15–20 Seconds Speed Trick</span>
                       </div>
-                      <div className="space-y-1.5">
+                      <p className="text-xs leading-relaxed">{activeQ.shortcut}</p>
+                    </div>
+                  )}
+
+                  {explanationTab === 'traps' && activeQ.option_rationales && (
+                    <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5 animate-in fade-in duration-150">
+                      <div className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                        Why other choices were incorrect:
+                      </div>
+                      <div className="space-y-1">
                         {Object.entries(activeQ.option_rationales).map(([optId, rationale]) => (
-                          <div key={optId} className="flex items-start gap-2 text-slate-600 text-xs">
-                            <span className="font-mono font-bold uppercase text-slate-900 shrink-0">
+                          <div key={optId} className="flex items-start gap-1.5 text-xs text-slate-600">
+                            <span className="font-mono font-bold uppercase text-slate-900 shrink-0 text-[11px]">
                               Option {optId}:
                             </span>
                             <span>{rationale}</span>
@@ -529,14 +597,17 @@ export default function ResultAnalysisPage() {
                   )}
                 </div>
 
-                {/* Navigation Footer for the Question */}
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                {/* Compact Navigation Footer */}
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                   <button
-                    onClick={() => setSelectedQIndex((prev) => Math.max(0, prev - 1))}
+                    onClick={() => {
+                      setSelectedQIndex((prev) => Math.max(0, prev - 1));
+                      setExplanationTab('solution');
+                    }}
                     disabled={selectedQIndex === 0}
-                    className="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 font-semibold text-slate-700 transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 font-semibold text-slate-700 transition-colors cursor-pointer text-xs"
                   >
-                    ← Previous Question
+                    ← Previous
                   </button>
 
                   <Link
@@ -548,11 +619,14 @@ export default function ResultAnalysisPage() {
                   </Link>
 
                   <button
-                    onClick={() => setSelectedQIndex((prev) => Math.min(snapshot.questions_review.length - 1, prev + 1))}
+                    onClick={() => {
+                      setSelectedQIndex((prev) => Math.min(snapshot.questions_review.length - 1, prev + 1));
+                      setExplanationTab('solution');
+                    }}
                     disabled={selectedQIndex === snapshot.questions_review.length - 1}
-                    className="neu-chip-primary px-5 py-2 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                    className="neu-chip-primary px-4 py-1.5 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer shadow-xs text-xs"
                   >
-                    <span>Next Question →</span>
+                    <span>Next →</span>
                   </button>
                 </div>
               </div>
