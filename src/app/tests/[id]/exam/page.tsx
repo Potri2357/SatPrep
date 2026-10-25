@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
 import { BrandLogo } from '@/components/brand-logo';
 import { MathRenderer } from '@/lib/math-renderer';
 import { PaletteState, AssembledQuestion } from '@/lib/types';
@@ -28,6 +29,8 @@ import {
   Lock,
   Layers,
   Award,
+  Lightbulb,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function ExamTestWindow() {
@@ -42,6 +45,11 @@ export default function ExamTestWindow() {
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const [examName, setExamName] = useState<string>('IBPS PO Prelims 2026');
   const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Hindi'>('English');
+
+  // Review Mode state
+  const [isReviewMode, setIsReviewMode] = useState<boolean>(false);
+  const [reviewAttemptId, setReviewAttemptId] = useState<string>('');
+  const [reviewQuestions, setReviewQuestions] = useState<any[]>([]);
 
   // Answers Map: qid -> { selected_option, state, time_spent }
   const [answers, setAnswers] = useState<
@@ -68,6 +76,47 @@ export default function ExamTestWindow() {
   useEffect(() => {
     const initTest = async () => {
       try {
+        const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+        const revMode = urlParams?.get('mode') === 'review';
+        const revAttempt = urlParams?.get('attemptId') || '';
+
+        // Handle Review Mode
+        if (revMode && revAttempt) {
+          setIsReviewMode(true);
+          setReviewAttemptId(revAttempt);
+          const resRev = await fetch(`/api/test/result/${revAttempt}`);
+          const dataRev = await resRev.json();
+          if (dataRev.success && dataRev.snapshot) {
+            const revList = dataRev.snapshot.questions_review || [];
+            setReviewQuestions(revList);
+            const mappedQs = revList.map((rq: any) => ({
+              id: rq.question_id,
+              stem: rq.stem,
+              options: rq.options,
+              type: 'mcq' as const,
+              topic_id: rq.topic_name,
+              difficulty_assigned: rq.difficulty,
+              status: 'live' as const,
+              source: 'seed' as const,
+              version: 1,
+            }));
+            setQuestions(mappedQs);
+            setExamName(dataRev.snapshot.exam_name || 'IBPS PO Prelims 2026 (Review)');
+            const initAnswers: Record<string, { selectedOption?: string; state: PaletteState; timeSpent: number }> = {};
+            revList.forEach((rq: any) => {
+              initAnswers[rq.question_id] = {
+                selectedOption: rq.your_answer,
+                state: rq.is_correct ? 'answered' : rq.your_answer ? 'not_answered' : 'not_visited',
+                timeSpent: rq.time_taken_sec || 0,
+              };
+            });
+            setAnswers(initAnswers);
+            setSecondsRemaining(0);
+            setLoading(false);
+            return;
+          }
+        }
+
         const res = await fetch('/api/test/start', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -112,9 +161,9 @@ export default function ExamTestWindow() {
     initTest();
   }, [testId]);
 
-  // 2. Countdown Timer Loop (Auto-submit on expiry)
+  // 2. Countdown Timer Loop (Auto-submit on expiry, disabled in review mode)
   useEffect(() => {
-    if (loading || secondsRemaining <= 0) return;
+    if (loading || isReviewMode || secondsRemaining <= 0) return;
 
     const timer = setInterval(() => {
       setSecondsRemaining((prev) => {
@@ -143,6 +192,7 @@ export default function ExamTestWindow() {
   }, []);
 
   const currentQ = questions[currentIdx];
+  const currentRevQ = isReviewMode ? reviewQuestions[currentIdx] : null;
 
   // Sync selectedOption state when question jumps
   useEffect(() => {
@@ -337,7 +387,7 @@ export default function ExamTestWindow() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col select-none text-slate-800 font-sans">
-      {/* 1. TOP CANDIDATE & EXAM HEADER (Official TCS iON Architecture) */}
+      {/* 1. TOP CANDIDATE & EXAM HEADER */}
       <header className="h-14 sm:h-16 bg-[#005CE6] text-white px-4 sm:px-6 flex items-center justify-between border-b border-blue-700 shrink-0 z-30">
         <div className="flex items-center gap-3 sm:gap-4">
           <BrandLogo size={32} showWordmark={false} />
@@ -345,26 +395,18 @@ export default function ExamTestWindow() {
             <div className="font-bold text-xs sm:text-sm text-white tracking-tight leading-tight">
               {examName}
             </div>
-            <div className="text-[10px] text-blue-200 font-mono flex items-center gap-2">
-              <span>Terminal: C-042</span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <span className={`w-1.5 h-1.5 rounded-full ${isSaved ? 'bg-emerald-400' : 'bg-amber-300 animate-ping'}`} />
-                <span>{isSaved ? 'Autosaved' : 'Syncing...'}</span>
-              </span>
-            </div>
           </div>
         </div>
 
         {/* Center: Authoritative Sectional Countdown Clock */}
         <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-1 text-[11px] font-semibold text-blue-100">
-            <Clock className="w-3.5 h-3.5" />
+          <div className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-blue-100">
+            <Clock className="w-4 h-4 text-white" />
             <span>Time Left:</span>
           </div>
           <div
             className={cn(
-              "font-mono text-sm sm:text-base font-bold tabular-nums px-3.5 py-1 rounded-lg border transition-all shadow-xs",
+              "font-mono text-sm sm:text-base font-bold tabular-nums px-3.5 py-1 rounded-xl border transition-all shadow-xs",
               isRed
                 ? "bg-rose-500 text-white border-rose-400 animate-pulse"
                 : isAmber
@@ -376,33 +418,10 @@ export default function ExamTestWindow() {
           </div>
         </div>
 
-        {/* Right: Candidate Details & Language Toggle */}
+        {/* Right: Candidate Details */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Language Selector */}
-          <div className="hidden sm:flex items-center gap-1.5 bg-blue-700/80 px-2.5 py-1 rounded-lg border border-blue-500/60 text-xs">
-            <Languages className="w-3.5 h-3.5 text-blue-200" />
-            <select
-              value={selectedLanguage}
-              onChange={(e) => setSelectedLanguage(e.target.value as any)}
-              className="bg-transparent text-white font-medium text-xs focus:outline-none cursor-pointer"
-            >
-              <option value="English" className="text-slate-900">English</option>
-              <option value="Hindi" className="text-slate-900">Hindi</option>
-            </select>
-          </div>
-
-          {/* Fullscreen Toggle */}
-          <button
-            onClick={toggleFullscreen}
-            className="p-1.5 rounded-lg bg-blue-700/80 hover:bg-blue-600 text-white border border-blue-500/60 hidden md:block transition-colors cursor-pointer"
-            title="Toggle Fullscreen"
-          >
-            {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
-          </button>
-
-          {/* Candidate Card */}
-          <div className="flex items-center gap-2.5 pl-2 sm:pl-3 border-l border-blue-500/50">
-            <div className="w-8 h-8 rounded-lg bg-white text-[#005CE6] font-extrabold text-xs flex items-center justify-center shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-white text-[#005CE6] font-extrabold text-xs flex items-center justify-center shadow-xs">
               AS
             </div>
             <div className="hidden lg:block text-left leading-tight">
@@ -494,12 +513,30 @@ export default function ExamTestWindow() {
                   </div>
 
                   <div className="flex items-center gap-2 font-mono text-[11px] font-semibold">
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
-                      +1.00 Marks
-                    </span>
-                    <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-rose-200">
-                      -0.25 Negative
-                    </span>
+                    {isReviewMode && currentRevQ ? (
+                      currentRevQ.is_correct ? (
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center gap-1 border border-emerald-200">
+                          <Check className="w-3 h-3 stroke-[3]" /> +1.00 Marks (Correct)
+                        </span>
+                      ) : currentRevQ.your_answer ? (
+                        <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold text-xs flex items-center gap-1 border border-rose-200">
+                          <X className="w-3 h-3 stroke-[3]" /> -0.25 Marks (Incorrect)
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold text-xs border border-slate-200">
+                          0.00 Marks (Skipped)
+                        </span>
+                      )
+                    ) : (
+                      <>
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          +1.00 Marks
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-rose-200">
+                          -0.25 Negative
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -541,9 +578,48 @@ export default function ExamTestWindow() {
                   <MathRenderer content={currentQ.stem} />
                 </div>
 
-                {/* Options List (Authentic Banking Radio Selection) */}
+                {/* Options List (Authentic Banking Radio Selection or Review Highlight) */}
                 <div className="space-y-3 pt-2">
                   {currentQ.options.map((opt) => {
+                    if (isReviewMode && currentRevQ) {
+                      const isCorrect = opt.id === currentRevQ.correct_answer;
+                      const isSelected = opt.id === currentRevQ.your_answer;
+                      return (
+                        <div
+                          key={opt.id}
+                          className={cn(
+                            "min-h-[50px] p-3.5 sm:p-4 rounded-xl border flex items-center justify-between transition-all select-none",
+                            isCorrect
+                              ? "border-emerald-400 bg-emerald-50/70 font-semibold text-emerald-950 ring-1 ring-emerald-300"
+                              : isSelected
+                              ? "border-rose-400 bg-rose-50/70 font-semibold text-rose-950 ring-1 ring-rose-300"
+                              : "border-slate-200 bg-white opacity-80 text-slate-700"
+                          )}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-xs font-mono uppercase text-slate-500">
+                              ({opt.id})
+                            </span>
+                            <div className="text-sm font-medium leading-normal">
+                              <MathRenderer content={opt.text} />
+                            </div>
+                          </div>
+                          <div>
+                            {isCorrect && (
+                              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                <Check className="w-3 h-3 stroke-[3]" /> Correct Key
+                              </span>
+                            )}
+                            {isSelected && !isCorrect && (
+                              <span className="text-[11px] font-bold text-rose-700 bg-rose-100/90 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                                <X className="w-3 h-3 stroke-[3]" /> Your Answer
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+
                     const isSelected = selectedOption === opt.id;
                     return (
                       <div
@@ -581,6 +657,123 @@ export default function ExamTestWindow() {
                     );
                   })}
                 </div>
+
+                {/* In Review Mode: Show Explanations right in the question page */}
+                {isReviewMode && currentRevQ && (
+                  <div className="mt-6 pt-5 border-t border-slate-200 space-y-3.5">
+                    {/* Step-by-Step Official Method */}
+                    <div className="p-4 rounded-2xl bg-[#F0FAFF] border border-[#BCEBFC] space-y-2">
+                      <div className="font-bold text-[#005CE6] flex items-center gap-1.5 text-xs uppercase tracking-wider">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        <span>Step-by-Step Official Explanation</span>
+                      </div>
+                      <div className="leading-relaxed text-slate-800 text-[13px]">
+                        <MathRenderer content={currentRevQ.solution} />
+                      </div>
+                    </div>
+
+                    {/* Speed Shortcut Trick */}
+                    {currentRevQ.shortcut && (
+                      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 space-y-1.5">
+                        <div className="font-bold flex items-center gap-1.5 text-xs uppercase tracking-wider text-amber-900">
+                          <Lightbulb className="w-4 h-4 text-amber-600" />
+                          <span>Exam Speed Shortcut (15–20 Seconds)</span>
+                        </div>
+                        <p className="leading-relaxed text-[12px]">{currentRevQ.shortcut}</p>
+                      </div>
+                    )}
+
+                    {/* Distractor Trap Diagnosis */}
+                    {currentRevQ.option_rationales && (
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                        <div className="font-bold text-slate-800 text-xs">
+                          Distractor / Trap Diagnosis:
+                        </div>
+                        <div className="space-y-1.5">
+                          {Object.entries(currentRevQ.option_rationales).map(([optId, rationale]: [string, any]) => (
+                            <div key={optId} className="flex items-start gap-2 text-slate-600 text-[12px]">
+                              <span className="font-mono font-bold uppercase text-slate-900 shrink-0">Option {optId}:</span>
+                              <span>{rationale}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* CARD ACTION FOOTER (Integrated inside the card) */}
+              <div className="p-4 sm:px-6 sm:py-4 bg-[#F8FAFC]/90 border-t border-slate-200 rounded-b-2xl flex flex-wrap items-center justify-between gap-3">
+                {isReviewMode ? (
+                  <>
+                    <Link
+                      href={`/tests/result/${reviewAttemptId}`}
+                      className="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                      <span>Back to Scorecard</span>
+                    </Link>
+
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
+                        disabled={currentIdx === 0}
+                        className="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer shadow-2xs"
+                      >
+                        Previous Question
+                      </button>
+
+                      <button
+                        onClick={() => currentIdx < questions.length - 1 && setCurrentIdx((prev) => prev + 1)}
+                        disabled={currentIdx === questions.length - 1}
+                        className="neu-chip-primary px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <span>Next Question</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Left Side: Mark For Review & Clear Response */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleMarkForReviewAndNext}
+                        className="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold border border-purple-200 text-purple-700 bg-purple-50/70 hover:bg-purple-100 transition-colors cursor-pointer"
+                      >
+                        Mark for Review &amp; Next
+                      </button>
+
+                      <button
+                        onClick={handleClearResponse}
+                        disabled={!selectedOption}
+                        className="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer"
+                      >
+                        Clear Response
+                      </button>
+                    </div>
+
+                    {/* Right Side: Previous & Save & Next */}
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <button
+                        onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
+                        disabled={currentIdx === 0}
+                        className="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer"
+                      >
+                        Previous
+                      </button>
+
+                      <button
+                        onClick={handleSaveAndNext}
+                        className="neu-chip-primary px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <span>Save &amp; Next</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           ) : (
@@ -591,15 +784,6 @@ export default function ExamTestWindow() {
         {/* RIGHT PALETTE RAIL (Authentic TCS iON 5-State Legend & Grid) */}
         <aside className="w-80 bg-white border-l border-slate-200 p-5 hidden lg:flex flex-col justify-between shrink-0 z-20">
           <div className="space-y-4">
-            {/* Palette Header */}
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Question Palette
-              </span>
-              <span className="text-xs font-mono font-bold text-[#005CE6]">
-                Quant: {questions.length} Qs
-              </span>
-            </div>
 
             {/* TCS iON 5-Symbol Status Legend */}
             <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 bg-slate-50/70 p-3 rounded-xl border border-slate-200/80">
@@ -688,56 +872,26 @@ export default function ExamTestWindow() {
             </div>
           </div>
 
-          {/* Submit Exam Button */}
+          {/* Submit Exam Button or Back to Scorecard */}
           <div className="pt-3 border-t border-slate-100">
-            <button
-              onClick={() => setShowSubmitModal(true)}
-              className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
-            >
-              Submit Exam
-            </button>
+            {isReviewMode ? (
+              <Link
+                href={`/tests/result/${reviewAttemptId}`}
+                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm text-center block"
+              >
+                Back to Scorecard
+              </Link>
+            ) : (
+              <button
+                onClick={() => setShowSubmitModal(true)}
+                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+              >
+                Submit Exam
+              </button>
+            )}
           </div>
         </aside>
       </div>
-
-      {/* 4. FOOTER CONTROLS ACTION BAR (Official TCS iON Action Sequencing) */}
-      <footer className="h-16 bg-white border-t border-slate-200 px-4 sm:px-6 flex items-center justify-between z-30 shrink-0">
-        {/* Left Side: Mark For Review & Clear Response */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleMarkForReviewAndNext}
-            className="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold border border-purple-300 text-purple-700 bg-purple-50/60 hover:bg-purple-100/60 transition-colors cursor-pointer"
-          >
-            Mark for Review &amp; Next
-          </button>
-
-          <button
-            onClick={handleClearResponse}
-            disabled={!selectedOption}
-            className="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer"
-          >
-            Clear Response
-          </button>
-        </div>
-
-        {/* Right Side: Previous & Save & Next */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <button
-            onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
-            disabled={currentIdx === 0}
-            className="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer"
-          >
-            Previous
-          </button>
-
-          <button
-            onClick={handleSaveAndNext}
-            className="px-6 py-2.5 rounded-xl text-xs font-bold bg-[#005CE6] hover:bg-blue-700 text-white transition-colors cursor-pointer shadow-xs"
-          >
-            Save &amp; Next
-          </button>
-        </div>
-      </footer>
 
       {/* MODAL 1: QUESTION PAPER MODAL (Official TCS iON Skim View) */}
       {showQuestionPaper && (

@@ -34,6 +34,7 @@ export default function ResultAnalysisPage() {
 
   // Filter for Questions Review
   const [filter, setFilter] = useState<'all' | 'correct' | 'wrong' | 'skipped' | 'slow'>('all');
+  const [selectedQIndex, setSelectedQIndex] = useState<number>(0);
   const [expandedSolutions, setExpandedSolutions] = useState<Record<string, boolean>>({});
   const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({});
 
@@ -50,10 +51,10 @@ export default function ResultAnalysisPage() {
         const data = await res.json();
         if (data.success && data.snapshot) {
           setSnapshot(data.snapshot);
-          // By default expand first wrong question solution
-          const firstWrong = data.snapshot.questions_review.find((q: any) => !q.is_correct && q.your_answer);
-          if (firstWrong) {
-            setExpandedSolutions({ [firstWrong.question_id]: true });
+          // By default focus first wrong question
+          const firstWrongIdx = data.snapshot.questions_review.findIndex((q: any) => !q.is_correct && q.your_answer);
+          if (firstWrongIdx !== -1) {
+            setSelectedQIndex(firstWrongIdx);
           }
         }
       } catch {
@@ -304,205 +305,259 @@ export default function ResultAnalysisPage() {
           </div>
         </div>
 
-        {/* SOLUTIONS & REVIEW VIEW */}
+        {/* SOLUTIONS & QUESTION EXPLANATIONS (Interactive & Uncluttered) */}
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-slate-900">Questions &amp; Detailed Solutions</h2>
+              <h2 className="text-xl font-bold text-slate-900">Question Performance &amp; Explanations</h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Review step-by-step solutions, shortcut tricks, and wrong-option psychometric explanations.
+                Inspect step-by-step solutions, exam speed shortcuts, and psychometric distractor analyses.
               </p>
             </div>
 
-            {/* Filter Tabs (Neumorphic Inset + Chip UI) */}
-            <div className="flex rounded-full p-1.5 neu-inset text-xs">
-              {[
-                { id: 'all', label: 'All' },
-                { id: 'correct', label: 'Correct' },
-                { id: 'wrong', label: 'Wrong' },
-                { id: 'skipped', label: 'Skipped' },
-                { id: 'slow', label: 'Slow' },
-              ].map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => setFilter(f.id as any)}
-                  className={`px-3.5 py-1.5 font-bold rounded-full transition-all ${
-                    filter === f.id
-                      ? 'neu-chip-primary text-white'
-                      : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
+            <div className="flex items-center gap-3">
+              <Link
+                href={`/tests/${snapshot.test_id}/exam?mode=review&attemptId=${attemptId}`}
+                className="neu-chip-primary px-5 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-xs cursor-pointer"
+              >
+                <span>Open in Exam Console</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
 
-          {/* Question List */}
-          <div className="space-y-4">
-            {filteredQuestions.map((q) => {
-              const isExpanded = expandedSolutions[q.question_id];
-              const isBookmarked = bookmarked[q.question_id];
+          {/* Question Palette Bar (Clean Chip Navigator) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#BCEBFC] shadow-2xs space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              {/* Filter Tabs */}
+              <div className="flex flex-wrap gap-1.5 text-xs">
+                {[
+                  { id: 'all', label: `All (${snapshot.questions_review.length})` },
+                  { id: 'wrong', label: `Incorrect (${snapshot.score_card.wrong})` },
+                  { id: 'correct', label: `Correct (${snapshot.score_card.correct})` },
+                  { id: 'skipped', label: `Skipped (${snapshot.score_card.skipped})` },
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    onClick={() => setFilter(f.id as any)}
+                    className={`px-3 py-1 font-bold rounded-full transition-all text-xs cursor-pointer ${
+                      filter === f.id
+                        ? 'bg-[#005CE6] text-white shadow-2xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
 
-              return (
-                <div
-                  key={q.question_id}
-                  className={`p-6 rounded-3xl neu-glass-card transition-all ${
-                    q.is_correct
-                      ? 'border-emerald-200 hover:border-emerald-300'
-                      : q.your_answer
-                      ? 'border-rose-200 hover:border-rose-300'
-                      : 'border-slate-200 hover:border-blue-200'
-                  }`}
-                >
-                  {/* Question Header */}
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100 text-xs">
-                    <div className="flex items-center gap-2.5">
-                      <span className="font-bold font-mono px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                        Q{q.position}
-                      </span>
-                      <span className="text-slate-600 capitalize font-medium">{q.topic_name}</span>
-                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
-                        Level {q.difficulty}
-                      </span>
-                    </div>
+              {/* Status Legend */}
+              <div className="flex items-center gap-3 text-[11px] text-slate-500">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                  <span>Correct</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                  <span>Incorrect</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+                  <span>Skipped</span>
+                </span>
+              </div>
+            </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="text-slate-500 font-mono text-[11px]">
-                        Time: {q.time_taken_sec}s (Ideal: {q.ideal_time_sec}s)
+            {/* Questions Number Strip */}
+            <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100">
+              {filteredQuestions.map((q) => {
+                const isSelected = q.position === (snapshot.questions_review[selectedQIndex]?.position);
+                let chipColor = 'bg-slate-100 text-slate-700 hover:bg-slate-200';
+                if (q.is_correct) {
+                  chipColor = 'bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100';
+                } else if (q.your_answer) {
+                  chipColor = 'bg-rose-50 text-rose-700 border border-rose-300 hover:bg-rose-100';
+                }
+
+                return (
+                  <button
+                    key={q.question_id}
+                    onClick={() => {
+                      const actualIdx = snapshot.questions_review.findIndex((item) => item.question_id === q.question_id);
+                      if (actualIdx !== -1) setSelectedQIndex(actualIdx);
+                    }}
+                    className={`w-9 h-9 rounded-xl font-mono text-xs font-bold transition-all flex items-center justify-center cursor-pointer ${chipColor} ${
+                      isSelected ? 'ring-2 ring-[#005CE6] ring-offset-2 scale-105 shadow-xs font-extrabold' : ''
+                    }`}
+                  >
+                    {q.position}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Focused Question Explanation Card */}
+          {snapshot.questions_review[selectedQIndex] && (() => {
+            const activeQ = snapshot.questions_review[selectedQIndex];
+            return (
+              <div className="p-6 sm:p-7 rounded-3xl neu-glass-card border border-blue-200 shadow-sm space-y-6">
+                {/* Question Header */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100 text-xs">
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-bold font-mono px-3 py-1 rounded-full bg-[#005CE6] text-white">
+                      Question {activeQ.position} of {snapshot.questions_review.length}
+                    </span>
+                    <span className="text-slate-700 capitalize font-bold text-xs bg-slate-100 px-2.5 py-1 rounded-lg">
+                      {activeQ.topic_name}
+                    </span>
+                    <span className="text-[11px] px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-mono font-medium">
+                      Difficulty Level {activeQ.difficulty}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    {activeQ.is_correct ? (
+                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center gap-1.5 border border-emerald-200 text-xs">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        <span>Correct (+1.00 Marks)</span>
                       </span>
-                      <button
-                        onClick={() => toggleBookmark(q.question_id)}
-                        className={`p-1.5 rounded-lg hover:bg-blue-50 transition-colors ${
-                          isBookmarked ? 'text-blue-600' : 'text-slate-400'
-                        }`}
-                        title="Bookmark for Revision"
+                    ) : activeQ.your_answer ? (
+                      <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-bold flex items-center gap-1.5 border border-rose-200 text-xs">
+                        <XCircle className="w-4 h-4 text-rose-600" />
+                        <span>Incorrect (-0.25 Marks)</span>
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200">
+                        Skipped (0.00 Marks)
+                      </span>
+                    )}
+                    <span className="text-slate-500 font-mono text-[11px]">
+                      Time: {activeQ.time_taken_sec}s
+                    </span>
+                  </div>
+                </div>
+
+                {/* Question Stem */}
+                <div className="py-2 text-base sm:text-lg font-medium text-slate-900 leading-relaxed">
+                  <MathRenderer content={activeQ.stem} />
+                </div>
+
+                {/* Options Comparison */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  {activeQ.options.map((opt) => {
+                    const isCorrectOpt = opt.id === activeQ.correct_answer;
+                    const isUserSelected = opt.id === activeQ.your_answer;
+
+                    let optClass = 'border-slate-200 bg-white text-slate-700';
+                    if (isCorrectOpt) {
+                      optClass = 'border-emerald-400 bg-emerald-50/70 text-emerald-950 font-bold ring-1 ring-emerald-300';
+                    } else if (isUserSelected && !isCorrectOpt) {
+                      optClass = 'border-rose-400 bg-rose-50/70 text-rose-950 font-bold ring-1 ring-rose-300';
+                    }
+
+                    return (
+                      <div
+                        key={opt.id}
+                        className={`p-3.5 sm:p-4 rounded-2xl border text-xs sm:text-sm flex items-center justify-between transition-all ${optClass}`}
                       >
-                        <Bookmark className="w-4 h-4 fill-current" />
-                      </button>
-                      <button
-                        onClick={() => setReportingQid(q.question_id)}
-                        className="p-1.5 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors"
-                        title="Report Question"
-                      >
-                        <Flag className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Question Stem */}
-                  <div className="py-4 text-sm sm:text-base font-medium text-slate-900 leading-relaxed">
-                    <MathRenderer content={q.stem} />
-                  </div>
-
-                  {/* Options Comparison */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
-                    {q.options.map((opt) => {
-                      const isCorrectOpt = opt.id === q.correct_answer;
-                      const isUserSelected = opt.id === q.your_answer;
-
-                      let optClass = 'border-slate-200 bg-slate-50/60 text-slate-700';
-                      if (isCorrectOpt) {
-                        optClass = 'border-emerald-300 bg-emerald-50 text-emerald-900 font-bold shadow-xs';
-                      } else if (isUserSelected && !isCorrectOpt) {
-                        optClass = 'border-rose-300 bg-rose-50 text-rose-900 font-bold shadow-xs';
-                      }
-
-                      return (
-                        <div
-                          key={opt.id}
-                          className={`p-3.5 rounded-2xl border text-xs flex items-center justify-between ${optClass}`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className="font-bold uppercase font-mono">{opt.id}.</span>
-                            <MathRenderer content={opt.text} />
-                          </div>
-
-                          <div className="text-[10px] font-bold">
-                            {isCorrectOpt && (
-                              <span className="flex items-center gap-1 text-emerald-700">
-                                <CheckCircle2 className="w-3.5 h-3.5" />
-                                <span>Correct Key</span>
-                              </span>
-                            )}
-                            {isUserSelected && !isCorrectOpt && (
-                              <span className="flex items-center gap-1 text-rose-700">
-                                <XCircle className="w-3.5 h-3.5" />
-                                <span>Your Choice</span>
-                              </span>
-                            )}
-                          </div>
+                        <div className="flex items-center gap-2.5">
+                          <span className="font-bold uppercase font-mono text-xs">({opt.id})</span>
+                          <MathRenderer content={opt.text} />
                         </div>
-                      );
-                    })}
-                  </div>
 
-                  {/* Toggle Solution Drawer */}
-                  <div className="pt-4 flex justify-between items-center text-xs">
-                    <button
-                      onClick={() => toggleSolution(q.question_id)}
-                      className="font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
-                    >
-                      <span>{isExpanded ? 'Hide Solution & Shortcuts' : 'View Step-by-Step Solution & Trap Diagnosis'}</span>
-                      {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    </button>
-
-                    <Link
-                      href={`/tests/new`}
-                      className="text-xs text-slate-500 hover:text-blue-600 flex items-center gap-1 transition-colors font-medium"
-                    >
-                      <span>Practise Similar</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-
-                  {/* Expanded Solution Body */}
-                  {isExpanded && (
-                    <div className="mt-4 pt-4 border-t border-slate-100 space-y-4 text-xs">
-                      {/* Step-by-step Solution */}
-                      <div className="p-4 rounded-2xl bg-blue-50/40 border border-blue-100">
-                        <div className="font-bold text-blue-900 mb-2 flex items-center gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span>Official Step-by-Step Method</span>
-                        </div>
-                        <div className="leading-relaxed text-slate-800">
-                          <MathRenderer content={q.solution} />
+                        <div className="text-[11px] font-bold">
+                          {isCorrectOpt && (
+                            <span className="flex items-center gap-1 text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>Correct Key</span>
+                            </span>
+                          )}
+                          {isUserSelected && !isCorrectOpt && (
+                            <span className="flex items-center gap-1 text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full">
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>Your Choice</span>
+                            </span>
+                          )}
                         </div>
                       </div>
+                    );
+                  })}
+                </div>
 
-                      {/* Shortcut Trick */}
-                      {q.shortcut && (
-                        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900">
-                          <div className="font-bold mb-1 flex items-center gap-2 text-amber-900">
-                            <Lightbulb className="w-4 h-4 text-amber-600" />
-                            <span>Exam Shortcut Trick (15-20 Seconds)</span>
-                          </div>
-                          <p className="leading-relaxed">{q.shortcut}</p>
-                        </div>
-                      )}
+                {/* Detailed Official Explanation Box */}
+                <div className="pt-4 border-t border-slate-200 space-y-4 text-xs">
+                  {/* Step-by-step Solution */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-[#F0FAFF] border border-[#BCEBFC] space-y-2">
+                    <div className="font-bold text-[#005CE6] flex items-center gap-2 text-xs uppercase tracking-wider">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>Official Step-by-Step Derivation</span>
+                    </div>
+                    <div className="leading-relaxed text-slate-800 text-sm">
+                      <MathRenderer content={activeQ.solution} />
+                    </div>
+                  </div>
 
-                      {/* Wrong-Option Explanations */}
-                      {q.option_rationales && (
-                        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                          <div className="font-bold text-slate-900 mb-2">
-                            Why You Might Have Chosen Other Options (Psychometric Distractor Trap):
+                  {/* Shortcut Trick */}
+                  {activeQ.shortcut && (
+                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 space-y-1.5">
+                      <div className="font-bold flex items-center gap-2 text-amber-900 text-xs uppercase tracking-wider">
+                        <Lightbulb className="w-4 h-4 text-amber-600" />
+                        <span>Exam Speed Shortcut (15–20 Seconds)</span>
+                      </div>
+                      <p className="leading-relaxed text-xs">{activeQ.shortcut}</p>
+                    </div>
+                  )}
+
+                  {/* Wrong-Option Explanations */}
+                  {activeQ.option_rationales && (
+                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                      <div className="font-bold text-slate-800 text-xs">
+                        Distractor / Psychological Trap Analysis:
+                      </div>
+                      <div className="space-y-1.5">
+                        {Object.entries(activeQ.option_rationales).map(([optId, rationale]) => (
+                          <div key={optId} className="flex items-start gap-2 text-slate-600 text-xs">
+                            <span className="font-mono font-bold uppercase text-slate-900 shrink-0">
+                              Option {optId}:
+                            </span>
+                            <span>{rationale}</span>
                           </div>
-                          {Object.entries(q.option_rationales).map(([optId, rationale]) => (
-                            <div key={optId} className="flex items-start gap-2 text-slate-700">
-                              <span className="font-mono font-bold uppercase text-slate-900">
-                                Option {optId}:
-                              </span>
-                              <span>{rationale}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
-              );
-            })}
-          </div>
+
+                {/* Navigation Footer for the Question */}
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <button
+                    onClick={() => setSelectedQIndex((prev) => Math.max(0, prev - 1))}
+                    disabled={selectedQIndex === 0}
+                    className="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 font-semibold text-slate-700 transition-colors cursor-pointer"
+                  >
+                    ← Previous Question
+                  </button>
+
+                  <Link
+                    href={`/tests/${snapshot.test_id}/exam?mode=review&attemptId=${attemptId}`}
+                    className="text-xs font-bold text-[#005CE6] hover:underline flex items-center gap-1"
+                  >
+                    <span>Open in Exam Console</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+
+                  <button
+                    onClick={() => setSelectedQIndex((prev) => Math.min(snapshot.questions_review.length - 1, prev + 1))}
+                    disabled={selectedQIndex === snapshot.questions_review.length - 1}
+                    className="neu-chip-primary px-5 py-2 rounded-xl font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <span>Next Question →</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </main>
 
