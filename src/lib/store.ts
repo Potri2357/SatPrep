@@ -16,6 +16,7 @@ import {
   ReportItem,
   PaletteState,
 } from './types';
+import { FULL_MOCK_35_QUESTIONS, FULL_MOCK_35_KEYS } from './bank-exam-blueprint';
 
 // Initial Seed Topics
 export const INITIAL_TOPICS: Topic[] = [
@@ -520,6 +521,10 @@ class SatPrepStore {
     INITIAL_QUESTIONS.forEach((q) => this.questions.set(q.id, q));
     Object.entries(INITIAL_KEYS).forEach(([qid, k]) => this.keys.set(qid, k));
 
+    // Seed official 35-question full blueprint for authentic real-time exam pattern
+    FULL_MOCK_35_QUESTIONS.forEach((q) => this.questions.set(q.id, q));
+    Object.entries(FULL_MOCK_35_KEYS).forEach(([qid, k]) => this.keys.set(qid, k));
+
     // Seed sample reports
     this.reports.push({
       id: 'rep-1',
@@ -588,26 +593,44 @@ class SatPrepStore {
     const testId = `test-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const exam = INITIAL_EXAMS.find((e) => e.id === config.exam_id) || INITIAL_EXAMS[0];
 
-    // Filter questions
-    let pool = Array.from(this.questions.values()).filter((q) => q.status === 'live' || q.status === 'reviewed');
-
-    if (config.source_type === 'manual' && config.selected_qids && config.selected_qids.length > 0) {
-      pool = pool.filter((q) => config.selected_qids!.includes(q.id));
-    } else if (config.topics && config.topics.length > 0) {
-      pool = pool.filter((q) => config.topics.includes(q.topic_id));
-    }
-
-    // If pool is smaller than question_count, replicate/twist existing to meet count
     let selected: Question[] = [];
-    if (pool.length === 0) {
-      selected = Array.from(this.questions.values()).slice(0, config.question_count);
+
+    // Exact and authentic real-time banking exam question pattern
+    if (config.mode === 'full_mock' || config.question_count === 35) {
+      // Full 35-Question Quantitative Aptitude standard exam pattern:
+      // Q1-Q5: Simplification & Approximation
+      // Q6-Q10: Quadratic Equations
+      // Q11-Q15: Number Series
+      // Q16-Q20: Table DI Set (5 questions)
+      // Q21-Q25: Pie Chart DI Set (5 questions)
+      // Q26-Q35: 10 Core Arithmetic Word Problems
+      selected = [...FULL_MOCK_35_QUESTIONS];
+    } else if (config.mode === 'sectional' || config.question_count === 25) {
+      // 25-Question Sectional Pattern: 5 Simplification, 5 Quadratic, 5 Series, 5 DI, 5 Arithmetic
+      const simps = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'simplification').slice(0, 5);
+      const quads = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'quadratic-equations').slice(0, 5);
+      const series = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'number-series').slice(0, 5);
+      const di = FULL_MOCK_35_QUESTIONS.filter((q) => q.topic_id === 'tabular-di').slice(0, 5);
+      const arith = FULL_MOCK_35_QUESTIONS.filter((q) => !['simplification', 'quadratic-equations', 'number-series', 'tabular-di', 'bar-pie-di'].includes(q.topic_id)).slice(0, 5);
+      selected = [...simps, ...quads, ...series, ...di, ...arith];
     } else {
+      // Topic test / Custom practice: filter by chosen topics or selected QIDs
+      let pool = Array.from(this.questions.values()).filter((q) => q.status === 'live' || q.status === 'reviewed');
+
+      if (config.source_type === 'manual' && config.selected_qids && config.selected_qids.length > 0) {
+        pool = pool.filter((q) => config.selected_qids!.includes(q.id));
+      } else if (config.topics && config.topics.length > 0) {
+        pool = pool.filter((q) => config.topics.includes(q.topic_id));
+      }
+
+      if (pool.length === 0) {
+        pool = Array.from(this.questions.values());
+      }
+
+      let idx = 0;
       while (selected.length < config.question_count) {
-        for (const q of pool) {
-          if (selected.length < config.question_count) {
-            selected.push(q);
-          }
-        }
+        selected.push(pool[idx % pool.length]);
+        idx++;
       }
     }
 
