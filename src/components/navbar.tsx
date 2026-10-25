@@ -13,10 +13,11 @@ import {
   User,
   Shield,
   Award,
-  ChevronDown,
   LogOut,
   Home,
   BarChart2,
+  Play,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -77,28 +78,30 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   };
 
   return (
-    <header className={cn("sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all", className)}>
+    <header className={cn("sticky top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_6px_20px_rgba(0,92,230,0.02)] transition-all", className)}>
       <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Left: Brand with descriptive subtitle */}
-        <div className="flex items-center gap-6">
+        {/* Left: Brand Logo & Segmented Nav */}
+        <div className="flex items-center gap-6 lg:gap-8">
           <Link
             href="/"
-            className="flex items-center gap-3 transition-opacity hover:opacity-90 focus:outline-none"
-            aria-label="SatPrep - Banking exam preparation"
+            className="flex items-center gap-2.5 transition-all hover:opacity-95 focus:outline-none group"
+            aria-label="SatPrep - Banking Exam Prep"
           >
-            <BrandLogo size={34} showWordmark={false} />
-            <div className="flex flex-col">
-              <span className="font-extrabold text-base tracking-tight text-slate-900 leading-tight">
+            <div className="transition-transform group-hover:scale-105">
+              <BrandLogo size={32} showWordmark={false} />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="font-extrabold text-[17px] tracking-tight text-slate-900">
                 SatPrep
               </span>
-              <span className="text-[10px] font-medium text-slate-500 leading-none">
-                Banking exam preparation
+              <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md bg-[#005CE6]/10 text-[#005CE6] text-[10px] font-mono font-bold tracking-wider uppercase border border-[#005CE6]/20">
+                Bank Prep
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 ml-4" aria-label="Main Navigation">
+          {/* Desktop Segmented Navigation Bar */}
+          <nav className="hidden md:flex items-center p-1 bg-slate-100/80 rounded-2xl border border-slate-200/60 shadow-2xs" aria-label="Main Navigation">
             {navItems.map((item) => {
               const active = isItemActive(item.href);
               const Icon = item.icon;
@@ -107,13 +110,13 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                   key={item.title}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors",
+                    "flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all duration-150 select-none",
                     active
-                      ? "text-[#005CE6] bg-blue-50/70 font-bold"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/70"
+                      ? "bg-white text-[#005CE6] font-bold shadow-xs shadow-slate-200/70"
+                      : "text-slate-600 font-semibold hover:text-slate-900 hover:bg-white/60"
                   )}
                 >
-                  <Icon className={cn("w-4 h-4 shrink-0", active ? "text-[#005CE6]" : "text-slate-400")} />
+                  <Icon className={cn("w-3.5 h-3.5 shrink-0", active ? "text-[#005CE6]" : "text-slate-400")} />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -121,8 +124,17 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           </nav>
         </div>
 
-        {/* Right: User Profile Menu & Mobile Toggle */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Right: Quick CTA + User Profile Avatar + Mobile Toggle */}
+        <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+          {/* Quick Mock Test CTA (Desktop) */}
+          <Link
+            href="/tests/new"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#0096D6] hover:from-[#004ec4] hover:to-[#0081ba] text-white text-xs font-bold transition-all shadow-xs hover:shadow hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Play className="w-3 h-3 fill-current" />
+            <span>Start Test</span>
+          </Link>
+
           {/* User Account Controls (Avatar Icon Only) */}
           <div className="relative" ref={dropdownRef}>
             <button
@@ -133,45 +145,53 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                 setProfileDropdownOpen((prev) => !prev);
               }}
               className={cn(
-                "p-0.5 rounded-full transition-all cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-[#005CE6]/40 flex items-center justify-center",
-                profileDropdownOpen ? "ring-2 ring-[#005CE6] shadow-sm" : "hover:ring-2 hover:ring-[#005CE6]/30"
+                "p-0.5 rounded-full transition-all cursor-pointer select-none focus:outline-none relative flex items-center justify-center",
+                profileDropdownOpen
+                  ? "ring-2 ring-[#005CE6] ring-offset-2 ring-offset-white shadow-sm"
+                  : "hover:ring-2 hover:ring-[#005CE6]/30 hover:ring-offset-1"
               )}
               aria-label="Candidate Profile Menu"
               aria-expanded={profileDropdownOpen}
               title="Sathyamoorthi M (Click for Profile Menu)"
             >
-              <CandidateAvatar size={38} />
+              <CandidateAvatar size={36} />
+              {/* Online pulse indicator dot */}
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
             </button>
 
             {/* Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
-                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 mb-1 flex items-center gap-3">
-                  <CandidateAvatar size={34} />
+              <div className="absolute right-0 mt-2.5 w-72 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_12px_40px_rgba(0,0,0,0.12),0_2px_6px_rgba(0,0,0,0.04)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
+                {/* Profile Header (Target line completely removed) */}
+                <div className="p-3 rounded-xl bg-gradient-to-br from-[#F0FAFF] to-[#EBF7FF] border border-[#BCEBFC]/60 flex items-center gap-3">
+                  <CandidateAvatar size={38} />
                   <div className="min-w-0 flex-1">
                     <div className="font-bold text-xs text-slate-900 truncate">Sathyamoorthi M</div>
-                    <div className="text-[10px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
-                    <div className="text-[10px] font-semibold text-[#005CE6] mt-0.5">Target: IBPS PO Prelims 2026</div>
+                    <div className="text-[11px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
+                    <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100/90 text-emerald-800 text-[10px] font-bold border border-emerald-200">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      <span>Verified Student</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="px-2 pt-1 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Student Space
+                <div className="px-2 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Student Portal
                 </div>
 
                 <Link
                   href="/profile"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/60 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/70 transition-colors"
                 >
                   <User className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Candidate Profile &amp; Goals</span>
+                  <span>Candidate Profile &amp; Settings</span>
                 </Link>
 
                 <Link
                   href="/tests/result/sample-attempt-1"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/60 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/70 transition-colors"
                 >
                   <Award className="w-3.5 h-3.5 text-slate-400" />
                   <span>Exam Results &amp; Analytics</span>
@@ -186,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                 <Link
                   href="/admin"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/60 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/70 transition-colors"
                 >
                   <Shield className="w-3.5 h-3.5 text-slate-400" />
                   <span>Admin Console</span>
@@ -197,7 +217,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                 <Link
                   href="/auth"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5 text-rose-500" />
                   <span>Sign Out</span>
@@ -209,7 +229,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg border border-slate-200 text-slate-600 hover:text-slate-900 transition-colors"
+            className="md:hidden p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
             aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -219,27 +239,38 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1">
-          {navItems.map((item) => {
-            const active = isItemActive(item.href);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.title}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-colors",
-                  active
-                    ? "text-[#005CE6] bg-blue-50/70 font-bold"
-                    : "text-slate-700 hover:bg-slate-50"
-                )}
-              >
-                <Icon className={cn("w-4 h-4", active ? "text-[#005CE6]" : "text-slate-400")} />
-                <span>{item.title}</span>
-              </Link>
-            );
-          })}
+        <div className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl px-4 py-3 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-150">
+          <div className="grid grid-cols-2 gap-1.5 pb-2">
+            {navItems.map((item) => {
+              const active = isItemActive(item.href);
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-colors",
+                    active
+                      ? "text-[#005CE6] bg-blue-50/80 font-bold"
+                      : "text-slate-700 hover:bg-slate-50"
+                  )}
+                >
+                  <Icon className={cn("w-4 h-4 shrink-0", active ? "text-[#005CE6]" : "text-slate-400")} />
+                  <span>{item.title}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          <Link
+            href="/tests/new"
+            onClick={() => setMobileMenuOpen(false)}
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#0096D6] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
+          >
+            <Play className="w-3.5 h-3.5 fill-current" />
+            <span>Start Practice Test</span>
+          </Link>
         </div>
       )}
     </header>
