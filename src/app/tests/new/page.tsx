@@ -172,6 +172,7 @@ export default function NewTestBuilderPage() {
           source_type: 'auto',
           topics: selectedTopics,
           question_count: questionCount,
+          duration_min: durationMinutes,
           difficulty_mix: difficultyMix,
         }),
       });

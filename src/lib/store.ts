@@ -581,6 +581,7 @@ class SatPrepStore {
     source_type?: 'auto' | 'manual' | 'curated';
     topics: string[];
     question_count: number;
+    duration_min?: number;
     difficulty_mix?: string;
     selected_qids?: string[];
   }): TestRecord {
@@ -632,11 +633,20 @@ class SatPrepStore {
       };
     });
 
+    // Determine test duration matching real-time exam patterns
+    let testDuration = config.duration_min;
+    if (!testDuration) {
+      if (config.mode === 'full_mock') testDuration = 20;
+      else if (config.mode === 'sectional') testDuration = 15;
+      else if (config.mode === 'topic_test') testDuration = 10;
+      else testDuration = Math.max(5, Math.round(assembledQuestions.length * (20 / 35)));
+    }
+
     const bundle: FrozenTestBundle = {
       test_id: testId,
       assembled_at: new Date().toISOString(),
       exam_name: exam.name,
-      duration_min: 20,
+      duration_min: testDuration,
       total_questions: assembledQuestions.length,
       total_marks: assembledQuestions.length * 1.0,
       negative_marks: 0.25,
@@ -646,7 +656,7 @@ class SatPrepStore {
         {
           id: 'quant-section-1',
           name: 'Quantitative Aptitude',
-          duration_min: 20,
+          duration_min: testDuration,
           questions: assembledQuestions,
         },
       ],
