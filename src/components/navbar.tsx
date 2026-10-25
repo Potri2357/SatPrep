@@ -5,6 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '@/components/brand-logo';
 import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+} from '@/components/ui/navigation-menu';
+import { cn } from '@/lib/utils';
+import {
   Flame,
   Plus,
   Menu,
@@ -17,8 +24,7 @@ import {
   ChevronDown,
   LogOut,
   Sparkles,
-  Settings,
-  HelpCircle,
+  Home,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -42,66 +48,79 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Centered core options with icons (Exam Results and Profile removed as requested)
-  const centerNavLinks = [
-    { label: 'Create Test', href: '/tests/new', icon: Layers },
-    { label: 'Practice', href: '/practice', icon: BookOpen },
+  // Centered navigation options with icons (using shadcn navigation-menu pattern)
+  const centerNavItems = [
+    { title: 'Home', href: '/', icon: Home },
+    { title: 'Create Test', href: '/tests/new', icon: Layers },
+    { title: 'Practice', href: '/practice', icon: BookOpen },
   ];
 
-  const isActive = (href: string) => {
+  const isItemActive = (href: string) => {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
   };
 
   return (
-    <header className={`sticky top-0 z-50 bg-[#F7FDFF]/85 backdrop-blur-xl border-b border-[#BCEBFC]/60 shadow-[0_4px_24px_rgba(0,92,230,0.04)] ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between relative">
-        {/* Left: Brand Logo */}
-        <div className="flex items-center">
+    <div className={`sticky top-3 z-50 px-3 sm:px-6 w-full ${className}`}>
+      {/* Floating Island Navbar (Clean, High-Contrast, Premium Architecture) */}
+      <header className="max-w-7xl mx-auto h-16 rounded-full bg-white/95 backdrop-blur-2xl border border-[#BCEBFC] shadow-[0_12px_36px_rgba(0,92,230,0.08),0_2px_6px_rgba(0,92,230,0.04)] px-4 sm:px-6 flex items-center justify-between relative transition-all">
+        {/* Left: Brand Logo & Wordmark */}
+        <div className="flex items-center shrink-0">
           <Link
             href="/"
             className="flex items-center transition-transform hover:scale-[1.02] focus:outline-none"
+            aria-label="SatPrep Home"
           >
-            <BrandLogo size={34} showWordmark={true} />
+            <BrandLogo size={36} showWordmark={true} />
           </Link>
         </div>
 
-        {/* Center: Navigation Options Dock (Centered, with Icons, Chip UI) */}
-        <nav className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2 p-1 rounded-full neu-inset bg-white/70 backdrop-blur-md border border-[#BCEBFC]/80 shadow-[inset_2px_2px_6px_rgba(0,92,230,0.06),inset_-2px_-2px_6px_rgba(255,255,255,0.95)]">
-          {centerNavLinks.map((link) => {
-            const active = isActive(link.href);
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-2 ${
-                  active
-                    ? 'neu-chip-primary text-white shadow-[0_4px_14px_rgba(0,92,230,0.35)]'
-                    : 'text-slate-600 hover:text-[#005CE6] hover:bg-white/80'
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${active ? 'text-white' : 'text-[#005CE6]'}`} />
-                <span>{link.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Center: shadcn NavigationMenu with sliding underline & icons */}
+        <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2">
+          <NavigationMenu>
+            <NavigationMenuList className="space-x-1 sm:space-x-2 bg-[#F0FAFF]/80 p-1 rounded-full border border-[#BCEBFC]/60 shadow-[inset_0_1px_3px_rgba(0,92,230,0.05)]">
+              {centerNavItems.map((item) => {
+                const active = isItemActive(item.href);
+                const Icon = item.icon;
+                return (
+                  <NavigationMenuItem key={item.title}>
+                    <NavigationMenuLink
+                      active={active}
+                      asChild
+                      className={cn(
+                        "group relative inline-flex h-9 w-max items-center justify-center rounded-full px-4 py-2 font-bold text-xs transition-all",
+                        "before:absolute before:inset-x-3 before:bottom-0.5 before:h-[2px] before:scale-x-0 before:bg-[#005CE6] before:transition-transform before:duration-200",
+                        active
+                          ? "bg-white text-[#005CE6] shadow-[0_2px_8px_rgba(0,92,230,0.12)] before:scale-x-100"
+                          : "text-slate-600 hover:text-[#005CE6] hover:bg-white/60 hover:before:scale-x-100"
+                      )}
+                    >
+                      <Link className="flex items-center gap-2" href={item.href}>
+                        <Icon className={cn("h-4 w-4 shrink-0 transition-colors", active ? "text-[#005CE6]" : "text-slate-500 group-hover:text-[#005CE6]")} />
+                        <span>{item.title}</span>
+                      </Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                );
+              })}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
-        {/* Right: Streak Chip, New Test Chip, and Profile Icon with Dropdown (User & Admin) */}
-        <div className="flex items-center gap-3">
-          {/* 5-Day Streak Pill (Matching Reference Image) */}
+        {/* Right: Streak Pill, New Test Chip & Profile Icon with Dropdown */}
+        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+          {/* 5-Day Streak Pill (Matches user reference image exactly) */}
           <div className="hidden lg:inline-flex streak-pill">
             <Flame className="w-4 h-4 fill-amber-500 text-amber-500 shrink-0" />
             <span>5 Day Streak</span>
           </div>
 
-          {/* Quick New Test Chip Button (Matching Reference Image) */}
+          {/* Quick New Test Chip Button (Matches user reference image exactly) */}
           <Link
             href="/tests/new"
             className="hidden sm:inline-flex neu-chip-primary text-xs"
           >
-            <Plus className="w-4 h-4 text-white" />
+            <Plus className="w-4 h-4 text-white stroke-[2.5]" />
             <span>New Test</span>
           </Link>
 
@@ -109,38 +128,40 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-              className={`flex items-center gap-1.5 p-1 rounded-full bg-white/90 border transition-all cursor-pointer ${
+              className={cn(
+                "flex items-center gap-1.5 p-1 rounded-full bg-white border transition-all cursor-pointer select-none",
                 profileDropdownOpen
-                  ? 'border-[#005CE6] shadow-[0_0_0_3px_rgba(0,92,230,0.15)] ring-1 ring-[#005CE6]'
-                  : 'border-[#BCEBFC] hover:border-[#005CE6] shadow-[2px_2px_8px_rgba(0,92,230,0.08),-2px_-2px_8px_rgba(255,255,255,0.95)]'
-              }`}
-              aria-label="User Profile and Admin Navigation Menu"
+                  ? "border-[#005CE6] shadow-[0_0_0_3px_rgba(0,92,230,0.15)] ring-1 ring-[#005CE6]"
+                  : "border-[#BCEBFC] hover:border-[#005CE6] shadow-[0_2px_8px_rgba(0,92,230,0.08)]"
+              )}
+              aria-label="User & Admin Profile Menu"
               aria-expanded={profileDropdownOpen}
             >
-              {/* Avatar Pill */}
+              {/* Avatar Disc */}
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#005CE6] via-[#0096D6] to-[#60CEF8] text-white font-extrabold flex items-center justify-center text-xs shadow-sm ring-1 ring-white">
                 AS
               </div>
               <ChevronDown
-                className={`w-3.5 h-3.5 text-slate-500 mr-1 transition-transform duration-200 ${
-                  profileDropdownOpen ? 'rotate-180 text-[#005CE6]' : 'text-slate-500'
-                }`}
+                className={cn(
+                  "w-3.5 h-3.5 text-slate-500 mr-1 transition-transform duration-200",
+                  profileDropdownOpen && "rotate-180 text-[#005CE6]"
+                )}
               />
             </button>
 
-            {/* Profile Dropdown Menu with User and Admin Options */}
+            {/* Profile & Admin Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-72 rounded-3xl bg-white/95 backdrop-blur-2xl border border-white shadow-[0_16px_40px_rgba(0,92,230,0.14),-6px_-6px_20px_rgba(255,255,255,0.95)] p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1.5">
+              <div className="absolute right-0 mt-3 w-72 rounded-3xl bg-white/98 backdrop-blur-2xl border border-[#BCEBFC] shadow-[0_20px_50px_rgba(0,92,230,0.15),0_1px_3px_rgba(0,92,230,0.05)] p-3 z-50 animate-in fade-in slide-in-from-top-2 duration-150 space-y-1.5">
                 {/* Candidate Info Header */}
-                <div className="p-3 rounded-2xl bg-gradient-to-br from-[#F0FAFF] to-[#E0F4FD] border border-[#BCEBFC]/60 mb-1">
+                <div className="p-3.5 rounded-2xl bg-gradient-to-br from-[#F0FAFF] to-[#E0F4FD] border border-[#BCEBFC]/70 mb-1">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#005CE6] to-[#0096D6] text-white font-bold flex items-center justify-center text-sm shadow-sm ring-2 ring-white">
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#005CE6] to-[#0096D6] text-white font-extrabold flex items-center justify-center text-sm shadow-sm ring-2 ring-white">
                       AS
                     </div>
                     <div className="overflow-hidden">
                       <div className="font-extrabold text-sm text-[#0F172A] truncate">Aditya Sharma</div>
                       <div className="text-[11px] text-slate-500 truncate">aditya@satprep.in</div>
-                      <div className="text-[10px] text-[#005CE6] font-bold bg-white/80 px-2 py-0.5 rounded-full inline-block mt-1 border border-[#BCEBFC]">
+                      <div className="text-[10px] font-bold text-[#005CE6] bg-white px-2 py-0.5 rounded-full inline-block mt-1 border border-[#BCEBFC]">
                         IBPS PO 2026 Aspirant
                       </div>
                     </div>
@@ -157,12 +178,12 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                   onClick={() => setProfileDropdownOpen(false)}
                   className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-[#F0FAFF] transition-all group"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-[#F0FAFF] group-hover:bg-[#BCEBFC]/50 text-[#005CE6] flex items-center justify-center transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-[#F0FAFF] group-hover:bg-[#BCEBFC]/60 text-[#005CE6] flex items-center justify-center transition-colors">
                     <User className="w-3.5 h-3.5" />
                   </div>
                   <div>
                     <div className="font-bold">Candidate Profile</div>
-                    <div className="text-[10px] text-slate-400">Exams, targets, and study stats</div>
+                    <div className="text-[10px] text-slate-400">Target exams &amp; study history</div>
                   </div>
                 </Link>
 
@@ -171,12 +192,12 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                   onClick={() => setProfileDropdownOpen(false)}
                   className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-[#F0FAFF] transition-all group"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-[#F0FAFF] group-hover:bg-[#BCEBFC]/50 text-[#005CE6] flex items-center justify-center transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-[#F0FAFF] group-hover:bg-[#BCEBFC]/60 text-[#005CE6] flex items-center justify-center transition-colors">
                     <Award className="w-3.5 h-3.5" />
                   </div>
                   <div>
                     <div className="font-bold">Exam Results &amp; Analytics</div>
-                    <div className="text-[10px] text-slate-400">Scorecard, rank, and weak spots</div>
+                    <div className="text-[10px] text-slate-400">Scorecard, rank &amp; weak areas</div>
                   </div>
                 </Link>
 
@@ -201,7 +222,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                       <span>Admin Console</span>
                       <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-[#005CE6] text-white font-mono">STAFF</span>
                     </div>
-                    <div className="text-[10px] text-slate-400">Manage questions, seeds &amp; test packs</div>
+                    <div className="text-[10px] text-slate-400">Question bank, generator &amp; review</div>
                   </div>
                 </Link>
 
@@ -226,17 +247,17 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-full bg-white/80 border border-slate-200 text-slate-600 hover:text-slate-900 shadow-xs transition-colors"
+            className="md:hidden p-2 rounded-full bg-white border border-[#BCEBFC] text-slate-600 hover:text-slate-900 shadow-xs transition-colors"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-      </div>
+      </header>
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-[#BCEBFC]/60 bg-white/95 backdrop-blur-xl px-4 py-4 space-y-2 shadow-xl">
+        <div className="md:hidden mt-2 rounded-3xl border border-[#BCEBFC] bg-white/98 backdrop-blur-2xl p-4 space-y-2 shadow-xl">
           <div className="flex items-center gap-2 mb-3">
             <div className="streak-pill text-xs py-1 px-3">
               <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
@@ -252,22 +273,23 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
             </Link>
           </div>
 
-          {centerNavLinks.map((link) => {
-            const active = isActive(link.href);
-            const Icon = link.icon;
+          {centerNavItems.map((item) => {
+            const active = isItemActive(item.href);
+            const Icon = item.icon;
             return (
               <Link
-                key={link.href}
-                href={link.href}
+                key={item.title}
+                href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-xs font-bold transition-all ${
+                className={cn(
+                  "flex items-center gap-3 px-4 py-2.5 rounded-full text-xs font-bold transition-all",
                   active
-                    ? 'bg-[#005CE6] text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-50'
-                }`}
+                    ? "bg-[#005CE6] text-white shadow-sm"
+                    : "text-slate-700 hover:bg-slate-50"
+                )}
               >
-                <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-[#005CE6]'}`} />
-                <span>{link.label}</span>
+                <Icon className={cn("w-4 h-4", active ? "text-white" : "text-[#005CE6]")} />
+                <span>{item.title}</span>
               </Link>
             );
           })}
@@ -302,6 +324,6 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           </div>
         </div>
       )}
-    </header>
+    </div>
   );
 };

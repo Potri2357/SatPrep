@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Sans } from 'next/font/google';
+import 'katex/dist/katex.min.css';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -24,6 +25,12 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+          integrity="sha384-GvrOXuhMATgEsSwCs4smqk74XYTSpenTM9c46Nd4P4MENT378229Uuo3mQUMU377"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={`${dmSans.className} min-h-screen bg-[#F7FDFF] text-[#0F172A] antialiased selection:bg-[#005CE6] selection:text-white`}>
         {children}
