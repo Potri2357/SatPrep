@@ -85,7 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Bottom User Profile in Admin */}
         <div className="p-4 border-t border-blue-100 space-y-3">
           <Link
-            href="/dashboard"
+            href="/"
             className="flex items-center justify-between text-xs text-slate-500 hover:text-blue-600 transition-colors"
           >
             <span>Exit to Student App</span>

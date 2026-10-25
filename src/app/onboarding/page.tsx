@@ -25,7 +25,7 @@ export default function OnboardingPage() {
   };
 
   const handleFinish = () => {
-    router.push('/dashboard');
+    router.push('/tests/new');
   };
 
   return (

@@ -133,22 +133,52 @@ export default function ResultAnalysisPage() {
 
       {/* Main Body */}
       <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 space-y-8 z-10">
-        {/* HERO SCORE CARD WITH BLUE ACCENT */}
-        <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm relative overflow-hidden">
+        {/* Quick Action Bar for Exam Results */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF] mb-2">
+              <Award className="w-3.5 h-3.5 text-[#2563EB]" />
+              <span>Exam Performance Scorecard</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A]">
+              Test Result &amp; Diagnostic Dashboard
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/tests/new"
+              className="neu-chip-primary text-xs"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>Build Next Calibrated Test</span>
+            </Link>
+            <Link
+              href="/practice"
+              className="chip-btn text-xs"
+            >
+              <Bookmark className="w-3.5 h-3.5 text-[#2563EB]" />
+              <span>Practice Weak Areas</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* HERO SCORE CARD WITH NEUMORPHIC GLASS ACCENT */}
+        <div className="neu-glass-card p-6 sm:p-8 rounded-3xl relative overflow-hidden">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             {/* Score Ring */}
             <div className="flex items-center gap-6">
               <div className="relative w-28 h-28 flex items-center justify-center shrink-0">
                 <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
                   <path
-                    className="text-blue-50"
+                    className="text-blue-100"
                     strokeWidth="3.5"
                     stroke="currentColor"
                     fill="none"
                     d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   />
                   <path
-                    className="text-blue-600"
+                    className="text-[#2563EB]"
                     strokeDasharray={`${Math.max(5, sc.accuracy_percent)}, 100`}
                     strokeWidth="3.5"
                     strokeLinecap="round"
@@ -158,7 +188,7 @@ export default function ResultAnalysisPage() {
                   />
                 </svg>
                 <div className="absolute text-center">
-                  <div className="text-2xl font-bold font-mono text-blue-700 leading-none">
+                  <div className="text-2xl font-bold font-mono text-[#2563EB] leading-none">
                     {sc.total_score.toFixed(2)}
                   </div>
                   <div className="text-[10px] text-slate-400 mt-1 font-semibold">/ {sc.max_marks}</div>
@@ -170,9 +200,9 @@ export default function ResultAnalysisPage() {
                   <TrendingUp className="w-3.5 h-3.5" />
                   <span>Accuracy: {sc.accuracy_percent}%</span>
                 </div>
-                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                <h2 className="text-xl sm:text-2xl font-extrabold text-[#0F172A]">
                   Quantitative Aptitude Analysis
-                </h1>
+                </h2>
                 <p className="text-xs text-slate-600 mt-1">
                   Time Spent: <strong className="text-slate-900">{Math.round(sc.total_time_spent_sec / 60)}m {sc.total_time_spent_sec % 60}s</strong> · Attempted: <strong className="text-slate-900">{sc.attempted}/{sc.max_marks}</strong>
                 </p>
@@ -181,7 +211,7 @@ export default function ResultAnalysisPage() {
 
             {/* Percentile & Rank Cards */}
             <div className="flex gap-4 w-full md:w-auto">
-              <div className="flex-1 md:w-36 p-4 rounded-2xl bg-blue-50/50 border border-blue-100 text-center">
+              <div className="flex-1 md:w-36 p-4 rounded-2xl neu-inset text-center">
                 <span className="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">Percentile</span>
                 <div className="text-2xl font-extrabold font-mono text-blue-800 mt-1">
                   {sc.percentile || 88.4}%ile
@@ -189,7 +219,7 @@ export default function ResultAnalysisPage() {
                 <div className="text-[10px] text-slate-500 mt-0.5">Top 12% in cohort</div>
               </div>
 
-              <div className="flex-1 md:w-36 p-4 rounded-2xl bg-white border border-slate-200 text-center shadow-xs">
+              <div className="flex-1 md:w-36 p-4 rounded-2xl neu-glass-card text-center">
                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">All-India Rank</span>
                 <div className="text-2xl font-extrabold font-mono text-slate-900 mt-1">
                   #{sc.rank || 142}
@@ -215,7 +245,7 @@ export default function ResultAnalysisPage() {
             </div>
             <div>
               <span className="text-slate-500">Average Pace:</span>
-              <div className="text-base font-bold text-blue-600 font-mono mt-0.5">
+              <div className="text-base font-bold text-[#2563EB] font-mono mt-0.5">
                 {sc.attempted > 0 ? Math.round(sc.total_time_spent_sec / sc.attempted) : 0}s per question
               </div>
             </div>
@@ -223,7 +253,7 @@ export default function ResultAnalysisPage() {
         </div>
 
         {/* TOPIC BREAKDOWN & STRENGTH TAGS */}
-        <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-4">
+        <div className="neu-glass-card p-6 sm:p-8 rounded-3xl space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-base font-bold text-slate-900">Topic Mastery &amp; Accuracy Breakdown</h2>
@@ -284,8 +314,8 @@ export default function ResultAnalysisPage() {
               </p>
             </div>
 
-            {/* Filter Tabs (Chip UI) */}
-            <div className="flex rounded-2xl p-1 bg-white border border-blue-100 shadow-xs text-xs">
+            {/* Filter Tabs (Neumorphic Inset + Chip UI) */}
+            <div className="flex rounded-full p-1.5 neu-inset text-xs">
               {[
                 { id: 'all', label: 'All' },
                 { id: 'correct', label: 'Correct' },
@@ -296,10 +326,10 @@ export default function ResultAnalysisPage() {
                 <button
                   key={f.id}
                   onClick={() => setFilter(f.id as any)}
-                  className={`px-3.5 py-1.5 font-semibold rounded-xl transition-all ${
+                  className={`px-3.5 py-1.5 font-bold rounded-full transition-all ${
                     filter === f.id
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm'
-                      : 'text-slate-600 hover:text-blue-600'
+                      ? 'neu-chip-primary text-white'
+                      : 'chip-btn bg-transparent border-transparent shadow-none hover:bg-white/60'
                   }`}
                 >
                   {f.label}
@@ -317,7 +347,7 @@ export default function ResultAnalysisPage() {
               return (
                 <div
                   key={q.question_id}
-                  className={`p-6 rounded-3xl bg-white border transition-all shadow-xs ${
+                  className={`p-6 rounded-3xl neu-glass-card transition-all ${
                     q.is_correct
                       ? 'border-emerald-200 hover:border-emerald-300'
                       : q.your_answer

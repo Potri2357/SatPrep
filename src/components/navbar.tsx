@@ -13,7 +13,7 @@ import {
   BookOpen,
   User,
   Shield,
-  LayoutDashboard,
+  Award,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -25,15 +25,15 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { label: 'Create Test', href: '/tests/new', icon: Layers },
     { label: 'Practice', href: '/practice', icon: BookOpen },
+    { label: 'Exam Results', href: '/tests/result/sample-attempt-1', icon: Award },
     { label: 'Profile', href: '/profile', icon: User },
   ];
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/dashboard';
+    if (href === '/') {
+      return pathname === '/';
     }
     return pathname.startsWith(href);
   };
@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
         {/* Left: Brand Logo & Primary Navigation */}
         <div className="flex items-center gap-7">
           <Link
-            href="/dashboard"
+            href="/"
             className="flex items-center transition-transform hover:scale-[1.02] focus:outline-none"
           >
             <BrandLogo size={34} showWordmark={true} />

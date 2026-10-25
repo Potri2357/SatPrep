@@ -52,18 +52,18 @@ export default function LandingPage() {
           {/* CTA Chip Buttons Strip */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/dashboard"
+              href="/tests/new"
               className="neu-chip-primary text-sm px-8 py-3.5"
             >
               <span>Launch Mock Test</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
-              href="/tests/new"
+              href="/tests/result/sample-attempt-1"
               className="chip-btn text-sm px-8 py-3.5"
             >
-              <Layers className="w-4 h-4 text-[#2563EB]" />
-              <span>Assemble Custom Test</span>
+              <Award className="w-4 h-4 text-[#2563EB]" />
+              <span>View Exam Results</span>
             </Link>
           </div>
 
@@ -267,7 +267,7 @@ export default function LandingPage() {
           <BrandLogo size={32} showWordmark={true} />
           <p>© 2026 SatPrep. Bank Exam Quantitative Aptitude Platform. All rights reserved.</p>
           <div className="flex gap-6 font-semibold">
-            <Link href="/dashboard" className="hover:text-[#2563EB] transition-colors">Dashboard</Link>
+            <Link href="/tests/result/sample-attempt-1" className="hover:text-[#2563EB] transition-colors">Exam Results</Link>
             <Link href="/practice" className="hover:text-[#2563EB] transition-colors">Practice</Link>
             <Link href="/admin" className="hover:text-[#2563EB] transition-colors">Admin Console</Link>
             <Link href="/profile" className="hover:text-[#2563EB] transition-colors">Profile</Link>

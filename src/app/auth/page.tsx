@@ -16,7 +16,7 @@ export default function AuthPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/dashboard');
+    router.push('/tests/new');
   };
 
   return (
@@ -67,7 +67,7 @@ export default function AuthPage() {
 
           {/* Social Google Login */}
           <button
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push('/tests/new')}
             className="w-full h-11 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-sm font-semibold text-slate-700 flex items-center justify-center gap-3 transition-colors mb-4 shadow-sm"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
