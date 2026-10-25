@@ -50,6 +50,7 @@ export default function ExamTestWindow() {
   const [isReviewMode, setIsReviewMode] = useState<boolean>(false);
   const [reviewAttemptId, setReviewAttemptId] = useState<string>('');
   const [reviewQuestions, setReviewQuestions] = useState<any[]>([]);
+  const [reviewSolutionTab, setReviewSolutionTab] = useState<'step' | 'shortcut' | 'traps'>('step');
 
   // Answers Map: qid -> { selected_option, state, time_spent }
   const [answers, setAnswers] = useState<
@@ -497,22 +498,22 @@ export default function ExamTestWindow() {
       {/* 3. MAIN WORKSPACE: Question Canvas (Left) + Question Palette (Right) */}
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT / CENTER: Question Canvas */}
-        <main className="flex-1 flex flex-col overflow-y-auto p-4 sm:p-6 lg:p-7 max-w-5xl mx-auto w-full">
+        <main className="flex-1 flex flex-col overflow-y-auto p-3 sm:p-4 lg:p-5 max-w-4xl mx-auto w-full">
           {currentQ ? (
-            <div className="p-6 sm:p-7 rounded-2xl bg-white border border-slate-200 shadow-xs flex-1 flex flex-col justify-between space-y-6">
-              <div>
+            <div className="rounded-2xl bg-white border border-[#BCEBFC]/90 shadow-[0_4px_24px_rgba(0,92,230,0.06)] flex flex-col justify-between overflow-hidden">
+              <div className="p-4 sm:p-5 lg:p-6 space-y-3.5 flex-1">
                 {/* Question Info Bar */}
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3 text-xs">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-900 text-sm">
-                      Question No. {currentIdx + 1}
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#005CE6]/10 text-[#005CE6] font-bold text-xs">
+                      <span>Question {currentIdx + 1}</span>
                     </span>
-                    <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-[11px] capitalize">
+                    <span className="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-[11px] capitalize border border-slate-200/50">
                       {currentQ.topic_id.replace(/-/g, ' ')}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 font-mono text-[11px] font-semibold">
+                  <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold">
                     {isReviewMode && currentRevQ ? (
                       currentRevQ.is_correct ? (
                         <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center gap-1 border border-emerald-200">
@@ -529,10 +530,10 @@ export default function ExamTestWindow() {
                       )
                     ) : (
                       <>
-                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/70">
                           +1.00 Marks
                         </span>
-                        <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-800 border border-rose-200">
+                        <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200/70">
                           -0.25 Negative
                         </span>
                       </>
@@ -542,7 +543,7 @@ export default function ExamTestWindow() {
 
                 {/* DI Stimulus Table if applicable */}
                 {currentQ.stimulus && (
-                  <div className="mt-4 mb-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5">
                     <div className="text-xs font-bold text-slate-800">
                       {currentQ.stimulus.title || 'Data Interpretation Table'}
                     </div>
@@ -550,9 +551,9 @@ export default function ExamTestWindow() {
                       <div className="overflow-x-auto text-xs">
                         <table className="w-full text-left border-collapse bg-white rounded-lg overflow-hidden border border-slate-200">
                           <thead>
-                            <tr className="bg-slate-100 border-b border-slate-200 text-slate-700">
+                            <tr className="bg-slate-100/80 border-b border-slate-200 text-slate-700">
                               {currentQ.stimulus.structured_data.headers.map((h: string, i: number) => (
-                                <th key={i} className="p-2 font-bold">{h}</th>
+                                <th key={i} className="px-2.5 py-1.5 font-bold text-[11px]">{h}</th>
                               ))}
                             </tr>
                           </thead>
@@ -560,7 +561,7 @@ export default function ExamTestWindow() {
                             {currentQ.stimulus.structured_data.rows.map((row: string[], rIdx: number) => (
                               <tr key={rIdx} className="border-b border-slate-100 hover:bg-slate-50">
                                 {row.map((cell: string, cIdx: number) => (
-                                  <td key={cIdx} className={cn("p-2", cIdx === 0 ? "font-bold text-slate-800" : "font-mono text-slate-600")}>
+                                  <td key={cIdx} className={cn("px-2.5 py-1.5 text-xs", cIdx === 0 ? "font-bold text-slate-800" : "font-mono text-slate-600")}>
                                     {cell}
                                   </td>
                                 ))}
@@ -574,12 +575,12 @@ export default function ExamTestWindow() {
                 )}
 
                 {/* Question Stem (KaTeX mathematical typography) */}
-                <div className="text-[17px] sm:text-[18px] font-medium text-slate-900 leading-[1.65] my-5">
+                <div className="text-[14.5px] sm:text-[15.5px] font-medium text-slate-900 leading-relaxed my-2 sm:my-3 select-text">
                   <MathRenderer content={currentQ.stem} />
                 </div>
 
-                {/* Options List (Authentic Banking Radio Selection or Review Highlight) */}
-                <div className="space-y-3 pt-2">
+                {/* Options List (Compact Authentic Selection or Review Highlight) */}
+                <div className="space-y-2 pt-1">
                   {currentQ.options.map((opt) => {
                     if (isReviewMode && currentRevQ) {
                       const isCorrect = opt.id === currentRevQ.correct_answer;
@@ -588,30 +589,39 @@ export default function ExamTestWindow() {
                         <div
                           key={opt.id}
                           className={cn(
-                            "min-h-[50px] p-3.5 sm:p-4 rounded-xl border flex items-center justify-between transition-all select-none",
+                            "px-3.5 py-2.5 rounded-xl border flex items-center justify-between transition-all select-none text-xs sm:text-[13.5px]",
                             isCorrect
-                              ? "border-emerald-400 bg-emerald-50/70 font-semibold text-emerald-950 ring-1 ring-emerald-300"
+                              ? "border-emerald-400 bg-emerald-50/80 font-semibold text-emerald-950 ring-1 ring-emerald-300 shadow-2xs"
                               : isSelected
-                              ? "border-rose-400 bg-rose-50/70 font-semibold text-rose-950 ring-1 ring-rose-300"
-                              : "border-slate-200 bg-white opacity-80 text-slate-700"
+                              ? "border-rose-400 bg-rose-50/80 font-semibold text-rose-950 ring-1 ring-rose-300 shadow-2xs"
+                              : "border-slate-200 bg-white/70 opacity-75 text-slate-600 hover:opacity-100"
                           )}
                         >
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-xs font-mono uppercase text-slate-500">
-                              ({opt.id})
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span
+                              className={cn(
+                                "w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs font-mono uppercase shrink-0",
+                                isCorrect
+                                  ? "bg-emerald-600 text-white"
+                                  : isSelected
+                                  ? "bg-rose-600 text-white"
+                                  : "bg-slate-100 text-slate-600"
+                              )}
+                            >
+                              {opt.id}
                             </span>
-                            <div className="text-sm font-medium leading-normal">
+                            <div className="font-medium leading-snug">
                               <MathRenderer content={opt.text} />
                             </div>
                           </div>
-                          <div>
+                          <div className="shrink-0 pl-2">
                             {isCorrect && (
-                              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100/90 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100/90 px-2 py-0.5 rounded-full flex items-center gap-1 border border-emerald-200">
                                 <Check className="w-3 h-3 stroke-[3]" /> Correct Key
                               </span>
                             )}
                             {isSelected && !isCorrect && (
-                              <span className="text-[11px] font-bold text-rose-700 bg-rose-100/90 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                              <span className="text-[11px] font-bold text-rose-700 bg-rose-100/90 px-2 py-0.5 rounded-full flex items-center gap-1 border border-rose-200">
                                 <X className="w-3 h-3 stroke-[3]" /> Your Answer
                               </span>
                             )}
@@ -626,31 +636,38 @@ export default function ExamTestWindow() {
                         key={opt.id}
                         onClick={() => setSelectedOption(opt.id)}
                         className={cn(
-                          "min-h-[50px] p-3.5 sm:p-4 rounded-xl border flex items-center gap-3.5 cursor-pointer transition-all select-none",
+                          "group px-3.5 py-2.5 rounded-xl border flex items-center gap-3 cursor-pointer transition-all select-none text-xs sm:text-[13.5px]",
                           isSelected
-                            ? "border-[#005CE6] bg-blue-50/60 font-semibold ring-1 ring-[#005CE6]"
-                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
+                            ? "border-[#005CE6] bg-[#F0FAFF] font-semibold text-[#003B99] ring-1 ring-[#005CE6]/30 shadow-2xs"
+                            : "border-slate-200 bg-white hover:border-[#60CEF8] hover:bg-[#F0FAFF]/40 text-slate-800"
                         )}
                       >
                         {/* Radio Disc */}
                         <div
                           className={cn(
-                            "w-5 h-5 rounded-full border flex items-center justify-center shrink-0 transition-colors",
+                            "w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
                             isSelected
-                              ? "border-[#005CE6] bg-[#005CE6] text-white"
-                              : "border-slate-300 bg-white"
+                              ? "border-[#005CE6] bg-[#005CE6]"
+                              : "border-slate-300 bg-white group-hover:border-[#005CE6]"
                           )}
                         >
-                          {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                          {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                         </div>
 
-                        {/* Option Tag */}
-                        <span className="font-bold text-xs font-mono uppercase text-slate-500">
-                          ({opt.id})
+                        {/* Letter Chip */}
+                        <span
+                          className={cn(
+                            "w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs font-mono uppercase shrink-0 transition-colors",
+                            isSelected
+                              ? "bg-[#005CE6] text-white"
+                              : "bg-slate-100 text-slate-600 group-hover:bg-[#BCEBFC]/40 group-hover:text-[#005CE6]"
+                          )}
+                        >
+                          {opt.id}
                         </span>
 
                         {/* Option Text */}
-                        <div className="text-sm font-medium text-slate-800 leading-normal flex-1">
+                        <div className="font-medium leading-snug flex-1">
                           <MathRenderer content={opt.text} />
                         </div>
                       </div>
@@ -658,40 +675,84 @@ export default function ExamTestWindow() {
                   })}
                 </div>
 
-                {/* In Review Mode: Show Explanations right in the question page */}
+                {/* In Review Mode: Compact Tabbed Solution Drawer */}
                 {isReviewMode && currentRevQ && (
-                  <div className="mt-6 pt-5 border-t border-slate-200 space-y-3.5">
-                    {/* Step-by-Step Official Method */}
-                    <div className="p-4 rounded-2xl bg-[#F0FAFF] border border-[#BCEBFC] space-y-2">
-                      <div className="font-bold text-[#005CE6] flex items-center gap-1.5 text-xs uppercase tracking-wider">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        <span>Step-by-Step Official Explanation</span>
-                      </div>
-                      <div className="leading-relaxed text-slate-800 text-[13px]">
-                        <MathRenderer content={currentRevQ.solution} />
-                      </div>
+                  <div className="mt-4 pt-3 border-t border-slate-100 space-y-2.5">
+                    <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100/90 border border-slate-200/60 w-fit text-xs">
+                      <button
+                        onClick={() => setReviewSolutionTab('step')}
+                        className={cn(
+                          "px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                          reviewSolutionTab === 'step'
+                            ? "bg-white text-[#005CE6] shadow-2xs"
+                            : "text-slate-600 hover:text-slate-900"
+                        )}
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Step-by-Step Derivation</span>
+                      </button>
+
+                      {currentRevQ.shortcut && (
+                        <button
+                          onClick={() => setReviewSolutionTab('shortcut')}
+                          className={cn(
+                            "px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                            reviewSolutionTab === 'shortcut'
+                              ? "bg-white text-amber-900 shadow-2xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          )}
+                        >
+                          <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Speed Shortcut</span>
+                        </button>
+                      )}
+
+                      {currentRevQ.option_rationales && (
+                        <button
+                          onClick={() => setReviewSolutionTab('traps')}
+                          className={cn(
+                            "px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                            reviewSolutionTab === 'traps'
+                              ? "bg-white text-slate-900 shadow-2xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          )}
+                        >
+                          <Layers className="w-3.5 h-3.5 text-[#0096D6]" />
+                          <span>Trap Diagnosis</span>
+                        </button>
+                      )}
                     </div>
 
-                    {/* Speed Shortcut Trick */}
-                    {currentRevQ.shortcut && (
-                      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 space-y-1.5">
-                        <div className="font-bold flex items-center gap-1.5 text-xs uppercase tracking-wider text-amber-900">
-                          <Lightbulb className="w-4 h-4 text-amber-600" />
-                          <span>Exam Speed Shortcut (15–20 Seconds)</span>
+                    {/* Tab Contents */}
+                    {reviewSolutionTab === 'step' && (
+                      <div className="p-3.5 rounded-xl bg-[#F0FAFF] border border-[#BCEBFC] space-y-1.5 text-xs text-slate-800 leading-relaxed animate-in fade-in duration-150">
+                        <div className="font-bold text-[#005CE6] text-[11px] uppercase tracking-wider">
+                          Official Mathematical Breakdown
                         </div>
-                        <p className="leading-relaxed text-[12px]">{currentRevQ.shortcut}</p>
+                        <div className="leading-relaxed">
+                          <MathRenderer content={currentRevQ.solution} />
+                        </div>
                       </div>
                     )}
 
-                    {/* Distractor Trap Diagnosis */}
-                    {currentRevQ.option_rationales && (
-                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                        <div className="font-bold text-slate-800 text-xs">
-                          Distractor / Trap Diagnosis:
+                    {reviewSolutionTab === 'shortcut' && currentRevQ.shortcut && (
+                      <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 space-y-1 text-xs leading-relaxed animate-in fade-in duration-150">
+                        <div className="font-bold text-amber-900 text-[11px] uppercase tracking-wider flex items-center gap-1">
+                          <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+                          <span>Exam Speed Shortcut (15–20 Seconds)</span>
+                        </div>
+                        <p className="leading-relaxed">{currentRevQ.shortcut}</p>
+                      </div>
+                    )}
+
+                    {reviewSolutionTab === 'traps' && currentRevQ.option_rationales && (
+                      <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs animate-in fade-in duration-150">
+                        <div className="font-bold text-slate-800 text-[11px] uppercase tracking-wider">
+                          Option Trap Breakdown
                         </div>
                         <div className="space-y-1.5">
                           {Object.entries(currentRevQ.option_rationales).map(([optId, rationale]: [string, any]) => (
-                            <div key={optId} className="flex items-start gap-2 text-slate-600 text-[12px]">
+                            <div key={optId} className="flex items-start gap-2 text-slate-600 text-[11.5px]">
                               <span className="font-mono font-bold uppercase text-slate-900 shrink-0">Option {optId}:</span>
                               <span>{rationale}</span>
                             </div>
@@ -703,33 +764,34 @@ export default function ExamTestWindow() {
                 )}
               </div>
 
-              {/* CARD ACTION FOOTER (Integrated inside the card) */}
-              <div className="p-4 sm:px-6 sm:py-4 bg-[#F8FAFC]/90 border-t border-slate-200 rounded-b-2xl flex flex-wrap items-center justify-between gap-3">
+              {/* CARD ACTION FOOTER (Integrated inside the card seamlessly) */}
+              <div className="px-4 sm:px-5 py-2.5 bg-slate-50/90 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
                 {isReviewMode ? (
                   <>
                     <Link
                       href={`/tests/result/${reviewAttemptId}`}
-                      className="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                      className="px-3.5 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
                     >
                       <ChevronLeft className="w-3.5 h-3.5" />
                       <span>Back to Scorecard</span>
                     </Link>
 
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
                         disabled={currentIdx === 0}
-                        className="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer shadow-2xs"
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer shadow-2xs flex items-center gap-1"
                       >
-                        Previous Question
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                        <span>Previous</span>
                       </button>
 
                       <button
                         onClick={() => currentIdx < questions.length - 1 && setCurrentIdx((prev) => prev + 1)}
                         disabled={currentIdx === questions.length - 1}
-                        className="neu-chip-primary px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        className="neu-chip-primary px-4 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                       >
-                        <span>Next Question</span>
+                        <span>Next</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -740,33 +802,35 @@ export default function ExamTestWindow() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={handleMarkForReviewAndNext}
-                        className="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold border border-purple-200 text-purple-700 bg-purple-50/70 hover:bg-purple-100 transition-colors cursor-pointer"
+                        className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold border border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer shadow-2xs flex items-center gap-1.5"
                       >
-                        Mark for Review &amp; Next
+                        <Bookmark className="w-3.5 h-3.5" />
+                        <span>Mark for Review &amp; Next</span>
                       </button>
 
                       <button
                         onClick={handleClearResponse}
                         disabled={!selectedOption}
-                        className="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer"
+                        className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
                       >
                         Clear Response
                       </button>
                     </div>
 
                     {/* Right Side: Previous & Save & Next */}
-                    <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
                         disabled={currentIdx === 0}
-                        className="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer"
+                        className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 text-slate-700 transition-colors cursor-pointer shadow-2xs flex items-center gap-1"
                       >
-                        Previous
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                        <span>Previous</span>
                       </button>
 
                       <button
                         onClick={handleSaveAndNext}
-                        className="neu-chip-primary px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        className="neu-chip-primary px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs hover:shadow transition-all"
                       >
                         <span>Save &amp; Next</span>
                         <ArrowRight className="w-3.5 h-3.5" />
