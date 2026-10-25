@@ -72,6 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
   const isItemActive = (href: string) => {
     if (href === '/') return pathname === '/';
+    if (href === '/tests/new') return pathname.startsWith('/tests');
     return pathname.startsWith(href);
   };
 
