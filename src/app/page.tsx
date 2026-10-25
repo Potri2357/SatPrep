@@ -283,7 +283,6 @@ export default function LandingPage() {
             <Link href="/tests/result/sample-attempt-1" className="hover:text-[#2563EB] transition-colors">Exam Results</Link>
             <Link href="/practice" className="hover:text-[#2563EB] transition-colors">Practice</Link>
             <Link href="/admin" className="hover:text-[#2563EB] transition-colors">Admin Console</Link>
-            <Link href="/profile" className="hover:text-[#2563EB] transition-colors">Profile</Link>
           </div>
         </div>
       </footer>

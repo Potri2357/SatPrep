@@ -15,7 +15,6 @@ import {
   Home,
   Layers,
   BookOpen,
-  BarChart2,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -67,7 +66,6 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
     { title: 'Home', href: '/', icon: Home },
     { title: 'Mock Tests', href: '/tests/new', icon: Layers },
     { title: 'Practice', href: '/practice', icon: BookOpen },
-    { title: 'Progress', href: '/profile', icon: BarChart2 },
   ];
 
   const isItemActive = (href: string) => {
@@ -160,15 +158,6 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                 <div className="px-2 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
                   Student Portal
                 </div>
-
-                <Link
-                  href="/profile"
-                  onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-[#F0FAFF] transition-colors"
-                >
-                  <User className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Profile &amp; Settings</span>
-                </Link>
 
                 <Link
                   href="/tests/result/sample-attempt-1"
