@@ -18,6 +18,8 @@ import {
   Award,
   ChevronRight,
   ChevronLeft,
+  Loader2,
+  WifiOff,
 } from 'lucide-react';
 
 export default function ExamInstructionsPage() {
@@ -28,6 +30,109 @@ export default function ExamInstructionsPage() {
   const [hasAgreed, setHasAgreed] = useState<boolean>(false);
   const [testData, setTestData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // Real-time system & network diagnostics
+  const [systemStatus, setSystemStatus] = useState<{
+    state: 'checking' | 'compatible' | 'warning';
+    label: string;
+  }>({ state: 'checking', label: 'Checking...' });
+
+  const [networkStatus, setNetworkStatus] = useState<{
+    state: 'checking' | 'stable' | 'slow' | 'offline';
+    label: string;
+  }>({ state: 'checking', label: 'Checking...' });
+
+  // 1. Real System Compatibility Check (Screen, Storage, Modern APIs)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    try {
+      const hasLocalStorage = (() => {
+        try {
+          const key = '__satprep_test__';
+          localStorage.setItem(key, '1');
+          localStorage.removeItem(key);
+          return true;
+        } catch {
+          return false;
+        }
+      })();
+      const hasFetch = typeof window.fetch === 'function';
+      const screenWidth = window.screen.width;
+
+      if (!hasLocalStorage || !hasFetch) {
+        setSystemStatus({ state: 'warning', label: 'Browser Outdated' });
+      } else if (screenWidth < 640) {
+        setSystemStatus({ state: 'compatible', label: 'Compatible (Mobile)' });
+      } else {
+        setSystemStatus({ state: 'compatible', label: 'Compatible' });
+      }
+    } catch {
+      setSystemStatus({ state: 'compatible', label: 'Compatible' });
+    }
+  }, []);
+
+  // 2. Real Network Connection & Ping Latency Check
+  useEffect(() => {
+    let isMounted = true;
+
+    const measurePing = async () => {
+      if (typeof window === 'undefined') return;
+
+      if (!navigator.onLine) {
+        if (isMounted) setNetworkStatus({ state: 'offline', label: 'Offline' });
+        return;
+      }
+
+      try {
+        const start = performance.now();
+        const res = await fetch(`/api/ping?t=${Date.now()}`, { cache: 'no-store' });
+        const latency = Math.round(performance.now() - start);
+
+        if (!res.ok) throw new Error('Ping failed');
+
+        if (isMounted) {
+          if (latency < 250) {
+            setNetworkStatus({
+              state: 'stable',
+              label: `Stable (${latency}ms)`,
+            });
+          } else {
+            setNetworkStatus({
+              state: 'slow',
+              label: `Slow (${latency}ms)`,
+            });
+          }
+        }
+      } catch {
+        if (isMounted) {
+          if (!navigator.onLine) {
+            setNetworkStatus({ state: 'offline', label: 'Offline' });
+          } else {
+            setNetworkStatus({ state: 'slow', label: 'Unstable' });
+          }
+        }
+      }
+    };
+
+    measurePing();
+
+    const onOnline = () => measurePing();
+    const onOffline = () => {
+      if (isMounted) setNetworkStatus({ state: 'offline', label: 'Offline' });
+    };
+
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
+    const interval = setInterval(measurePing, 12000);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     if (!testId) return;
@@ -222,26 +327,66 @@ export default function ExamInstructionsPage() {
               </div>
             </div>
 
-            {/* System Compatibility & Connection Status */}
+            {/* System Compatibility & Connection Status (Real-time Dynamic Checks) */}
             <div className="pt-1 space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
                 <div className="flex items-center gap-2 text-slate-600">
-                  <Monitor className="w-4 h-4 text-emerald-600" />
+                  <Monitor className="w-4 h-4 text-slate-500" />
                   <span>System Compatibility</span>
                 </div>
-                <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
-                  <Check className="w-3.5 h-3.5" /> Compatible
-                </span>
+                {systemStatus.state === 'checking' && (
+                  <span className="text-slate-400 text-xs flex items-center gap-1 font-medium">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Verifying...</span>
+                  </span>
+                )}
+                {systemStatus.state === 'compatible' && (
+                  <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>{systemStatus.label}</span>
+                  </span>
+                )}
+                {systemStatus.state === 'warning' && (
+                  <span className="font-bold text-amber-700 text-xs flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{systemStatus.label}</span>
+                  </span>
+                )}
               </div>
 
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
                 <div className="flex items-center gap-2 text-slate-600">
-                  <Wifi className="w-4 h-4 text-emerald-600" />
+                  {networkStatus.state === 'offline' ? (
+                    <WifiOff className="w-4 h-4 text-rose-500" />
+                  ) : (
+                    <Wifi className="w-4 h-4 text-slate-500" />
+                  )}
                   <span>Network Connection</span>
                 </div>
-                <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
-                  <Check className="w-3.5 h-3.5" /> Stable
-                </span>
+                {networkStatus.state === 'checking' && (
+                  <span className="text-slate-400 text-xs flex items-center gap-1 font-medium">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Measuring...</span>
+                  </span>
+                )}
+                {networkStatus.state === 'stable' && (
+                  <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>{networkStatus.label}</span>
+                  </span>
+                )}
+                {networkStatus.state === 'slow' && (
+                  <span className="font-bold text-amber-700 text-xs flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{networkStatus.label}</span>
+                  </span>
+                )}
+                {networkStatus.state === 'offline' && (
+                  <span className="font-bold text-rose-700 text-xs flex items-center gap-1">
+                    <WifiOff className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Offline</span>
+                  </span>
+                )}
               </div>
             </div>
 
