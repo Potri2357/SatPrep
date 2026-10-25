@@ -42,20 +42,20 @@ export default function LandingPage() {
             Practice calibrated questions in an exact TCS-iON exam environment. Server-authoritative timer, psychometric distractor explanations, and zero mock latency.
           </p>
 
-          {/* CTA Chip Buttons Strip */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          {/* CTA Chip Buttons Strip (Large, Distinct & Prominent) */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
             <Link
               href="/tests/new"
-              className="neu-chip-primary text-sm px-8 py-3.5"
+              className="px-8 sm:px-10 py-4 sm:py-4.5 rounded-2xl text-base sm:text-lg font-bold text-white bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] hover:from-[#004ec4] hover:to-[#0081ba] shadow-[0_8px_28px_rgba(0,92,230,0.38)] hover:shadow-[0_12px_36px_rgba(0,92,230,0.48)] hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group cursor-pointer"
             >
               <span>Launch Mock Test</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
             </Link>
             <Link
               href="/tests/result/sample-attempt-1"
-              className="chip-btn text-sm px-8 py-3.5"
+              className="px-8 sm:px-10 py-4 sm:py-4.5 rounded-2xl text-base sm:text-lg font-bold text-[#005CE6] bg-white border-2 border-[#BCEBFC] hover:border-[#005CE6] hover:bg-[#F0FAFF] shadow-[0_4px_16px_rgba(0,92,230,0.06)] hover:shadow-[0_8px_24px_rgba(0,92,230,0.14)] hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group cursor-pointer"
             >
-              <Award className="w-4 h-4 text-[#2563EB]" />
+              <Award className="w-5 h-5 text-[#005CE6] group-hover:scale-110 transition-transform" />
               <span>View Exam Results</span>
             </Link>
           </div>
@@ -205,50 +205,87 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
               href="/tests/new"
-              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group"
+              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group flex flex-col justify-between"
             >
-              <div className="w-11 h-11 rounded-2xl bg-[#E0F4FD] text-[#005CE6] border border-[#BCEBFC] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
-                <Award className="w-5 h-5" />
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#E0F4FD] text-[#005CE6] border border-[#BCEBFC] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-xs">
+                  <Award className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-[#0F172A] mb-2 flex items-center justify-between">
+                  <span>Full-Length Prelims Mocks</span>
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  35 questions in 20 minutes timed test. Real exam difficulty distribution and negative marking.
+                </p>
               </div>
-              <h3 className="text-base font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
-                <span>Full-Length Prelims Mocks</span>
-                <ArrowRight className="w-4 h-4 text-[#005CE6] group-hover:translate-x-1 transition-transform" />
-              </h3>
-              <p className="text-slate-600 text-xs leading-relaxed">
-                35 questions in 20 minutes timed test. Real exam difficulty distribution and negative marking.
-              </p>
+              <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#007AE6] group-hover:from-[#004dc2] group-hover:to-[#0066cc] text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
+                <span>Take 35-Q Full Mock</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </div>
             </Link>
 
             <Link
               href="/practice"
-              className="neu-glass-card p-6 rounded-3xl hover:scale-[1.02] transition-all group"
+              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group flex flex-col justify-between"
             >
-              <div className="w-10 h-10 rounded-2xl bg-[#D1FAE5] text-[#10B981] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
-                <Target className="w-5 h-5" />
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#D1FAE5] text-[#10B981] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-xs">
+                  <Target className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-[#0F172A] mb-2 flex items-center justify-between">
+                  <span>Speed Drills &amp; Arithmetic</span>
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  Topic-by-topic drills on Simplification, Quadratic Equations, Number Series, and Profit &amp; Loss.
+                </p>
               </div>
-              <h3 className="text-base font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
-                <span>Speed Drills &amp; Arithmetic</span>
-                <ArrowRight className="w-4 h-4 text-[#10B981] group-hover:translate-x-1 transition-transform" />
-              </h3>
-              <p className="text-slate-600 text-xs leading-relaxed">
-                Topic-by-topic drills on Simplification, Quadratic Equations, Number Series, and Profit &amp; Loss.
-              </p>
+              <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 group-hover:from-emerald-700 group-hover:to-teal-700 text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
+                <span>Practice Speed Drills</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </div>
             </Link>
 
             <Link
               href="/tests/new"
-              className="neu-glass-card p-6 rounded-3xl hover:scale-[1.02] transition-all group"
+              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group flex flex-col justify-between"
             >
-              <div className="w-10 h-10 rounded-2xl bg-[#EDE9FE] text-[#8B5CF6] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
-                <BarChart3 className="w-5 h-5" />
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-[#EDE9FE] text-[#8B5CF6] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-xs">
+                  <BarChart3 className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-[#0F172A] mb-2 flex items-center justify-between">
+                  <span>Data Interpretation Sets</span>
+                </h3>
+                <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                  Tabular, Bar, Pie, and Caselet DI questions with step-by-step ratio and percentage calculations.
+                </p>
               </div>
-              <h3 className="text-base font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
-                <span>Data Interpretation Sets</span>
-                <ArrowRight className="w-4 h-4 text-[#8B5CF6] group-hover:translate-x-1 transition-transform" />
-              </h3>
-              <p className="text-slate-600 text-xs leading-relaxed">
-                Tabular, Bar, Pie, and Caselet DI questions with step-by-step ratio and percentage calculations.
-              </p>
+              <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 group-hover:from-purple-700 group-hover:to-indigo-700 text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
+                <span>Solve DI Sets</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* High-Impact Bottom Call to Action Section */}
+      <section className="py-20 bg-gradient-to-r from-[#061226] via-[#0B234F] to-[#005CE6] text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#60CEF8]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10 space-y-6">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            Ready to Benchmark Your Exam Readiness?
+          </h2>
+          <p className="text-blue-100/90 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            Experience authentic TCS-iON banking interface simulations with real-time analytics, percentile benchmarking, and detailed step-by-step explanations.
+          </p>
+          <div className="pt-4 flex justify-center">
+            <Link
+              href="/tests/new"
+              className="px-10 py-5 rounded-2xl text-base sm:text-lg font-extrabold text-[#005CE6] bg-white hover:bg-[#F0FAFF] shadow-[0_12px_40px_rgba(0,0,0,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group cursor-pointer"
+            >
+              <span>Start Free Prelims Mock Test</span>
+              <ArrowRight className="w-5 h-5 text-[#005CE6] group-hover:translate-x-1.5 transition-transform" />
             </Link>
           </div>
         </div>

@@ -16,7 +16,6 @@ import {
   LogOut,
   Home,
   BarChart2,
-  Play,
   CheckCircle2,
 } from 'lucide-react';
 
@@ -28,7 +27,7 @@ export function CandidateAvatar({ size = 36, className = "" }: { size?: number; 
   return (
     <div
       className={cn(
-        "rounded-full bg-gradient-to-tr from-[#005CE6] via-[#0096D6] to-[#60CEF8] p-[2px] shadow-xs transition-all duration-200 hover:shadow-md hover:scale-105 active:scale-95 shrink-0 select-none",
+        "rounded-full bg-gradient-to-tr from-[#005CE6] via-[#0096D6] to-[#60CEF8] p-[2px] shadow-sm transition-all duration-200 hover:shadow-md hover:scale-105 active:scale-95 shrink-0 select-none",
         className
       )}
       style={{ width: size, height: size }}
@@ -78,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   };
 
   return (
-    <header className={cn("sticky top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_6px_20px_rgba(0,92,230,0.02)] transition-all", className)}>
+    <header className={cn("sticky top-0 z-50 w-full bg-[#08152D]/95 backdrop-blur-2xl border-b border-[#005CE6]/30 shadow-[0_4px_30px_rgba(0,18,50,0.22)] transition-all", className)}>
       <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Left: Brand Logo & Segmented Nav */}
         <div className="flex items-center gap-6 lg:gap-8">
@@ -91,17 +90,17 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
               <BrandLogo size={32} showWordmark={false} />
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-[17px] tracking-tight text-slate-900">
+              <span className="font-extrabold text-[17px] tracking-tight text-white">
                 SatPrep
               </span>
-              <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md bg-[#005CE6]/10 text-[#005CE6] text-[10px] font-mono font-bold tracking-wider uppercase border border-[#005CE6]/20">
+              <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-md bg-[#005CE6] text-white text-[10px] font-mono font-bold tracking-wider uppercase border border-[#60CEF8]/40 shadow-xs">
                 Bank Prep
               </span>
             </div>
           </Link>
 
-          {/* Desktop Segmented Navigation Bar */}
-          <nav className="hidden md:flex items-center p-1 bg-slate-100/80 rounded-2xl border border-slate-200/60 shadow-2xs" aria-label="Main Navigation">
+          {/* Desktop Segmented Navigation Bar (Frosted Navy Pills) */}
+          <nav className="hidden md:flex items-center p-1 bg-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.12] shadow-inner" aria-label="Main Navigation">
             {navItems.map((item) => {
               const active = isItemActive(item.href);
               const Icon = item.icon;
@@ -112,11 +111,11 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                   className={cn(
                     "flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs transition-all duration-150 select-none",
                     active
-                      ? "bg-white text-[#005CE6] font-bold shadow-xs shadow-slate-200/70"
-                      : "text-slate-600 font-semibold hover:text-slate-900 hover:bg-white/60"
+                      ? "bg-[#005CE6] text-white font-bold shadow-md shadow-[#005CE6]/40"
+                      : "text-blue-100/75 font-semibold hover:text-white hover:bg-white/[0.10]"
                   )}
                 >
-                  <Icon className={cn("w-3.5 h-3.5 shrink-0", active ? "text-[#005CE6]" : "text-slate-400")} />
+                  <Icon className={cn("w-3.5 h-3.5 shrink-0", active ? "text-white" : "text-blue-200/60")} />
                   <span>{item.title}</span>
                 </Link>
               );
@@ -124,17 +123,8 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           </nav>
         </div>
 
-        {/* Right: Quick CTA + User Profile Avatar + Mobile Toggle */}
-        <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
-          {/* Quick Mock Test CTA (Desktop) */}
-          <Link
-            href="/tests/new"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#0096D6] hover:from-[#004ec4] hover:to-[#0081ba] text-white text-xs font-bold transition-all shadow-xs hover:shadow hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <Play className="w-3 h-3 fill-current" />
-            <span>Start Test</span>
-          </Link>
-
+        {/* Right: User Profile Avatar + Mobile Toggle (Removed Start Test) */}
+        <div className="flex items-center gap-3 shrink-0">
           {/* User Account Controls (Avatar Icon Only) */}
           <div className="relative" ref={dropdownRef}>
             <button
@@ -147,79 +137,79 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
               className={cn(
                 "p-0.5 rounded-full transition-all cursor-pointer select-none focus:outline-none relative flex items-center justify-center",
                 profileDropdownOpen
-                  ? "ring-2 ring-[#005CE6] ring-offset-2 ring-offset-white shadow-sm"
-                  : "hover:ring-2 hover:ring-[#005CE6]/30 hover:ring-offset-1"
+                  ? "ring-2 ring-[#60CEF8] ring-offset-2 ring-offset-[#08152D] shadow-sm"
+                  : "hover:ring-2 hover:ring-[#60CEF8]/50 hover:ring-offset-1 hover:ring-offset-[#08152D]"
               )}
               aria-label="Candidate Profile Menu"
               aria-expanded={profileDropdownOpen}
               title="Sathyamoorthi M (Click for Profile Menu)"
             >
-              <CandidateAvatar size={36} />
+              <CandidateAvatar size={38} />
               {/* Online pulse indicator dot */}
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#08152D]" />
             </button>
 
-            {/* Dropdown Menu */}
+            {/* Dropdown Menu (Styled Dark Frosted Glass) */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2.5 w-72 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/80 shadow-[0_12px_40px_rgba(0,0,0,0.12),0_2px_6px_rgba(0,0,0,0.04)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
+              <div className="absolute right-0 mt-2.5 w-72 rounded-2xl bg-[#0B1A35]/98 backdrop-blur-2xl border border-blue-800/60 shadow-[0_20px_60px_rgba(0,10,30,0.6)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1 text-white">
                 {/* Profile Header (Target line completely removed) */}
-                <div className="p-3 rounded-xl bg-gradient-to-br from-[#F0FAFF] to-[#EBF7FF] border border-[#BCEBFC]/60 flex items-center gap-3">
+                <div className="p-3 rounded-xl bg-blue-950/80 border border-blue-800/80 flex items-center gap-3">
                   <CandidateAvatar size={38} />
                   <div className="min-w-0 flex-1">
-                    <div className="font-bold text-xs text-slate-900 truncate">Sathyamoorthi M</div>
-                    <div className="text-[11px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
-                    <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100/90 text-emerald-800 text-[10px] font-bold border border-emerald-200">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <div className="font-bold text-xs text-white truncate">Sathyamoorthi M</div>
+                    <div className="text-[11px] text-blue-200/80 truncate">sathyamoorthi@satprep.in</div>
+                    <div className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/40">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                       <span>Verified Student</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="px-2 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="px-2 pt-2 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-300/70">
                   Student Portal
                 </div>
 
                 <Link
                   href="/profile"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/70 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-blue-100 hover:text-white hover:bg-white/10 transition-colors"
                 >
-                  <User className="w-3.5 h-3.5 text-slate-400" />
+                  <User className="w-3.5 h-3.5 text-blue-300" />
                   <span>Candidate Profile &amp; Settings</span>
                 </Link>
 
                 <Link
                   href="/tests/result/sample-attempt-1"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/70 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-blue-100 hover:text-white hover:bg-white/10 transition-colors"
                 >
-                  <Award className="w-3.5 h-3.5 text-slate-400" />
+                  <Award className="w-3.5 h-3.5 text-blue-300" />
                   <span>Exam Results &amp; Analytics</span>
                 </Link>
 
-                <div className="h-px bg-slate-100 my-1" />
+                <div className="h-px bg-blue-900/60 my-1" />
 
-                <div className="px-2 pt-1 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <div className="px-2 pt-1 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-300/70">
                   Administration
                 </div>
 
                 <Link
                   href="/admin"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:text-[#005CE6] hover:bg-blue-50/70 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-blue-100 hover:text-white hover:bg-white/10 transition-colors"
                 >
-                  <Shield className="w-3.5 h-3.5 text-slate-400" />
+                  <Shield className="w-3.5 h-3.5 text-blue-300" />
                   <span>Admin Console</span>
                 </Link>
 
-                <div className="h-px bg-slate-100 my-1" />
+                <div className="h-px bg-blue-900/60 my-1" />
 
                 <Link
                   href="/auth"
                   onClick={() => setProfileDropdownOpen(false)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-300 hover:bg-rose-950/40 hover:text-rose-200 transition-colors"
                 >
-                  <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                  <LogOut className="w-3.5 h-3.5 text-rose-400" />
                   <span>Sign Out</span>
                 </Link>
               </div>
@@ -229,7 +219,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-xl border border-white/20 text-white hover:bg-white/10 transition-colors cursor-pointer"
             aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -237,10 +227,10 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer (Deep Cobalt Frosted Sheet) */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur-xl px-4 py-3 space-y-1.5 shadow-lg animate-in slide-in-from-top-2 duration-150">
-          <div className="grid grid-cols-2 gap-1.5 pb-2">
+        <div className="md:hidden border-t border-blue-900/50 bg-[#08152D]/98 backdrop-blur-2xl px-4 py-3 space-y-2 shadow-2xl animate-in slide-in-from-top-2 duration-150">
+          <div className="grid grid-cols-2 gap-1.5 pb-1">
             {navItems.map((item) => {
               const active = isItemActive(item.href);
               const Icon = item.icon;
@@ -250,27 +240,18 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-colors",
+                    "flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors",
                     active
-                      ? "text-[#005CE6] bg-blue-50/80 font-bold"
-                      : "text-slate-700 hover:bg-slate-50"
+                      ? "text-white bg-[#005CE6] font-bold shadow-xs"
+                      : "text-blue-100/80 hover:bg-white/10"
                   )}
                 >
-                  <Icon className={cn("w-4 h-4 shrink-0", active ? "text-[#005CE6]" : "text-slate-400")} />
+                  <Icon className={cn("w-4 h-4 shrink-0", active ? "text-white" : "text-blue-300/70")} />
                   <span>{item.title}</span>
                 </Link>
               );
             })}
           </div>
-
-          <Link
-            href="/tests/new"
-            onClick={() => setMobileMenuOpen(false)}
-            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#0096D6] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-xs"
-          >
-            <Play className="w-3.5 h-3.5 fill-current" />
-            <span>Start Practice Test</span>
-          </Link>
         </div>
       )}
     </header>
