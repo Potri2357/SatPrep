@@ -13,12 +13,12 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   theme = 'light',
   className = '',
 }) => {
-  // Brand colors (PRD Section 7.2 & 7.3)
+  // Brand colors using the 5-color palette
   const isDark = theme === 'dark';
-  const blue500 = "#2563EB"; // Vibrant Royal Blue
+  const blue500 = "#005CE6"; // Deep Cobalt Royal Blue
   const navy700 = "#0F172A"; // High-contrast Deep Slate Navy
-  const ice100 = "#EFF6FF";
-  const iceRing = "#BFDBFE";
+  const ice100 = "#F0FAFF";
+  const iceRing = "#BCEBFC";
 
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>

@@ -25,7 +25,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className={`${dmSans.className} min-h-screen bg-[#F8FAFC] text-[#0F172A] antialiased selection:bg-[#2563EB] selection:text-white`}>
+      <body className={`${dmSans.className} min-h-screen bg-[#F7FDFF] text-[#0F172A] antialiased selection:bg-[#005CE6] selection:text-white`}>
         {children}
       </body>
     </html>

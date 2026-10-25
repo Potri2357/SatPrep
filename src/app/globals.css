@@ -2,24 +2,30 @@
 
 @layer base {
   :root {
-    /* Core Blue & White Palette */
-    --color-blue-500: #2563EB;
-    --color-blue-600: #1D4ED8;
-    --color-blue-700: #1E40AF;
-    --color-blue-800: #1E3A8A;
-    --color-blue-400: #3B82F6;
-    --color-blue-300: #60A5FA;
-    --color-blue-200: #93C5FD;
-    --color-blue-100: #DBEAFE;
-    --color-blue-50: #EFF6FF;
+    /* Exact 5-Color Blue Palette from user reference */
+    --color-brand-cobalt: #005CE6;   /* Deep Cobalt Royal Blue */
+    --color-brand-cerulean: #0096D6; /* Vivid Cerulean Blue */
+    --color-brand-sky: #60CEF8;      /* Sky Cyan Accent */
+    --color-brand-powder: #BCEBFC;   /* Soft Ice Powder Blue */
+    --color-brand-ice: #F7FDFF;      /* Pure Ice White Canvas */
+
+    /* Core Mapped Colors */
+    --color-blue-500: #005CE6;
+    --color-blue-600: #004ecc;
+    --color-blue-700: #003fa8;
+    --color-blue-400: #0096D6;
+    --color-blue-300: #60CEF8;
+    --color-blue-200: #BCEBFC;
+    --color-blue-100: #E0F4FD;
+    --color-blue-50: #F0FAFF;
 
     /* Crisp Neutrals */
-    --canvas: #F8FAFC;
-    --canvas-alt: #F0F6FF;
+    --canvas: #F7FDFF;
+    --canvas-alt: #F0FAFF;
     --surface: #FFFFFF;
-    --surface-glass: rgba(255, 255, 255, 0.85);
+    --surface-glass: rgba(255, 255, 255, 0.88);
     --border: #E2E8F0;
-    --border-blue: #BFDBFE;
+    --border-blue: #BCEBFC;
 
     --text-primary: #0F172A;
     --text-secondary: #334155;
@@ -123,7 +129,7 @@ button, input, select, textarea {
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow: 
-    4px 4px 10px rgba(37, 99, 235, 0.08), 
+    4px 4px 10px rgba(0, 92, 230, 0.08), 
     -4px -4px 10px rgba(255, 255, 255, 0.95),
     inset 0 1px 1px rgba(255, 255, 255, 0.8);
   color: #334155;
@@ -133,23 +139,23 @@ button, input, select, textarea {
 }
 
 .chip-btn:hover, .neu-chip:hover {
-  color: #2563EB;
-  background: rgba(239, 246, 255, 0.95);
-  border-color: rgba(191, 219, 254, 0.8);
+  color: #005CE6;
+  background: rgba(240, 250, 255, 0.95);
+  border-color: rgba(188, 235, 252, 0.9);
   box-shadow: 
-    6px 6px 16px rgba(37, 99, 235, 0.12), 
+    6px 6px 16px rgba(0, 92, 230, 0.12), 
     -6px -6px 16px rgba(255, 255, 255, 1);
   transform: translateY(-1px);
 }
 
 .chip-btn:active, .neu-chip:active, .chip-btn-active {
   box-shadow: 
-    inset 2px 2px 5px rgba(37, 99, 235, 0.15), 
+    inset 2px 2px 5px rgba(0, 92, 230, 0.15), 
     inset -2px -2px 5px rgba(255, 255, 255, 0.9);
   transform: translateY(0);
 }
 
-/* Primary Vibrant Royal Blue Chip Button */
+/* Primary Vibrant Royal Blue Chip Button (matches user image) */
 .chip-btn-primary, .neu-chip-primary {
   display: inline-flex;
   align-items: center;
@@ -158,25 +164,25 @@ button, input, select, textarea {
   padding: 0.625rem 1.5rem;
   border-radius: 9999px;
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: #FFFFFF;
-  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #005CE6 0%, #0076F5 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: 
-    4px 4px 14px rgba(37, 99, 235, 0.35), 
+    0 8px 22px rgba(0, 92, 230, 0.38), 
     -2px -2px 8px rgba(255, 255, 255, 0.7),
-    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    inset 0 1px 1px rgba(255, 255, 255, 0.5);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   user-select: none;
 }
 
 .chip-btn-primary:hover, .neu-chip-primary:hover {
-  background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%);
+  background: linear-gradient(135deg, #0050cc 0%, #0066eb 100%);
   box-shadow: 
-    6px 6px 20px rgba(37, 99, 235, 0.45), 
+    0 10px 28px rgba(0, 92, 230, 0.48), 
     -2px -2px 10px rgba(255, 255, 255, 0.85),
-    inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
   transform: scale(1.02);
 }
 
@@ -185,6 +191,24 @@ button, input, select, textarea {
     inset 2px 2px 6px rgba(0, 0, 0, 0.3), 
     inset -1px -1px 3px rgba(255, 255, 255, 0.2);
   transform: scale(0.98);
+}
+
+/* Streak Pill Component (exact match to user image 1) */
+.streak-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  font-size: 0.8125rem;
+  color: #9A3412;
+  background: #FFFDF5;
+  border: 1.5px solid #FEE685;
+  box-shadow: 
+    3px 3px 10px rgba(245, 158, 11, 0.12), 
+    -3px -3px 10px rgba(255, 255, 255, 0.95);
+  user-select: none;
 }
 
 /* KaTeX custom styles */

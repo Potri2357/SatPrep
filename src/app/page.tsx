@@ -33,14 +33,14 @@ export default function LandingPage() {
 
         <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#BFDBFE] text-xs font-bold text-[#1E40AF] shadow-sm mb-8">
-            <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#BCEBFC] text-xs font-bold text-[#005CE6] shadow-sm mb-8">
+            <Sparkles className="w-3.5 h-3.5 text-[#005CE6]" />
             <span>Calibrated Quant &amp; DI Engine for SBI, IBPS, RBI &amp; RRB</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#0F172A] mb-6 leading-[1.15]">
             Master Bank Exam Quant with <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1D4ED8] via-[#2563EB] to-[#3B82F6]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#0096D6] to-[#60CEF8]">
               Exam-Realistic Precision
             </span>
           </h1>
