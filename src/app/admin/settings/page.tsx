@@ -9,6 +9,7 @@ import {
   Sliders,
   Database,
   Lock,
+  Check,
 } from 'lucide-react';
 
 export default function AdminSettingsPage() {
@@ -140,9 +141,16 @@ export default function AdminSettingsPage() {
         <div className="pt-2 flex justify-end">
           <button
             onClick={handleSaveSettings}
-            className="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+            className="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02] flex items-center gap-1.5"
           >
-            {saveSuccess ? '✓ Settings Saved' : 'Save Global Settings'}
+            {saveSuccess ? (
+              <>
+                <Check className="w-3.5 h-3.5" />
+                <span>Settings Saved</span>
+              </>
+            ) : (
+              'Save Global Settings'
+            )}
           </button>
         </div>
       </div>

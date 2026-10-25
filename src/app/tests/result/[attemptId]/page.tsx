@@ -419,8 +419,18 @@ export default function ResultAnalysisPage() {
                           </div>
 
                           <div className="text-[10px] font-bold">
-                            {isCorrectOpt && <span className="text-emerald-700">✓ Correct Key</span>}
-                            {isUserSelected && !isCorrectOpt && <span className="text-rose-700">✗ Your Choice</span>}
+                            {isCorrectOpt && (
+                              <span className="flex items-center gap-1 text-emerald-700">
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>Correct Key</span>
+                              </span>
+                            )}
+                            {isUserSelected && !isCorrectOpt && (
+                              <span className="flex items-center gap-1 text-rose-700">
+                                <XCircle className="w-3.5 h-3.5" />
+                                <span>Your Choice</span>
+                              </span>
+                            )}
                           </div>
                         </div>
                       );
@@ -506,8 +516,9 @@ export default function ResultAnalysisPage() {
             </h2>
 
             {reportSubmitted ? (
-              <div className="text-center py-6 text-xs text-emerald-600 font-bold">
-                ✓ Report logged successfully! Our content reviewers will inspect this question.
+              <div className="text-center py-6 text-xs text-emerald-600 font-bold flex items-center justify-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Report logged successfully! Our content reviewers will inspect this question.</span>
               </div>
             ) : (
               <>

@@ -599,7 +599,10 @@ export default function PracticeHubPage() {
                   <div className="bg-slate-50 p-2 rounded-lg border border-slate-200/80 overflow-x-auto text-xs">
                     <MathRenderer content={`$$${item.latex}$$`} />
                   </div>
-                  <div className="text-[11px] text-slate-500 italic">💡 {item.note}</div>
+                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
+                    <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    <span>{item.note}</span>
+                  </div>
                 </div>
               ))}
             </div>

@@ -19,6 +19,9 @@ import {
   Flame,
   CheckCircle2,
   TrendingUp,
+  BarChart3,
+  Calculator,
+  Plus,
 } from 'lucide-react';
 
 interface ExamProfile {
@@ -299,8 +302,9 @@ export default function NewTestBuilderPage() {
               {/* 1. Number & Calculation Speed */}
               <div className="p-4 rounded-2xl bg-[#F0FAFF]/60 border border-[#BCEBFC]/60 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-[#005CE6] uppercase tracking-wider">
-                    ⚡ Number &amp; Calculation Speed
+                  <span className="text-[11px] font-bold text-[#005CE6] uppercase tracking-wider flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-[#005CE6]" />
+                    <span>Number &amp; Calculation Speed</span>
                   </span>
                   <button
                     type="button"
@@ -325,10 +329,10 @@ export default function NewTestBuilderPage() {
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-[#F0FAFF] hover:border-[#BCEBFC]'
                         }`}
                       >
-                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
                           sel ? 'bg-white text-[#005CE6]' : 'bg-slate-200 text-slate-600'
                         }`}>
-                          {sel ? '✓' : '+'}
+                          {sel ? <Check className="w-2.5 h-2.5 stroke-[3]" /> : <Plus className="w-2.5 h-2.5 stroke-[2.5]" />}
                         </span>
                         <span>{t.name}</span>
                       </button>
@@ -340,8 +344,9 @@ export default function NewTestBuilderPage() {
               {/* 2. Data Interpretation */}
               <div className="p-4 rounded-2xl bg-[#F0FAFF]/60 border border-[#BCEBFC]/60 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-[#005CE6] uppercase tracking-wider">
-                    📊 Data Interpretation Sets (10–15 Marks)
+                  <span className="text-[11px] font-bold text-[#005CE6] uppercase tracking-wider flex items-center gap-1.5">
+                    <BarChart3 className="w-3.5 h-3.5 text-[#005CE6]" />
+                    <span>Data Interpretation Sets (10–15 Marks)</span>
                   </span>
                   <button
                     type="button"
@@ -366,10 +371,10 @@ export default function NewTestBuilderPage() {
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-[#F0FAFF] hover:border-[#BCEBFC]'
                         }`}
                       >
-                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
                           sel ? 'bg-white text-[#005CE6]' : 'bg-slate-200 text-slate-600'
                         }`}>
-                          {sel ? '✓' : '+'}
+                          {sel ? <Check className="w-2.5 h-2.5 stroke-[3]" /> : <Plus className="w-2.5 h-2.5 stroke-[2.5]" />}
                         </span>
                         <span>{t.name}</span>
                       </button>
@@ -381,8 +386,9 @@ export default function NewTestBuilderPage() {
               {/* 3. Arithmetic Word Problems */}
               <div className="p-4 rounded-2xl bg-[#F0FAFF]/60 border border-[#BCEBFC]/60 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-[#005CE6] uppercase tracking-wider">
-                    🧮 Core Arithmetic Modules (10–12 Marks)
+                  <span className="text-[11px] font-bold text-[#005CE6] uppercase tracking-wider flex items-center gap-1.5">
+                    <Calculator className="w-3.5 h-3.5 text-[#005CE6]" />
+                    <span>Core Arithmetic Modules (10–12 Marks)</span>
                   </span>
                   <button
                     type="button"
@@ -407,10 +413,10 @@ export default function NewTestBuilderPage() {
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-[#F0FAFF] hover:border-[#BCEBFC]'
                         }`}
                       >
-                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+                        <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
                           sel ? 'bg-white text-[#005CE6]' : 'bg-slate-200 text-slate-600'
                         }`}>
-                          {sel ? '✓' : '+'}
+                          {sel ? <Check className="w-2.5 h-2.5 stroke-[3]" /> : <Plus className="w-2.5 h-2.5 stroke-[2.5]" />}
                         </span>
                         <span>{t.name}</span>
                       </button>

@@ -15,6 +15,7 @@ import {
   Trash2,
   Bell,
   Target,
+  Check,
 } from 'lucide-react';
 
 export default function ProfilePage() {
@@ -110,9 +111,16 @@ export default function ProfilePage() {
           <div className="pt-2 flex justify-end">
             <button
               onClick={handleSave}
-              className="px-6 py-2.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+              className="px-6 py-2.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02] flex items-center gap-1.5"
             >
-              {saveSuccess ? '✓ Profile Saved' : 'Save Changes'}
+              {saveSuccess ? (
+                <>
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Profile Saved</span>
+                </>
+              ) : (
+                'Save Changes'
+              )}
             </button>
           </div>
         </div>

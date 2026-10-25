@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Sparkles,
   Layers,
+  Check,
 } from 'lucide-react';
 
 export default function ContentReviewQueuePage() {
@@ -161,7 +162,12 @@ export default function ContentReviewQueuePage() {
                     </span>
                     <MathRenderer content={opt.text} />
                   </div>
-                  {isKey && <span className="text-[11px] text-emerald-700 font-bold">✓ Stated Key</span>}
+                  {isKey && (
+                    <span className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold">
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Stated Key</span>
+                    </span>
+                  )}
                 </div>
               );
             })}
