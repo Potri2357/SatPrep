@@ -51,7 +51,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div>
           {/* Logo Bar */}
           <div className="h-16 border-b border-blue-100 px-5 flex items-center justify-between">
-            <BrandLogo size={28} showWordmark={true} />
+            <Link href="/admin" className="transition-transform hover:scale-[1.02]">
+              <BrandLogo size={28} showWordmark={true} />
+            </Link>
             <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
               ADMIN
             </span>

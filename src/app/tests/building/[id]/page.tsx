@@ -56,7 +56,9 @@ export default function BuildingTestPage() {
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
 
       <header className="max-w-xl mx-auto w-full flex items-center justify-between z-10">
-        <BrandLogo size={36} showWordmark={true} />
+        <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
+          <BrandLogo size={36} showWordmark={true} />
+        </Link>
         <Link
           href="/dashboard"
           className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-600 shadow-xs transition-colors"

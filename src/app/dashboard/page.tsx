@@ -86,7 +86,9 @@ export default function StudentDashboard() {
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-[#E2E8F0]/80 shadow-[0_4px_20px_rgb(37,99,235,0.03)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <BrandLogo size={34} showWordmark={true} />
+            <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
+              <BrandLogo size={34} showWordmark={true} />
+            </Link>
             <nav className="hidden md:flex items-center gap-6 text-sm font-semibold">
               <Link href="/dashboard" className="text-[#2563EB] border-b-2 border-[#2563EB] pb-1">
                 Dashboard
@@ -98,7 +100,7 @@ export default function StudentDashboard() {
                 Practice
               </Link>
               <Link href="/profile" className="text-slate-600 hover:text-[#2563EB] transition-colors">
-                Profile &amp; Plan
+                Profile
               </Link>
               <Link href="/admin" className="text-xs px-3 py-1 rounded-full bg-[#EFF6FF] text-[#1E40AF] font-bold border border-[#BFDBFE] hover:bg-[#DBEAFE] transition-colors">
                 Admin Console

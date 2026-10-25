@@ -52,7 +52,9 @@ export default function PracticeHubPage() {
       <div className="absolute top-1/2 left-10 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
 
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-blue-100 px-6 h-16 flex items-center justify-between">
-        <BrandLogo size={34} showWordmark={true} />
+        <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
+          <BrandLogo size={34} showWordmark={true} />
+        </Link>
         <div className="flex items-center gap-4 text-xs font-semibold">
           <Link href="/dashboard" className="text-slate-600 hover:text-blue-600 transition-colors">
             Dashboard

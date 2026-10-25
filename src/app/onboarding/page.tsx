@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { BrandLogo } from '@/components/brand-logo';
 import { ArrowRight, Check, Target, Clock, Award, Sparkles } from 'lucide-react';
@@ -34,7 +35,9 @@ export default function OnboardingPage() {
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
 
       <header className="max-w-2xl mx-auto w-full flex items-center justify-between z-10">
-        <BrandLogo size={36} showWordmark={true} />
+        <Link href="/" className="transition-transform hover:scale-[1.02]">
+          <BrandLogo size={36} showWordmark={true} />
+        </Link>
         {/* Step Capsule Indicator */}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-blue-100 shadow-xs">
           {[1, 2, 3].map((s) => (

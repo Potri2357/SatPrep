@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   Award,
   ChevronRight,
+  ChevronLeft,
 } from 'lucide-react';
 
 export default function ExamInstructionsPage() {
@@ -56,22 +57,34 @@ export default function ExamInstructionsPage() {
   const totalMarks = testData?.bundle?.total_marks || questionCount;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between text-slate-800 relative overflow-hidden">
-      {/* Ambient background glow */}
-      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-br from-[#F0F6FF] via-[#F8FAFC] to-[#EFF6FF] flex flex-col justify-between text-[#0F172A] relative selection:bg-[#2563EB] selection:text-white">
+      {/* Decorative ambient background glows */}
+      <div className="absolute top-10 right-1/4 w-[500px] h-[500px] bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Header */}
-      <header className="sticky top-0 z-40 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 text-white shadow-md border-b border-blue-500/30 px-6 h-16 flex items-center justify-between shrink-0">
+      {/* Neat & Clean Top Header (Consistent White Glassmorphism) */}
+      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-xl border-b border-[#E2E8F0]/80 shadow-[0_4px_20px_rgb(37,99,235,0.03)] px-6 h-16 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-4">
-          <BrandLogo size={32} showWordmark={true} />
-          <span className="hidden sm:inline-block text-xs font-semibold px-3 py-1 rounded-full bg-white/20 text-white border border-white/30 backdrop-blur-md">
+          <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
+            <BrandLogo size={34} showWordmark={true} />
+          </Link>
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
             Candidate Verification &amp; Instructions
           </span>
         </div>
-        <div className="text-xs font-mono text-blue-100 flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-300" />
-          <span>PROCTORED EXAM ENVIRONMENT</span>
+
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span className="font-semibold text-emerald-800">Proctored Terminal</span>
+          </div>
+
+          <Link
+            href="/dashboard"
+            className="text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-colors shadow-xs"
+          >
+            Exit to Dashboard
+          </Link>
         </div>
       </header>
 
@@ -80,82 +93,82 @@ export default function ExamInstructionsPage() {
         {/* Left 2 Cols: Instructions Body */}
         <div className="lg:col-span-2 space-y-6">
           {/* Exam Summary Banner */}
-          <div className="glass-panel p-6 sm:p-7 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="p-6 sm:p-7 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                <Award className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
+                <Award className="w-3.5 h-3.5 text-[#2563EB]" />
                 <span>Standard TCS-iON Examination Pattern</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
                 {examName}
               </h1>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 font-medium">
                 Quantitative Aptitude &amp; Data Interpretation Paper
               </p>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
-              <div className="px-4 py-3 rounded-2xl bg-blue-50/60 border border-blue-100 text-center">
-                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Duration</span>
-                <span className="text-base font-extrabold font-mono text-blue-700">{durationMin} Mins</span>
+              <div className="px-4 py-3 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60 text-center shadow-xs">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Duration</span>
+                <span className="text-base font-extrabold font-mono text-[#2563EB]">{durationMin} Mins</span>
               </div>
-              <div className="px-4 py-3 rounded-2xl bg-blue-50/60 border border-blue-100 text-center">
-                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Questions</span>
+              <div className="px-4 py-3 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60 text-center shadow-xs">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Questions</span>
                 <span className="text-base font-extrabold font-mono text-slate-900">{questionCount} Qs</span>
               </div>
-              <div className="px-4 py-3 rounded-2xl bg-blue-50/60 border border-blue-100 text-center">
-                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Total Marks</span>
+              <div className="px-4 py-3 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60 text-center shadow-xs">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Marks</span>
                 <span className="text-base font-extrabold font-mono text-slate-900">{totalMarks}.00</span>
               </div>
             </div>
           </div>
 
           {/* General Instructions */}
-          <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-4">
-            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-blue-600" />
+          <div className="p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
+            <h2 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#2563EB]" />
               <span>General Examination Guidelines</span>
             </h2>
 
-            <div className="text-xs space-y-3.5 leading-relaxed text-slate-600">
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
-                <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+            <div className="text-xs space-y-3 leading-relaxed text-slate-600">
+              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                <Clock className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-slate-900">1. Server Clock:</strong> The countdown timer displayed at the top of the exam screen reflects the authoritative server clock. When the timer hits 00:00, your exam will be automatically submitted without manual intervention.
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
                 <Award className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-900">2. Marking Scheme:</strong> You will be awarded <strong className="text-emerald-700">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700">-0.25 marks</strong>. Unattempted questions carry zero penalties.
+                  <strong className="text-slate-900">2. Marking Scheme:</strong> You will be awarded <strong className="text-emerald-700 font-bold">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700 font-bold">-0.25 marks</strong>. Unattempted questions carry zero penalties.
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
                 <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-slate-900">3. Continuous Autosave:</strong> Every question response is transmitted and verified against the server. An active sync beacon confirms persistence on every selection.
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
                 <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-900">4. Saving Responses:</strong> To lock in your answer, you must click <strong className="text-blue-700">&quot;Save &amp; Next&quot;</strong>. Simply tapping on an option without proceeding does not save your choice.
+                  <strong className="text-slate-900">4. Saving Responses:</strong> To lock in your answer, you must click <strong className="text-[#2563EB]">&quot;Save &amp; Next&quot;</strong>. Simply tapping on an option without proceeding does not save your choice.
                 </div>
               </div>
             </div>
           </div>
 
           {/* Question Palette Legend */}
-          <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-4">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-bold uppercase tracking-wider text-slate-500">
                 Question Palette Symbol States
               </h2>
-              <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                5 State Standards
+              <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE]">
+                TCS-iON 5-Symbol Standards
               </span>
             </div>
 
@@ -167,32 +180,32 @@ export default function ExamInstructionsPage() {
                 <span className="text-slate-600">You have not visited the question yet.</span>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-rose-200 bg-rose-50/40 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-rose-200 bg-rose-50/50 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   2
                 </div>
                 <span className="text-slate-700">You have not answered the question.</span>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-emerald-200 bg-emerald-50/40 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   3
                 </div>
                 <span className="text-slate-700">You have answered the question.</span>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/40 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/50 shadow-xs">
                 <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   4
                 </div>
                 <span className="text-slate-700">Marked for review without answering.</span>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/40 shadow-xs sm:col-span-2">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/50 shadow-xs sm:col-span-2">
                 <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 ring-2 ring-emerald-400 shadow-sm">
                   5
                 </div>
-                <span className="text-slate-700 font-medium">Answered and marked for review (will be considered for final score evaluation).</span>
+                <span className="text-slate-700 font-medium">Answered and marked for review (will be considered for evaluation).</span>
               </div>
             </div>
           </div>
@@ -201,13 +214,13 @@ export default function ExamInstructionsPage() {
         {/* Right Col: Candidate Profile & Readiness Checkbox */}
         <div className="space-y-6">
           {/* Candidate Card */}
-          <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-4">
+          <div className="p-6 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
               Candidate Profile Verification
             </h2>
 
-            <div className="flex items-center gap-4 p-3 rounded-2xl bg-blue-50/50 border border-blue-100">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-blue-700 text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-blue-500/20">
+            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-[#EFF6FF]/60 border border-[#BFDBFE]/60">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#2563EB] to-[#1D4ED8] text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-blue-500/20">
                 AS
               </div>
               <div className="overflow-hidden">
@@ -220,7 +233,7 @@ export default function ExamInstructionsPage() {
             </div>
 
             {/* Device & Session Diagnostic */}
-            <div className="pt-2 space-y-2.5 text-xs">
+            <div className="pt-1 space-y-2 text-xs">
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <div className="flex items-center gap-2 text-slate-600">
                   <Monitor className="w-4 h-4 text-emerald-600" />
@@ -232,9 +245,9 @@ export default function ExamInstructionsPage() {
               <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <div className="flex items-center gap-2 text-slate-600">
                   <Wifi className="w-4 h-4 text-emerald-600" />
-                  <span>Network Sync</span>
+                  <span>Network Latency</span>
                 </div>
-                <span className="font-bold text-emerald-700 font-mono">24ms Latency</span>
+                <span className="font-bold text-emerald-700 font-mono">24ms Ping</span>
               </div>
             </div>
 
@@ -245,7 +258,7 @@ export default function ExamInstructionsPage() {
                   type="checkbox"
                   checked={hasAgreed}
                   onChange={(e) => setHasAgreed(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 border-slate-300"
+                  className="mt-0.5 w-4 h-4 rounded text-[#2563EB] focus:ring-blue-500 border-slate-300 accent-[#2563EB]"
                 />
                 <span className="text-xs text-slate-600 group-hover:text-slate-900 leading-snug">
                   I have read and understood all instructions. I declare that I will attempt the exam independently and without any unfair means.
@@ -256,7 +269,7 @@ export default function ExamInstructionsPage() {
               <button
                 onClick={handleStartExam}
                 disabled={!hasAgreed}
-                className="w-full h-12 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.01]"
+                className="w-full h-12 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.01]"
               >
                 <span>I am ready to begin</span>
                 <ArrowRight className="w-4 h-4" />

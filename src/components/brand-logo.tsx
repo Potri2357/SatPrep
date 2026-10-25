@@ -10,12 +10,15 @@ interface BrandLogoProps {
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   size = 36,
   showWordmark = true,
+  theme = 'light',
   className = '',
 }) => {
-  // Exact colors derived from PRD Section 7.2 & 7.3
-  const blue500 = "#2D6BCB";
-  const navy700 = "#212835";
-  const ice100 = "#EAF1F8";
+  // Brand colors (PRD Section 7.2 & 7.3)
+  const isDark = theme === 'dark';
+  const blue500 = "#2563EB"; // Vibrant Royal Blue
+  const navy700 = "#0F172A"; // High-contrast Deep Slate Navy
+  const ice100 = "#EFF6FF";
+  const iceRing = "#BFDBFE";
 
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
@@ -30,49 +33,52 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       >
         <defs>
           {/* Faint graph paper grid pattern inside disc */}
-          <pattern id="logo-grid" width="8" height="8" patternUnits="userSpaceOnUse">
-            <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#2D6BCB" strokeWidth="0.5" strokeOpacity="0.12" />
+          <pattern id="brand-logo-grid" width="8" height="8" patternUnits="userSpaceOnUse">
+            <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#2563EB" strokeWidth="0.5" strokeOpacity="0.16" />
           </pattern>
           
           {/* Diagonal 45-degree clipping paths for the two halves of the plus */}
-          <clipPath id="upper-left-clip">
+          <clipPath id="brand-upper-left-clip">
             <polygon points="-20,-20 120,-20 -20,120" />
           </clipPath>
-          <clipPath id="lower-right-clip">
+          <clipPath id="brand-lower-right-clip">
             <polygon points="120,-20 120,120 -20,120" />
           </clipPath>
         </defs>
 
         {/* Outer Ice Disc with subtle blue ring */}
-        <circle cx="50" cy="50" r="47" fill={ice100} stroke="#BFDBFE" strokeWidth="1.5" />
-        <circle cx="50" cy="50" r="46" fill="url(#logo-grid)" />
+        <circle
+          cx="50"
+          cy="50"
+          r="47"
+          fill={isDark ? '#1E293B' : ice100}
+          stroke={isDark ? '#3B82F6' : iceRing}
+          strokeWidth="1.5"
+        />
+        <circle cx="50" cy="50" r="46" fill="url(#brand-logo-grid)" />
 
         {/* The Rounded Plus Mark (Composite of horizontal and vertical capsule bars) */}
-        {/* Upper-Left half in Brand Blue (#2D6BCB) */}
-        <g clipPath="url(#upper-left-clip)">
-          {/* Vertical Bar */}
+        {/* Upper-Left half in Brand Royal Blue (#2563EB) */}
+        <g clipPath="url(#brand-upper-left-clip)">
           <rect x="41" y="22" width="18" height="56" rx="9" fill={blue500} />
-          {/* Horizontal Bar */}
           <rect x="22" y="41" width="56" height="18" rx="9" fill={blue500} />
         </g>
 
-        {/* Lower-Right half in Deep Navy (#212835) */}
-        <g clipPath="url(#lower-right-clip)">
-          {/* Vertical Bar */}
-          <rect x="41" y="22" width="18" height="56" rx="9" fill={navy700} />
-          {/* Horizontal Bar */}
-          <rect x="22" y="41" width="56" height="18" rx="9" fill={navy700} />
+        {/* Lower-Right half in Deep Slate Navy (#0F172A) */}
+        <g clipPath="url(#brand-lower-right-clip)">
+          <rect x="41" y="22" width="18" height="56" rx="9" fill={isDark ? '#93C5FD' : navy700} />
+          <rect x="22" y="41" width="56" height="18" rx="9" fill={isDark ? '#93C5FD' : navy700} />
         </g>
 
-        {/* Subtle center junction refinement */}
-        <circle cx="50" cy="50" r="2.5" fill="#FFFFFF" fillOpacity="0.25" />
+        {/* Subtle center junction dot */}
+        <circle cx="50" cy="50" r="2.5" fill="#FFFFFF" fillOpacity="0.4" />
       </svg>
 
-      {/* Wordmark (Sat in Navy / white, Prep in Brand Blue) */}
+      {/* Wordmark (Sat in solid Deep Navy #0F172A, Prep in Royal Blue #2563EB) */}
       {showWordmark && (
-        <span className="font-bold tracking-tight text-xl font-['DM_Sans'] leading-none">
-          <span className="text-slate-900 dark:text-white">Sat</span>
-          <span className="text-[#2D6BCB]">Prep</span>
+        <span className="font-extrabold tracking-tight text-xl font-['DM_Sans'] leading-none">
+          <span className={isDark ? 'text-white' : 'text-[#0F172A]'}>Sat</span>
+          <span className={isDark ? 'text-blue-300' : 'text-[#2563EB]'}>Prep</span>
         </span>
       )}
     </div>

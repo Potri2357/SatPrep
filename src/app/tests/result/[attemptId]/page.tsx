@@ -130,7 +130,9 @@ export default function ResultAnalysisPage() {
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-blue-100 px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <BrandLogo size={34} showWordmark={true} />
+          <Link href="/dashboard" className="transition-transform hover:scale-[1.02]">
+            <BrandLogo size={34} showWordmark={true} />
+          </Link>
           <span className="hidden sm:inline-block text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
             Mock Diagnosis &amp; Review
           </span>

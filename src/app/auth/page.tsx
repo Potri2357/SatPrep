@@ -24,7 +24,9 @@ export default function AuthPage() {
       {/* Left Column: Auth Form */}
       <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 sm:p-12 lg:p-16">
         <div>
-          <BrandLogo size={40} showWordmark={true} />
+          <Link href="/" className="inline-block transition-transform hover:scale-[1.02]">
+            <BrandLogo size={40} showWordmark={true} />
+          </Link>
         </div>
 
         <div className="max-w-md w-full mx-auto my-auto py-10">
