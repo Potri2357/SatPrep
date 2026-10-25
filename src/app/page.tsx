@@ -86,9 +86,9 @@ export default function LandingPage() {
 
         {/* Exam Terminal Mockup Container */}
         <div className="max-w-6xl mx-auto px-6 mt-16 relative z-10">
-          <div className="rounded-3xl bg-white border border-[#BFDBFE] shadow-[0_20px_50px_rgba(37,99,235,0.08)] overflow-hidden">
+          <div className="rounded-3xl bg-white border border-[#BCEBFC] shadow-[0_20px_50px_rgba(0,92,230,0.08)] overflow-hidden">
             {/* Window Top Bar */}
-            <div className="h-14 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] px-6 flex items-center justify-between text-white text-xs">
+            <div className="h-14 bg-gradient-to-r from-[#005CE6] to-[#0096D6] px-6 flex items-center justify-between text-white text-xs">
               <div className="flex items-center gap-3">
                 <BrandLogo size={24} showWordmark={false} />
                 <span className="font-bold tracking-tight">IBPS PO Prelims 2026 — Quantitative Aptitude</span>
@@ -97,8 +97,8 @@ export default function LandingPage() {
                 </span>
               </div>
               <div className="flex items-center gap-4 font-mono">
-                <div className="flex items-center gap-1.5 bg-white text-[#1E3A8A] px-3 py-1 rounded-xl font-bold shadow-xs">
-                  <Clock className="w-3.5 h-3.5 text-[#2563EB]" />
+                <div className="flex items-center gap-1.5 bg-white text-[#005CE6] px-3 py-1 rounded-xl font-bold shadow-xs">
+                  <Clock className="w-3.5 h-3.5 text-[#005CE6]" />
                   <span>18:42</span>
                 </div>
               </div>
@@ -212,14 +212,14 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
               href="/tests/new"
-              className="neu-glass-card p-6 rounded-3xl hover:scale-[1.02] transition-all group"
+              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-[#DBEAFE] text-[#2563EB] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
+              <div className="w-11 h-11 rounded-2xl bg-[#E0F4FD] text-[#005CE6] border border-[#BCEBFC] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-xs">
                 <Award className="w-5 h-5" />
               </div>
               <h3 className="text-base font-bold text-[#0F172A] mb-1.5 flex items-center justify-between">
                 <span>Full-Length Prelims Mocks</span>
-                <ArrowRight className="w-4 h-4 text-[#2563EB] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 text-[#005CE6] group-hover:translate-x-1 transition-transform" />
               </h3>
               <p className="text-slate-600 text-xs leading-relaxed">
                 35 questions in 20 minutes timed test. Real exam difficulty distribution and negative marking.

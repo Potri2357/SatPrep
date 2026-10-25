@@ -73,41 +73,42 @@ button, input, select, textarea {
 }
 
 /* ==============================================================================
-   Glassmorphism + Neumorphism Synthesis (Frosted Soft UI)
+   Refined Premium Card & Surface System (Subtle, Clean & Crisp)
    ============================================================================== */
 
-/* Frosted Glass + Neumorphic Extrusion Card */
+/* Premium Card (Clean, Crisp, Tactile with Refined Elevation) */
 .glass-panel, .neu-glass-card {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: #FFFFFF;
+  border: 1px solid #E2F0FD;
+  border-radius: 1.5rem;
   box-shadow: 
-    8px 8px 24px rgba(37, 99, 235, 0.06), 
-    -8px -8px 24px rgba(255, 255, 255, 0.98),
-    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    0 1px 2px rgba(0, 92, 230, 0.04),
+    0 8px 24px -4px rgba(0, 92, 230, 0.06),
+    0 0 0 1px rgba(188, 235, 252, 0.4);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Tactile Soft Glass Pill/Chip */
+.glass-panel:hover, .neu-glass-card:hover {
+  box-shadow: 
+    0 2px 4px rgba(0, 92, 230, 0.04),
+    0 14px 32px -4px rgba(0, 92, 230, 0.09),
+    0 0 0 1px rgba(0, 92, 230, 0.25);
+}
+
+/* Tactile Soft Pill / Chip Badge */
 .glass-pill, .neu-pill {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(191, 219, 254, 0.7);
-  box-shadow: 
-    4px 4px 12px rgba(37, 99, 235, 0.06), 
-    -4px -4px 12px rgba(255, 255, 255, 0.95);
+  background: #FFFFFF;
+  border: 1px solid #BCEBFC;
+  box-shadow: 0 2px 6px rgba(0, 92, 230, 0.05);
 }
 
-/* Neumorphic Recessed/Inset Panel (Inputs, Timers, Search Bars) */
+/* Neumorphic Inset Well (Inputs, Timers, Dock containers) */
 .neu-inset {
-  background: rgba(240, 246, 255, 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(191, 219, 254, 0.7);
+  background: #F0FAFF;
+  border: 1px solid #D4F0FD;
   box-shadow: 
-    inset 3px 3px 7px rgba(37, 99, 235, 0.08), 
-    inset -3px -3px 7px rgba(255, 255, 255, 0.95);
+    inset 0 2px 4px rgba(0, 92, 230, 0.04),
+    0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 /* ==============================================================================
