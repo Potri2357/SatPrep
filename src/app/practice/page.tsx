@@ -32,158 +32,6 @@ import {
   Pencil,
 } from 'lucide-react';
 
-// Topic Shortcut & Formula Cheat Sheets
-const TOPIC_CHEAT_SHEETS: Record<
-  string,
-  { title: string; summary: string; formulas: { name: string; latex: string; note: string }[] }
-> = {
-  'quadratic-equations': {
-    title: 'Quadratic Equations Speed Rules',
-    summary: 'Direct sign method enables solving 5 comparison questions in under 90 seconds.',
-    formulas: [
-      {
-        name: 'The Golden Sign Method',
-        latex: '(+, +) \\to (-, -) \\quad | \\quad (-, +) \\to (+, +) \\quad | \\quad (+, -) \\to (-, +) \\quad | \\quad (-, -) \\to (+, -)',
-        note: 'First sign always flips. Second sign changes if the first was negative.',
-      },
-      {
-        name: 'Free 5-Second Win Rule',
-        latex: 'ax^2 + bx - c = 0 \\quad \\& \\quad py^2 + qy - r = 0 \\implies \\text{No Relation}',
-        note: 'If both constant terms have negative signs, roots will be (+, -) and (+, -), which always leads to overlap.',
-      },
-    ],
-  },
-  'simplification': {
-    title: 'Speed Math & Fraction Cheat Sheet',
-    summary: 'Standard fraction percentage equivalents for rapid mental simplification.',
-    formulas: [
-      {
-        name: 'Common Unit Fractions',
-        latex: '\\frac{1}{6} = 16.67\\%, \\quad \\frac{1}{7} = 14.28\\%, \\quad \\frac{1}{8} = 12.5\\%, \\quad \\frac{1}{9} = 11.11\\%',
-        note: 'Memorize up to 1/20 for clerical and PO numerical ability.',
-      },
-      {
-        name: 'Difference of Squares Shortcut',
-        latex: 'a^2 - b^2 = (a - b)(a + b)',
-        note: 'Ideal for expressions like 47² - 43² = (4)(90) = 360.',
-      },
-    ],
-  },
-  'number-series': {
-    title: 'Number Series Pattern Archetypes',
-    summary: 'Recognize the 4 foundational sequence patterns immediately.',
-    formulas: [
-      {
-        name: 'Difference of Differences',
-        latex: '\\Delta_1, \\Delta_2, \\Delta_3 \\implies \\Delta^2 = \\text{constant or arithmetic progression}',
-        note: 'Always compute first level differences before trying complex multiplicative rules.',
-      },
-      {
-        name: 'Multiplication + Addition Pattern',
-        latex: 'T_{n} = T_{n-1} \\times k \\pm c \\quad \\text{where } k \\in \\{0.5, 1, 1.5, 2, 2.5\\}',
-        note: 'When values approximately double or triple each step, check this rule.',
-      },
-    ],
-  },
-  'profit-and-loss': {
-    title: 'Profit, Loss & Successive Discount',
-    summary: 'Eliminate multi-step equations using percentage multipliers.',
-    formulas: [
-      {
-        name: 'Net Percentage Change (Successive)',
-        latex: '\\text{Net } \\% = a + b + \\frac{ab}{100}',
-        note: 'Use negative signs for discounts and losses.',
-      },
-      {
-        name: 'Marked Price to Cost Price Ratio',
-        latex: '\\frac{\\text{MP}}{\\text{CP}} = \\frac{100 + \\text{Profit}\\%}{100 - \\text{Discount}\\%}',
-        note: 'Single-line solution when profit and discount percentages are both given.',
-      },
-    ],
-  },
-  'percentage': {
-    title: 'Percentage Conversion & Reciprocal Rules',
-    summary: 'Product constancy rule for price-consumption questions.',
-    formulas: [
-      {
-        name: 'Product Constancy Rule',
-        latex: '\\text{If } A \\text{ increases by } \\frac{1}{x}, \\text{ then } B \\text{ decreases by } \\frac{1}{x+1}',
-        note: 'If price rises by 25% (+1/4), consumption must reduce by 1/5 (20%) to keep budget constant.',
-      },
-    ],
-  },
-  'si-ci': {
-    title: 'Simple & Compound Interest Differences',
-    summary: 'Instant formulas for bank exam 2-year and 3-year CI-SI differences.',
-    formulas: [
-      {
-        name: '2-Year Difference Formula',
-        latex: '\\text{Difference} = P \\left(\\frac{R}{100}\\right)^2',
-        note: 'Extremely high frequency question in IBPS PO and SBI Clerk prelims.',
-      },
-      {
-        name: '3-Year Difference Formula',
-        latex: '\\text{Difference} = P \\left(\\frac{R}{100}\\right)^2 \\times \\left(3 + \\frac{R}{100}\\right)',
-        note: 'Use effective percentage breakdown to avoid cubing large numbers.',
-      },
-    ],
-  },
-  'ratio-proportion': {
-    title: 'Ratio & Mixture Replacement Rules',
-    summary: 'Cross multiplication method for income-expenditure pairs.',
-    formulas: [
-      {
-        name: 'Cross Multiplication for Savings',
-        latex: '\\Delta = |(A_1 \\times B_2) - (A_2 \\times B_1)| = \\text{Units Difference}',
-        note: 'Equate to the difference in cross products of savings.',
-      },
-    ],
-  },
-  'time-and-work': {
-    title: 'LCM Total Work & Unit Efficiency Method',
-    summary: 'Convert day-based rates into discrete work units.',
-    formulas: [
-      {
-        name: 'LCM Unit Work Rule',
-        latex: '\\text{Total Work} = \\text{LCM}(D_1, D_2, \\dots) \\implies \\text{Efficiency} = \\frac{\\text{Total Work}}{\\text{Days}}',
-        note: 'Never use 1/x fractions; integers are 5x faster and prevent arithmetic mistakes.',
-      },
-    ],
-  },
-  'time-speed-distance': {
-    title: 'Trains, Relative Speed & Streams',
-    summary: 'Crucial unit conversions and relative velocity formulas.',
-    formulas: [
-      {
-        name: 'Unit Conversion Factor',
-        latex: '1 \\text{ km/h} = \\frac{5}{18} \\text{ m/s} \\quad | \\quad 1 \\text{ m/s} = \\frac{18}{5} \\text{ km/h}',
-        note: 'Remember: 18 km/h = 5 m/s, 36 km/h = 10 m/s, 54 km/h = 15 m/s, 72 km/h = 20 m/s.',
-      },
-    ],
-  },
-  'tabular-di': {
-    title: 'Data Interpretation Speed Tactics',
-    summary: 'Approximation and fast ratio techniques for table DI.',
-    formulas: [
-      {
-        name: 'Percentage Change Calculation',
-        latex: '\\% \\text{ Change} = \\frac{\\text{Final} - \\text{Initial}}{\\text{Initial}} \\times 100',
-        note: 'Check options spread first. If options differ by >5%, round numbers to nearest tens.',
-      },
-    ],
-  },
-  'bar-pie-di': {
-    title: 'Pie Chart Degrees to Percentage Conversion',
-    summary: 'Angular ratio shortcuts for circular chart interpretation.',
-    formulas: [
-      {
-        name: 'Degrees to Percent Conversion',
-        latex: '360^\\circ = 100\\% \\implies 1\\% = 3.6^\\circ \\quad \\& \\quad 18^\\circ = 5\\%',
-        note: 'Calculate angular differences first before converting to actual values.',
-      },
-    ],
-  },
-};
 
 // Rich topic performance metadata for the sidebar
 interface TopicMeta {
@@ -278,7 +126,6 @@ export default function PracticeHubPage() {
 
   // Extras
   const [focusMode, setFocusMode] = useState<boolean>(false);
-  const [showCheatSheet, setShowCheatSheet] = useState<boolean>(false);
   const [showScratchpad, setShowScratchpad] = useState<boolean>(false);
   const [scratchNotes, setScratchNotes] = useState<string>('');
   const [bookmarks, setBookmarks] = useState<string[]>(['q-profit-1', 'q-series-1']);
@@ -435,17 +282,6 @@ export default function PracticeHubPage() {
 
   const isCurrentBookmarked = bookmarks.includes(currentQ.id);
   const activeTopic = INITIAL_TOPICS.find((t) => t.id === selectedTopic) || INITIAL_TOPICS[0];
-  const activeCheatSheet = TOPIC_CHEAT_SHEETS[selectedTopic] || {
-    title: 'Quantitative Formula Rule',
-    summary: 'Standard exam calculations and unit shortcuts.',
-    formulas: [
-      {
-        name: 'General Arithmetic Rule',
-        latex: '\\text{Rate} \\times \\text{Time} = \\text{Total Units}',
-        note: 'Break down problem into unit rates.',
-      },
-    ],
-  };
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col text-slate-800 selection:bg-blue-100">
@@ -539,18 +375,6 @@ export default function PracticeHubPage() {
 
           {/* Secondary Utilities */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowCheatSheet(!showCheatSheet)}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer",
-                showCheatSheet
-                  ? "bg-amber-50 border-amber-300 text-amber-900"
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-              )}
-            >
-              <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-              <span>Formula Sheet</span>
-            </button>
 
             <button
               onClick={() => setShowScratchpad(!showScratchpad)}
@@ -581,35 +405,6 @@ export default function PracticeHubPage() {
           </div>
         </div>
 
-        {/* Topic Formula Sheet Drawer */}
-        {showCheatSheet && (
-          <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/70 border border-amber-200/90 space-y-3 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between border-b border-amber-200/70 pb-2">
-              <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
-                <Lightbulb className="w-4 h-4 text-amber-600 fill-amber-500" />
-                <span>{activeCheatSheet.title}</span>
-              </div>
-              <span className="text-[11px] text-amber-800 font-medium">Exam Speed Reference</span>
-            </div>
-
-            <p className="text-xs text-amber-900/80">{activeCheatSheet.summary}</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
-              {activeCheatSheet.formulas.map((item, idx) => (
-                <div key={idx} className="p-3 rounded-xl bg-white border border-amber-200/80 space-y-1.5 shadow-2xs">
-                  <div className="text-xs font-bold text-slate-900">{item.name}</div>
-                  <div className="bg-slate-50 p-2 rounded-lg border border-slate-200/80 overflow-x-auto text-xs">
-                    <MathRenderer content={`$$${item.latex}$$`} />
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                    <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                    <span>{item.note}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Advanced Interactive Scratchpad Modal */}
         <ScratchpadModal

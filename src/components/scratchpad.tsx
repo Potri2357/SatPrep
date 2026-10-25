@@ -14,13 +14,7 @@ import {
   Minimize2,
   Minus,
   Download,
-  Copy,
-  Sparkles,
   X,
-  Check,
-  Hash,
-  Layers,
-  ArrowRight,
 } from 'lucide-react';
 
 interface ScratchpadProps {
@@ -33,44 +27,7 @@ interface ScratchpadProps {
 
 type ToolMode = 'pen' | 'eraser';
 type PaperPattern = 'blank' | 'ruled' | 'grid';
-type ActiveTab = 'draw' | 'notes' | 'formulas';
-
-const FRACTION_PERCENTAGES = [
-  { fraction: '1/2', percent: '50.00%' },
-  { fraction: '1/3', percent: '33.33%' },
-  { fraction: '1/4', percent: '25.00%' },
-  { fraction: '1/5', percent: '20.00%' },
-  { fraction: '1/6', percent: '16.67%' },
-  { fraction: '1/7', percent: '14.28%' },
-  { fraction: '1/8', percent: '12.50%' },
-  { fraction: '1/9', percent: '11.11%' },
-  { fraction: '1/11', percent: '9.09%' },
-  { fraction: '1/12', percent: '8.33%' },
-  { fraction: '1/15', percent: '6.67%' },
-  { fraction: '1/16', percent: '6.25%' },
-];
-
-const COMMON_SQUARES = [
-  { num: '12²', val: '144' },
-  { num: '13²', val: '169' },
-  { num: '14²', val: '196' },
-  { num: '15²', val: '225' },
-  { num: '16²', val: '256' },
-  { num: '18²', val: '324' },
-  { num: '19²', val: '361' },
-  { num: '24²', val: '576' },
-  { num: '25²', val: '625' },
-  { num: '29²', val: '841' },
-  { num: '31²', val: '961' },
-  { num: '32²', val: '1024' },
-];
-
-const QUAD_SIGN_RULES = [
-  { eq: 'ax² + bx + c = 0', signs: '(+, +)', roots: '(-, -)' },
-  { eq: 'ax² - bx + c = 0', signs: '(-, +)', roots: '(+, +)' },
-  { eq: 'ax² + bx - c = 0', signs: '(+, -)', roots: '(-, +)' },
-  { eq: 'ax² - bx - c = 0', signs: '(-, -)', roots: '(+, -)' },
-];
+type ActiveTab = 'draw' | 'notes';
 
 function safeEvaluateMath(input: string): string | null {
   if (!input || !input.trim()) return null;
@@ -127,7 +84,6 @@ export function ScratchpadModal({
   // Quick Calculator State
   const [calcInput, setCalcInput] = useState<string>('');
   const [calcResult, setCalcResult] = useState<string | null>(null);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   // Handle calculator live evaluation
   useEffect(() => {
@@ -286,12 +242,6 @@ export function ScratchpadModal({
     setCalcInput('');
   };
 
-  const handleCopyConstant = (val: string, key: string) => {
-    navigator.clipboard.writeText(val);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 1500);
-  };
-
   if (!isOpen) return null;
 
   // Minimized Floating Pill State
@@ -402,19 +352,6 @@ export function ScratchpadModal({
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Math Notes</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('formulas')}
-              className={cn(
-                "px-3 py-1 rounded-xl font-bold flex items-center gap-1.5 transition-all text-xs cursor-pointer",
-                activeTab === 'formulas'
-                  ? "bg-[#005CE6] text-white shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
-              )}
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>Speed Constants</span>
             </button>
           </div>
 
@@ -604,90 +541,12 @@ export function ScratchpadModal({
               />
             </div>
           )}
-
-          {/* TAB 3: QUANTITATIVE APTITUDE SPEED CONSTANTS */}
-          {activeTab === 'formulas' && (
-            <div className="flex-1 overflow-y-auto p-3.5 space-y-4 text-xs bg-[#FBFDFF] custom-scrollbar">
-              {/* Fractions to Percentage Equivalents */}
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-[#005CE6] uppercase tracking-wider text-[11px]">
-                    1. Fraction to Percentage Equivalents
-                  </span>
-                  <span className="text-[10px] text-slate-400">Tap to copy</span>
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-1.5">
-                  {FRACTION_PERCENTAGES.map((item) => (
-                    <button
-                      key={item.fraction}
-                      onClick={() => handleCopyConstant(`${item.fraction} = ${item.percent}`, item.fraction)}
-                      className="p-1.5 rounded-xl border border-blue-100 bg-white hover:bg-blue-50 text-left transition-all cursor-pointer flex items-center justify-between"
-                    >
-                      <span className="font-bold font-mono text-slate-900">{item.fraction}</span>
-                      <span className="font-mono text-blue-700 text-[11px]">{item.percent}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Quadratic Signs Quick Table */}
-              <div className="space-y-1.5 pt-2 border-t border-slate-100">
-                <span className="font-extrabold text-[#005CE6] uppercase tracking-wider text-[11px]">
-                  2. Quadratic Equations Sign Rule (10-Second Shortcut)
-                </span>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-[11px] border-collapse bg-white rounded-xl overflow-hidden border border-slate-200">
-                    <thead>
-                      <tr className="bg-blue-50 text-blue-900">
-                        <th className="p-1.5 text-left font-bold">Standard Form</th>
-                        <th className="p-1.5 font-bold">Equation Signs</th>
-                        <th className="p-1.5 font-bold">Root Signs</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100 font-mono">
-                      {QUAD_SIGN_RULES.map((rule, idx) => (
-                        <tr key={idx} className="hover:bg-slate-50">
-                          <td className="p-1.5 text-slate-800">{rule.eq}</td>
-                          <td className="p-1.5 text-center text-slate-600 font-bold">{rule.signs}</td>
-                          <td className="p-1.5 text-center text-emerald-700 font-extrabold">{rule.roots}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Frequently Tested Squares */}
-              <div className="space-y-1.5 pt-2 border-t border-slate-100">
-                <span className="font-extrabold text-[#005CE6] uppercase tracking-wider text-[11px]">
-                  3. Key Perfect Squares for Approximation
-                </span>
-                <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
-                  {COMMON_SQUARES.map((s) => (
-                    <button
-                      key={s.num}
-                      onClick={() => handleCopyConstant(`${s.num} = ${s.val}`, s.num)}
-                      className="p-1 rounded-lg border border-slate-200 bg-white hover:bg-blue-50 text-center font-mono cursor-pointer transition-colors"
-                    >
-                      <div className="text-[10px] text-slate-500">{s.num}</div>
-                      <div className="text-xs font-bold text-slate-900">{s.val}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Footer Bar */}
         <div className="px-3 py-1.5 bg-[#F8FAFC] border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500 shrink-0 select-none">
           <div className="flex items-center gap-2">
             <span>Rough sheet notes stay persistent across test questions.</span>
-            {copiedKey && (
-              <span className="text-emerald-600 font-bold flex items-center gap-1 animate-in fade-in duration-100">
-                <Check className="w-3 h-3 stroke-[3]" /> Copied!
-              </span>
-            )}
           </div>
           <button
             onClick={() => setIsMinimized(true)}
