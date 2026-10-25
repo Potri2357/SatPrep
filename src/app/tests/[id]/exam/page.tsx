@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { BrandLogo } from '@/components/brand-logo';
 import { MathRenderer } from '@/lib/math-renderer';
 import { PaletteState, AssembledQuestion } from '@/lib/types';
+import { ScratchpadModal } from '@/components/scratchpad';
 import { cn } from '@/lib/utils';
 import {
   Clock,
@@ -31,6 +32,7 @@ import {
   Award,
   Lightbulb,
   ArrowRight,
+  Pencil,
 } from 'lucide-react';
 
 export default function ExamTestWindow() {
@@ -67,6 +69,7 @@ export default function ExamTestWindow() {
   const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
   const [showQuestionPaper, setShowQuestionPaper] = useState<boolean>(false);
   const [showInstructions, setShowInstructions] = useState<boolean>(false);
+  const [showScratchpad, setShowScratchpad] = useState<boolean>(false);
   const [isMobilePaletteOpen, setIsMobilePaletteOpen] = useState<boolean>(false);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
@@ -561,11 +564,17 @@ export default function ExamTestWindow() {
           </button>
 
           <button
-            onClick={() => setShowInstructions(true)}
-            className="px-2.5 py-1 rounded-md bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold text-[11px] flex items-center gap-1 transition-colors cursor-pointer"
+            onClick={() => setShowScratchpad(!showScratchpad)}
+            className={cn(
+              "px-2.5 py-1 rounded-md border text-[11px] font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-2xs",
+              showScratchpad
+                ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
+                : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+            )}
+            title="Open Rough Scratchpad for Calculations"
           >
-            <HelpCircle className="w-3.5 h-3.5 text-amber-500" />
-            <span className="hidden sm:inline">Instructions</span>
+            <Pencil className="w-3.5 h-3.5 text-amber-500" />
+            <span className="hidden sm:inline">Rough Scratchpad</span>
           </button>
         </div>
       </div>
@@ -1195,6 +1204,12 @@ export default function ExamTestWindow() {
           </div>
         </div>
       )}
+
+      {/* Advanced Scratchpad Modal for Calculations */}
+      <ScratchpadModal
+        isOpen={showScratchpad}
+        onClose={() => setShowScratchpad(false)}
+      />
     </div>
   );
 }

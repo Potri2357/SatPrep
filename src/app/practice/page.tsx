@@ -6,6 +6,7 @@ import { Navbar } from '@/components/navbar';
 import { INITIAL_TOPICS, ALL_PRACTICE_QUESTIONS as INITIAL_QUESTIONS, ALL_PRACTICE_KEYS as INITIAL_KEYS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
 import { Question, QuestionKey } from '@/lib/types';
+import { ScratchpadModal } from '@/components/scratchpad';
 import { cn } from '@/lib/utils';
 import {
   BookOpen,
@@ -28,6 +29,7 @@ import {
   HelpCircle,
   Sparkles,
   Check,
+  Pencil,
 } from 'lucide-react';
 
 // Topic Shortcut & Formula Cheat Sheets
@@ -553,14 +555,14 @@ export default function PracticeHubPage() {
             <button
               onClick={() => setShowScratchpad(!showScratchpad)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer shadow-2xs",
                 showScratchpad
-                  ? "bg-slate-800 border-slate-800 text-white"
+                  ? "bg-[#005CE6] border-[#005CE6] text-white shadow-xs"
                   : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
               )}
             >
-              <FileText className="w-3.5 h-3.5 text-[#005CE6]" />
-              <span>Scratchpad</span>
+              <Pencil className="w-3.5 h-3.5" />
+              <span>Rough Scratchpad</span>
             </button>
 
             <button
@@ -609,30 +611,13 @@ export default function PracticeHubPage() {
           </div>
         )}
 
-        {/* Scratchpad Area */}
-        {showScratchpad && (
-          <div className="p-4 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-md space-y-2 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-200">
-                <FileText className="w-3.5 h-3.5 text-[#60CEF8]" />
-                <span>Candidate Rough Scratchpad</span>
-              </div>
-              <button
-                onClick={() => setScratchNotes('')}
-                className="text-[11px] font-medium text-slate-400 hover:text-rose-400"
-              >
-                Clear
-              </button>
-            </div>
-            <textarea
-              value={scratchNotes}
-              onChange={(e) => setScratchNotes(e.target.value)}
-              placeholder="Rough steps, factorizations, or calculations..."
-              rows={3}
-              className="w-full bg-slate-800 text-slate-100 placeholder:text-slate-500 text-xs p-3 rounded-xl border border-slate-700 focus:outline-none focus:ring-1 focus:ring-[#005CE6] font-mono"
-            />
-          </div>
-        )}
+        {/* Advanced Interactive Scratchpad Modal */}
+        <ScratchpadModal
+          isOpen={showScratchpad}
+          onClose={() => setShowScratchpad(false)}
+          initialNotes={scratchNotes}
+          onNotesChange={setScratchNotes}
+        />
 
         {/* TAB 1: TOPIC PRACTICE */}
         {activeTab === 'topics' && (
