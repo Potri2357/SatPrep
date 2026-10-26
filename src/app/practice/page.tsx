@@ -1,931 +1,832 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Navbar } from '@/components/navbar';
-import { INITIAL_TOPICS, ALL_PRACTICE_QUESTIONS as INITIAL_QUESTIONS, ALL_PRACTICE_KEYS as INITIAL_KEYS } from '@/lib/store';
-import { MathRenderer } from '@/lib/math-renderer';
-import { Question, QuestionKey } from '@/lib/types';
-import { ScratchpadModal } from '@/components/scratchpad';
+import { INITIAL_TOPICS } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import {
   BookOpen,
-  Bookmark,
-  BookmarkCheck,
-  CheckCircle2,
-  XCircle,
+  Zap,
+  Target,
+  Sparkles,
   ArrowRight,
   Clock,
-  Lightbulb,
-  FileText,
-  Search,
-  ChevronDown,
-  ChevronRight,
+  Award,
+  Layers,
+  CheckCircle2,
+  SlidersHorizontal,
   Flame,
-  RotateCcw,
-  Maximize2,
-  Minimize2,
-  BarChart3,
+  Lightbulb,
+  ShieldCheck,
+  Loader2,
+  TrendingUp,
+  AlertCircle,
   HelpCircle,
-  Sparkles,
+  X,
+  Play,
+  ChevronDown,
   Check,
-  Pencil,
+  Calculator,
+  Hash,
+  Activity,
+  IndianRupee,
+  Percent,
+  Scale,
+  Hourglass,
+  Gauge,
+  Table,
+  PieChart,
 } from 'lucide-react';
+import { Topic } from '@/lib/types';
 
-
-// Rich topic performance metadata for the sidebar
 interface TopicMeta {
-  status: 'In progress' | 'Needs review' | 'Mastered' | 'Not started';
-  accuracy: number;
-  badgeColor: string;
-  subtext: string;
+  id: string;
+  name: string;
+  group: 'Number-based' | 'Arithmetic' | 'DI';
+  examWeight: string;
+  targetPace: string;
+  conceptSummary: string;
+  difficulty: 'Easy' | 'Moderate' | 'Hard';
+  shortcuts: string[];
 }
 
-const TOPIC_METADATA: Record<string, TopicMeta> = {
-  'quadratic-equations': {
-    status: 'In progress',
-    accuracy: 65,
-    badgeColor: 'text-blue-700 bg-blue-50 border-blue-200',
-    subtext: 'Continue practice',
-  },
+const TOPICS_METADATA: Record<string, TopicMeta> = {
   'simplification': {
-    status: 'Mastered',
-    accuracy: 94,
-    badgeColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
-    subtext: 'Speed mastery verified',
+    id: 'simplification',
+    name: 'Simplification & Approximation',
+    group: 'Number-based',
+    examWeight: '5 - 10 Qs in Prelims',
+    targetPace: '20 - 25s per Q',
+    conceptSummary: 'BODMAS priority, percentage-fraction equivalence, unit digit filtering, and square/cube roots.',
+    difficulty: 'Easy',
+    shortcuts: ['Unit digit check', 'Fraction table shortcuts', 'Digital sum elimination'],
+  },
+  'quadratic-equations': {
+    id: 'quadratic-equations',
+    name: 'Quadratic Equations',
+    group: 'Number-based',
+    examWeight: '5 Qs in Prelims',
+    targetPace: '30s per Q',
+    conceptSummary: 'Root comparison between X and Y without quadratic formula using direct sign-inversion methods.',
+    difficulty: 'Easy',
+    shortcuts: ['Sign method rule', 'Constant negative rule', 'Co-efficient cross-multiply'],
   },
   'number-series': {
-    status: 'Needs review',
-    accuracy: 42,
-    badgeColor: 'text-amber-700 bg-amber-50 border-amber-200',
-    subtext: 'Review wrong patterns',
+    id: 'number-series',
+    name: 'Number Series',
+    group: 'Number-based',
+    examWeight: '5 Qs in Prelims',
+    targetPace: '35 - 45s per Q',
+    conceptSummary: 'Missing number and wrong term identification via multi-layer difference, primes, and alternating powers.',
+    difficulty: 'Moderate',
+    shortcuts: ['Double difference tree', 'Prime squares pattern', 'Alternating decimal multiply'],
   },
   'profit-and-loss': {
-    status: 'Needs review',
-    accuracy: 55,
-    badgeColor: 'text-amber-700 bg-amber-50 border-amber-200',
-    subtext: 'Distractor trap review',
+    id: 'profit-and-loss',
+    name: 'Profit and Loss',
+    group: 'Arithmetic',
+    examWeight: '1 - 2 Qs in Prelims',
+    targetPace: '45 - 60s per Q',
+    conceptSummary: 'Cost price, selling price, marked price, successive discounts, and dishonest dealer ratios.',
+    difficulty: 'Moderate',
+    shortcuts: ['CP to MP ratio formula', 'Net successive discount rule', 'Base ratio equating'],
   },
   'percentage': {
-    status: 'In progress',
-    accuracy: 70,
-    badgeColor: 'text-blue-700 bg-blue-50 border-blue-200',
-    subtext: 'Vote & budget drills',
+    id: 'percentage',
+    name: 'Percentage',
+    group: 'Arithmetic',
+    examWeight: '1 - 2 Qs in Prelims',
+    targetPace: '30 - 40s per Q',
+    conceptSummary: 'Fractional equivalents (1/2 to 1/20), percentage change, population growth, and revenue expenditure.',
+    difficulty: 'Easy',
+    shortcuts: ['AB-rule for inverse change', 'Fraction conversion chart', 'Multiplying factor method'],
   },
   'si-ci': {
-    status: 'Mastered',
-    accuracy: 90,
-    badgeColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
-    subtext: 'Review due in 3 days',
+    id: 'si-ci',
+    name: 'Simple & Compound Interest',
+    group: 'Arithmetic',
+    examWeight: '1 - 2 Qs in Prelims',
+    targetPace: '50 - 60s per Q',
+    conceptSummary: 'CI vs SI difference formula for 2 and 3 years, effective interest rates, and compounding periods.',
+    difficulty: 'Hard',
+    shortcuts: ['Effective rate chart (e.g. 10% for 2 yrs = 21%)', 'CI-SI 2-year difference formula', 'Tree ratio method'],
   },
   'ratio-proportion': {
-    status: 'In progress',
-    accuracy: 80,
-    badgeColor: 'text-blue-700 bg-blue-50 border-blue-200',
-    subtext: 'Cross-product mastery',
+    id: 'ratio-proportion',
+    name: 'Ratio and Proportion',
+    group: 'Arithmetic',
+    examWeight: '1 - 2 Qs in Prelims',
+    targetPace: '40s per Q',
+    conceptSummary: 'Direct & inverse variation, mean/third/fourth proportional, mixture replacement, and partnership profit shares.',
+    difficulty: 'Moderate',
+    shortcuts: ['Compound ratio multiplication', 'Alligation cross-rule', 'Investment-time product rule'],
   },
   'time-and-work': {
-    status: 'Needs review',
-    accuracy: 50,
-    badgeColor: 'text-amber-700 bg-amber-50 border-amber-200',
-    subtext: 'Remaining work trap',
+    id: 'time-and-work',
+    name: 'Time and Work',
+    group: 'Arithmetic',
+    examWeight: '1 - 2 Qs in Prelims',
+    targetPace: '45 - 55s per Q',
+    conceptSummary: 'LCM efficiency method, wages division by work, alternate day working, and pipes & cisterns emptying.',
+    difficulty: 'Moderate',
+    shortcuts: ['LCM total units assumption', 'Efficiency ratio inversion', 'Negative work method for leaks'],
   },
   'time-speed-distance': {
-    status: 'Mastered',
-    accuracy: 95,
-    badgeColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
-    subtext: 'Train relative speed',
+    id: 'time-speed-distance',
+    name: 'Time, Speed and Distance',
+    group: 'Arithmetic',
+    examWeight: '1 - 2 Qs in Prelims',
+    targetPace: '50 - 60s per Q',
+    conceptSummary: 'Relative speed in opposite and same directions, train crossing pole vs platform, and boat upstream/downstream.',
+    difficulty: 'Hard',
+    shortcuts: ['km/h to m/s conversion (x 5/18)', 'Harmonic mean average speed', 'Boats upstream/downstream shortcut'],
   },
   'tabular-di': {
-    status: 'In progress',
-    accuracy: 75,
-    badgeColor: 'text-blue-700 bg-blue-50 border-blue-200',
-    subtext: 'Ratio calculation speed',
+    id: 'tabular-di',
+    name: 'Tabular Data Interpretation',
+    group: 'DI',
+    examWeight: '5 Qs in Prelims',
+    targetPace: '35s per Q',
+    conceptSummary: 'Multi-column data tables, missing table values, ratio comparison, and percentage growth calculations.',
+    difficulty: 'Moderate',
+    shortcuts: ['Approximate division', 'Cross-multiplication comparison', 'Columnar summation trick'],
   },
   'bar-pie-di': {
-    status: 'Mastered',
-    accuracy: 88,
-    badgeColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
-    subtext: 'Degree conversions',
+    id: 'bar-pie-di',
+    name: 'Bar & Pie Chart DI',
+    group: 'DI',
+    examWeight: '5 Qs in Prelims',
+    targetPace: '35s per Q',
+    conceptSummary: 'Degree to percentage conversions (360° = 100%), dual pie charts, stacked bar comparisons, and trend extraction.',
+    difficulty: 'Moderate',
+    shortcuts: ['1% = 3.6° degree factor', 'Direct percentage ratio comparison', 'Visual bar delta estimation'],
   },
 };
 
-export default function PracticeHubPage() {
-  const [activeTab, setActiveTab] = useState<'topics' | 'bookmarks' | 'revision'>('topics');
-  const [selectedTopic, setSelectedTopic] = useState<string>('quadratic-equations');
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'Number-based' | 'Arithmetic' | 'DI'>('all');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'weak' | 'in_progress' | 'mastered'>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+const TOOLBAR_TOPIC_GROUPS = [
+  {
+    category: 'Speed Math & Number Systems',
+    items: [
+      { id: 'simplification', name: 'Simplification & Approx', badge: '5 - 10 Qs in Prelims', icon: Calculator, color: 'text-blue-600 bg-blue-50' },
+      { id: 'quadratic-equations', name: 'Quadratic Equations', badge: '5 Qs in Prelims', icon: Hash, color: 'text-indigo-600 bg-indigo-50' },
+      { id: 'number-series', name: 'Number Series', badge: '5 Qs in Prelims', icon: Activity, color: 'text-cyan-600 bg-cyan-50' },
+      { id: 'all_mixed', name: 'Mixed Speed Math Drill', badge: 'Randomized fast set', icon: Sparkles, color: 'text-amber-600 bg-amber-50' },
+    ],
+  },
+  {
+    category: 'Commercial Arithmetic',
+    items: [
+      { id: 'profit-and-loss', name: 'Profit and Loss', badge: 'Markup & Discounts', icon: IndianRupee, color: 'text-emerald-600 bg-emerald-50' },
+      { id: 'percentage', name: 'Percentage', badge: 'Fractions & Base Change', icon: Percent, color: 'text-teal-600 bg-teal-50' },
+      { id: 'si-ci', name: 'Simple & Compound Interest', badge: 'Effective Rate Formula', icon: TrendingUp, color: 'text-purple-600 bg-purple-50' },
+      { id: 'ratio-proportion', name: 'Ratio & Proportion', badge: 'Partnership & Mixtures', icon: Scale, color: 'text-sky-600 bg-sky-50' },
+      { id: 'time-and-work', name: 'Time and Work', badge: 'LCM Efficiency Method', icon: Hourglass, color: 'text-rose-600 bg-rose-50' },
+      { id: 'time-speed-distance', name: 'Time, Speed & Distance', badge: 'Trains & Boats/Streams', icon: Gauge, color: 'text-orange-600 bg-orange-50' },
+    ],
+  },
+  {
+    category: 'Data Interpretation',
+    items: [
+      { id: 'tabular-di', name: 'Tabular Data Interpretation', badge: '5 Qs in Prelims', icon: Table, color: 'text-blue-700 bg-blue-50' },
+      { id: 'bar-pie-di', name: 'Bar & Pie Chart DI', badge: '5 Qs in Prelims', icon: PieChart, color: 'text-violet-600 bg-violet-50' },
+    ],
+  },
+];
 
-  // Practice Drill States
-  const [practiceIdx, setPracticeIdx] = useState<number>(0);
-  const [selectedOpt, setSelectedOpt] = useState<string | null>(null);
-  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState<boolean>(false);
-  const [showDistractorRationales, setShowDistractorRationales] = useState<boolean>(false);
-  const [timerSec, setTimerSec] = useState<number>(0);
+export default function TopicDrillsHubPage() {
+  const router = useRouter();
+  const [selectedGroup, setSelectedGroup] = useState<'All' | 'Number-based' | 'Arithmetic' | 'DI'>('All');
+  const [feedbackMode, setFeedbackMode] = useState<'practice' | 'exam'>('practice');
+  const [questionCount, setQuestionCount] = useState<number>(10);
+  const [toolbarTopic, setToolbarTopic] = useState<string>('simplification');
+  const [topicDropdownOpen, setTopicDropdownOpen] = useState<boolean>(false);
+  const topicDropdownRef = useRef<HTMLDivElement>(null);
+  const [loadingTopicId, setLoadingTopicId] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Extras
-  const [focusMode, setFocusMode] = useState<boolean>(false);
-  const [showScratchpad, setShowScratchpad] = useState<boolean>(false);
-  const [scratchNotes, setScratchNotes] = useState<string>('');
-  const [bookmarks, setBookmarks] = useState<string[]>(['q-profit-1', 'q-series-1']);
-
-  // Session Statistics
-  const [sessionStats, setSessionStats] = useState({
-    attempted: 0,
-    correct: 0,
-    streak: 0,
-    totalTimeSec: 0,
-  });
-
-  // Filter topics based on search, category, and status filter
-  const filteredTopics = useMemo(() => {
-    return INITIAL_TOPICS.filter((t) => {
-      const matchesCat = selectedCategory === 'all' || t.group_name === selectedCategory;
-      const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
-      const meta = TOPIC_METADATA[t.id];
-      let matchesFilter = true;
-      if (selectedFilter === 'weak') matchesFilter = meta?.status === 'Needs review';
-      if (selectedFilter === 'in_progress') matchesFilter = meta?.status === 'In progress';
-      if (selectedFilter === 'mastered') matchesFilter = meta?.status === 'Mastered';
-
-      return matchesCat && matchesSearch && matchesFilter;
-    });
-  }, [selectedCategory, searchQuery, selectedFilter]);
-
-  // Questions for active topic
-  const topicQuestions = useMemo(() => {
-    const list = INITIAL_QUESTIONS.filter((q) => q.topic_id === selectedTopic);
-    return list.length > 0 ? list : [INITIAL_QUESTIONS[0]];
-  }, [selectedTopic]);
-
-  const currentQ: Question = topicQuestions[practiceIdx] || topicQuestions[0];
-  const currentKey: QuestionKey | undefined = INITIAL_KEYS[currentQ.id];
-
-  // Questions for bookmarks tab
-  const bookmarkedQuestions = useMemo(() => {
-    return INITIAL_QUESTIONS.filter((q) => bookmarks.includes(q.id));
-  }, [bookmarks]);
-
-  // Spaced revision mock schedule
-  const spacedRevisionItems = useMemo(() => {
-    return [
-      {
-        question: INITIAL_QUESTIONS.find((q) => q.id === 'q-profit-1') || INITIAL_QUESTIONS[0],
-        due: 'Due Today',
-        dueColor: 'text-rose-600 bg-rose-50 border-rose-200',
-        interval: 'Interval: 1 Day',
-        accuracyRetention: '72% retention',
-        reason: 'Distractor trap in successive discount',
-      },
-      {
-        question: INITIAL_QUESTIONS.find((q) => q.id === 'q-series-1') || INITIAL_QUESTIONS[0],
-        due: 'Due Tomorrow',
-        dueColor: 'text-amber-600 bg-amber-50 border-amber-200',
-        interval: 'Interval: 3 Days',
-        accuracyRetention: '88% retention',
-        reason: 'Speed recap on quadratic differences',
-      },
-      {
-        question: INITIAL_QUESTIONS.find((q) => q.id === 'q-quad-1') || INITIAL_QUESTIONS[0],
-        due: 'In 3 Days',
-        dueColor: 'text-blue-600 bg-blue-50 border-blue-200',
-        interval: 'Interval: 7 Days',
-        accuracyRetention: '95% retention',
-        reason: 'Mastery check',
-      },
-    ];
-  }, []);
-
-  // Timer effect
+  // Close dropdown on outside click
   useEffect(() => {
-    let interval: any = null;
-    if (!isAnswerSubmitted) {
-      interval = setInterval(() => {
-        setTimerSec((prev) => prev + 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isAnswerSubmitted]);
-
-  // Handle Option Select (Before submission)
-  const handleSelectOption = (optId: string) => {
-    if (isAnswerSubmitted) return;
-    setSelectedOpt(optId);
-  };
-
-  // Submit Answer
-  const handleCheckAnswer = useCallback(() => {
-    if (!selectedOpt || isAnswerSubmitted) return;
-    setIsAnswerSubmitted(true);
-
-    const isCorrect = currentKey && selectedOpt === currentKey.correct_option;
-    setSessionStats((prev) => ({
-      attempted: prev.attempted + 1,
-      correct: isCorrect ? prev.correct + 1 : prev.correct,
-      streak: isCorrect ? prev.streak + 1 : 0,
-      totalTimeSec: prev.totalTimeSec + timerSec,
-    }));
-  }, [selectedOpt, isAnswerSubmitted, currentKey, timerSec]);
-
-  // Next Question
-  const handleNextPractice = useCallback(() => {
-    setSelectedOpt(null);
-    setIsAnswerSubmitted(false);
-    setShowDistractorRationales(false);
-    setTimerSec(0);
-    if (practiceIdx < topicQuestions.length - 1) {
-      setPracticeIdx((prev) => prev + 1);
-    } else {
-      setPracticeIdx(0);
-    }
-  }, [practiceIdx, topicQuestions.length]);
-
-  // Keyboard navigation listener (A-E to pick, Enter to submit/next)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is typing in scratchpad textarea or search
-      if (
-        document.activeElement?.tagName === 'INPUT' ||
-        document.activeElement?.tagName === 'TEXTAREA'
-      ) {
-        return;
-      }
-
-      const key = e.key.toLowerCase();
-      if (!isAnswerSubmitted) {
-        if (key === 'a' || key === '1') setSelectedOpt('a');
-        if (key === 'b' || key === '2') setSelectedOpt('b');
-        if (key === 'c' || key === '3') setSelectedOpt('c');
-        if (key === 'd' || key === '4') setSelectedOpt('d');
-        if (key === 'e' || key === '5') setSelectedOpt('e');
-        if (e.key === 'Enter' && selectedOpt) {
-          handleCheckAnswer();
-        }
-      } else {
-        if (e.key === 'Enter') {
-          handleNextPractice();
-        }
+    const handleClickOutside = (event: MouseEvent) => {
+      if (topicDropdownRef.current && !topicDropdownRef.current.contains(event.target as Node)) {
+        setTopicDropdownOpen(false);
       }
     };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isAnswerSubmitted, selectedOpt, handleCheckAnswer, handleNextPractice]);
+  const currentTopicItem = useMemo(() => {
+    for (const group of TOOLBAR_TOPIC_GROUPS) {
+      const found = group.items.find((item) => item.id === toolbarTopic);
+      if (found) return found;
+    }
+    return TOOLBAR_TOPIC_GROUPS[0].items[0];
+  }, [toolbarTopic]);
 
-  // Toggle Bookmark
-  const toggleBookmark = (qId: string) => {
-    setBookmarks((prev) =>
-      prev.includes(qId) ? prev.filter((id) => id !== qId) : [...prev, qId]
-    );
+  // Customizer Modal State (Replaces redirecting to mock tests)
+  const [customizingTopic, setCustomizingTopic] = useState<Topic | null>(null);
+  const [customQuestionCount, setCustomQuestionCount] = useState<number>(10);
+  const [customFeedbackMode, setCustomFeedbackMode] = useState<'practice' | 'exam'>('practice');
+  const [customDurationMin, setCustomDurationMin] = useState<number>(10);
+  const [isStartingCustom, setIsStartingCustom] = useState<boolean>(false);
+
+  const filteredTopics = INITIAL_TOPICS.filter((t) => {
+    if (selectedGroup === 'All') return true;
+    return t.group_name === selectedGroup;
+  });
+
+  const handleStartDrill = async (topicId: string, count = questionCount, mode = feedbackMode, duration?: number) => {
+    setLoadingTopicId(topicId);
+    setErrorMsg(null);
+    try {
+      const topicList = topicId === 'all_mixed'
+        ? ['simplification', 'quadratic-equations', 'number-series', 'profit-and-loss']
+        : [topicId];
+
+      const res = await fetch('/api/test/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          exam_id: 'ibps-po-prelims-2026',
+          mode: 'topic_test',
+          topics: topicList,
+          question_count: count,
+          duration_min: duration !== undefined ? duration : (mode === 'practice' ? undefined : Math.ceil(count * 0.8)),
+          feedback_mode: mode,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to start topic drill');
+      }
+
+      router.push(`/tests/${data.test_id}/instructions`);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Error initializing drill. Please try again.');
+      setLoadingTopicId(null);
+    }
   };
 
-  const isCurrentBookmarked = bookmarks.includes(currentQ.id);
-  const activeTopic = INITIAL_TOPICS.find((t) => t.id === selectedTopic) || INITIAL_TOPICS[0];
+  const openCustomizer = (topic: Topic) => {
+    setCustomizingTopic(topic);
+    setCustomQuestionCount(questionCount);
+    setCustomFeedbackMode(feedbackMode);
+    setCustomDurationMin(Math.ceil(questionCount * 0.8));
+  };
+
+  const handleLaunchCustomDrill = async () => {
+    if (!customizingTopic) return;
+    setIsStartingCustom(true);
+    setErrorMsg(null);
+    try {
+      const res = await fetch('/api/test/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          exam_id: 'ibps-po-prelims-2026',
+          mode: 'topic_test',
+          topics: [customizingTopic.id],
+          question_count: customQuestionCount,
+          duration_min: customFeedbackMode === 'practice' ? undefined : customDurationMin,
+          feedback_mode: customFeedbackMode,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to launch customized drill');
+      }
+
+      router.push(`/tests/${data.test_id}/instructions`);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Error initializing custom drill. Please try again.');
+      setIsStartingCustom(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col text-slate-800 selection:bg-blue-100">
-      {/* Primary Navigation System */}
+    <div className="min-h-screen bg-[#F7FDFF] text-[#0F172A] flex flex-col">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 flex-1 space-y-5">
-        {/* Level 1: Compact Page Header with Integrated Quick Stats */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200/80">
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
-                Quantitative Practice
-              </h1>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-[#005CE6] border border-blue-200">
-                Prelims Drill
-              </span>
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-8">
+        {/* Header Hero */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC]">
+          <div className="space-y-3 max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Targeted Topic Mastery &amp; Speed Drills</span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Untimed instant-feedback practice with step-by-step solutions and speed techniques.
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              Topic Drills &amp; Practice
+            </h1>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Drill down into individual chapters with instant step-by-step mathematical derivations, speed shortcuts, and 0 negative penalty deductions.
             </p>
           </div>
 
-          {/* Compact Session Metrics */}
-          <div className="flex items-center gap-2 text-xs">
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200/80 text-slate-700 shadow-xs">
-              <span className="text-slate-400 font-medium">Accuracy:</span>
-              <span className="font-bold text-[#005CE6]">
-                {sessionStats.attempted > 0
-                  ? `${Math.round((sessionStats.correct / sessionStats.attempted) * 100)}%`
-                  : '—'}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200/80 text-slate-700 shadow-xs">
-              <Flame className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-              <span className="text-slate-400 font-medium">Streak:</span>
-              <span className="font-bold text-slate-900">{sessionStats.streak}</span>
-            </div>
-
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white border border-slate-200/80 text-slate-700 shadow-xs">
-              <span className="text-slate-400 font-medium">Solved:</span>
-              <span className="font-bold text-slate-900">{sessionStats.attempted}</span>
-            </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href="/tests"
+              className="px-5 py-2.5 rounded-2xl bg-white hover:bg-slate-50 border border-[#BCEBFC] text-[#005CE6] font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-2"
+            >
+              <Award className="w-4 h-4" />
+              <span>Full Mock Exams (35 Qs)</span>
+            </Link>
           </div>
         </div>
 
-        {/* Level 2: Mode Navigation (Single Clean Tab Bar with Secondary Utilities) */}
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          {/* Practice Mode Tabs */}
-          <div className="inline-flex items-center rounded-xl bg-slate-100 p-1 border border-slate-200/70" role="tablist">
-            <button
-              onClick={() => setActiveTab('topics')}
-              className={cn(
-                "flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
-                activeTab === 'topics'
-                  ? "bg-white text-slate-900 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900"
-              )}
-            >
-              <BookOpen className="w-3.5 h-3.5 text-[#005CE6]" />
-              <span>Topic Practice ({INITIAL_TOPICS.length})</span>
-            </button>
+        {errorMsg && (
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
 
-            <button
-              onClick={() => setActiveTab('bookmarks')}
-              className={cn(
-                "flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
-                activeTab === 'bookmarks'
-                  ? "bg-white text-slate-900 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900"
-              )}
-            >
-              <Bookmark className="w-3.5 h-3.5 text-[#005CE6]" />
-              <span>Saved Bookmarks ({bookmarks.length})</span>
-            </button>
+        {/* Global Drill Settings & Quick Launch Toolbar (Directly Leads to Test) */}
+        <div className="p-4 sm:p-6 rounded-3xl neu-glass-card space-y-5 border border-blue-100 shadow-sm">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 flex-wrap">
+              {/* Feedback Mode Selector */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">Mode:</span>
+                <div className="inline-flex p-1 rounded-xl bg-[#E0F4FD]/70 border border-[#BCEBFC]">
+                  <button
+                    onClick={() => setFeedbackMode('practice')}
+                    className={cn(
+                      "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                      feedbackMode === 'practice'
+                        ? "bg-emerald-600 text-white shadow-xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    )}
+                  >
+                    <Lightbulb className="w-3.5 h-3.5" />
+                    <span>Practice Mode (Instant Solutions)</span>
+                  </button>
+                  <button
+                    onClick={() => setFeedbackMode('exam')}
+                    className={cn(
+                      "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                      feedbackMode === 'exam'
+                        ? "bg-[#005CE6] text-white shadow-xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    )}
+                  >
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>Timed Exam Clock</span>
+                  </button>
+                </div>
+              </div>
 
+              {/* Question Count Preset */}
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">Questions:</span>
+                <div className="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200">
+                  {[5, 10, 15, 20].map((num) => (
+                    <button
+                      key={num}
+                      onClick={() => setQuestionCount(num)}
+                      className={cn(
+                        "px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                        questionCount === num
+                          ? "bg-white text-[#005CE6] shadow-xs"
+                          : "text-slate-600 hover:text-slate-900"
+                      )}
+                    >
+                      {num} Qs
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom Modern Topic Dropdown with Topic Icons */}
+              <div className="relative" ref={topicDropdownRef}>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">Topic:</span>
+                  <button
+                    type="button"
+                    onClick={() => setTopicDropdownOpen((prev) => !prev)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-[#005CE6] shadow-2xs text-xs font-bold text-slate-800 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[#005CE6]/30"
+                    aria-expanded={topicDropdownOpen}
+                  >
+                    <div className={cn("w-5 h-5 rounded-md flex items-center justify-center shrink-0", currentTopicItem.color)}>
+                      <currentTopicItem.icon className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="truncate max-w-[150px] sm:max-w-[190px] text-slate-900">
+                      {currentTopicItem.name}
+                    </span>
+                    <ChevronDown className={cn(
+                      "w-3.5 h-3.5 text-slate-400 group-hover:text-[#005CE6] transition-transform duration-200",
+                      topicDropdownOpen && "rotate-180 text-[#005CE6]"
+                    )} />
+                  </button>
+                </div>
+
+                {/* Dropdown Menu Popup with Topic Icons */}
+                {topicDropdownOpen && (
+                  <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-72 sm:w-80 max-h-[390px] overflow-y-auto rounded-2xl bg-white/95 backdrop-blur-xl border border-[#BCEBFC] shadow-[0_12px_40px_rgba(0,92,230,0.18)] p-2 z-50 divide-y divide-slate-100 animate-in fade-in zoom-in-95 duration-150">
+                    {TOOLBAR_TOPIC_GROUPS.map((group) => (
+                      <div key={group.category} className="py-1.5 first:pt-0.5 last:pb-0.5">
+                        <div className="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                          {group.category}
+                        </div>
+                        <div className="space-y-0.5 mt-0.5">
+                          {group.items.map((item) => {
+                            const isSelected = toolbarTopic === item.id;
+                            const IconComp = item.icon;
+                            return (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={() => {
+                                  setToolbarTopic(item.id);
+                                  setTopicDropdownOpen(false);
+                                }}
+                                className={cn(
+                                  "w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-left transition-all cursor-pointer group",
+                                  isSelected
+                                    ? "bg-[#F0FAFF] text-[#005CE6] font-bold"
+                                    : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                                )}
+                              >
+                                <div className="flex items-center gap-2.5 pr-2">
+                                  <div className={cn(
+                                    "w-7 h-7 rounded-xl flex items-center justify-center shrink-0 border border-slate-100/80 group-hover:scale-105 transition-transform",
+                                    item.color
+                                  )}>
+                                    <IconComp className="w-3.5 h-3.5" />
+                                  </div>
+                                  <div className="space-y-0.5">
+                                    <div className="text-xs leading-snug">{item.name}</div>
+                                    <div className="text-[10px] text-slate-400 group-hover:text-slate-500 font-normal">
+                                      {item.badge}
+                                    </div>
+                                  </div>
+                                </div>
+                                {isSelected && (
+                                  <div className="w-5 h-5 rounded-full bg-[#005CE6] text-white flex items-center justify-center shrink-0 shadow-2xs">
+                                    <Check className="w-3 h-3 stroke-[2.5]" />
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Direct Test Launch Button in Toolbar */}
             <button
-              onClick={() => setActiveTab('revision')}
-              className={cn(
-                "flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer",
-                activeTab === 'revision'
-                  ? "bg-white text-slate-900 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900"
-              )}
+              onClick={() => handleStartDrill(toolbarTopic, questionCount, feedbackMode)}
+              disabled={loadingTopicId === toolbarTopic}
+              className="py-2.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 disabled:opacity-50"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-[#005CE6]" />
-              <span>Spaced Revision ({spacedRevisionItems.length})</span>
+              {loadingTopicId === toolbarTopic ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Launching Drill...</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 fill-white" />
+                  <span>Start Drill Now ({questionCount} Qs)</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </div>
 
-          {/* Secondary Utilities */}
-          <div className="flex items-center gap-2">
-
-            <button
-              onClick={() => setShowScratchpad(!showScratchpad)}
-              className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer shadow-2xs",
-                showScratchpad
-                  ? "bg-[#005CE6] border-[#005CE6] text-white shadow-xs"
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-              )}
-            >
-              <Pencil className="w-3.5 h-3.5" />
-              <span>Rough Scratchpad</span>
-            </button>
-
-            <button
-              onClick={() => setFocusMode(!focusMode)}
-              className={cn(
-                "hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer",
-                focusMode
-                  ? "bg-blue-50 border-[#005CE6] text-[#005CE6]"
-                  : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-              )}
-              title={focusMode ? "Exit Focus Mode" : "Focus Mode (Hide Sidebar)"}
-            >
-              {focusMode ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-              <span>{focusMode ? "Sidebar" : "Focus"}</span>
-            </button>
+          <div className="text-[11.5px] text-slate-600 flex items-center gap-2 pt-2 border-t border-slate-100">
+            {feedbackMode === 'practice' ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>
+                  <strong>Instant Practice Active:</strong> Real-time option verification, speed calculation shortcuts, distractor trap analysis, ambient per-question stopwatch, and 0 negative penalty deductions.
+                </span>
+              </>
+            ) : (
+              <>
+                <Clock className="w-3.5 h-3.5 text-[#005CE6] shrink-0" />
+                <span>
+                  <strong>Timed Exam Active:</strong> Strict {Math.ceil(questionCount * 0.8)}-minute countdown timer with -0.25 negative marks. Full solutions revealed on the final results page.
+                </span>
+              </>
+            )}
           </div>
         </div>
 
+        {/* Category Filter Pills */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setSelectedGroup('All')}
+            className={cn(
+              "px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold border transition-all cursor-pointer",
+              selectedGroup === 'All'
+                ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
+                : "bg-white text-slate-700 border-[#BCEBFC] hover:bg-slate-50"
+            )}
+          >
+            All Topics ({INITIAL_TOPICS.length})
+          </button>
+          <button
+            onClick={() => setSelectedGroup('Number-based')}
+            className={cn(
+              "px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold border transition-all cursor-pointer",
+              selectedGroup === 'Number-based'
+                ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
+                : "bg-white text-slate-700 border-[#BCEBFC] hover:bg-slate-50"
+            )}
+          >
+            Speed Math &amp; Number Series (3)
+          </button>
+          <button
+            onClick={() => setSelectedGroup('Arithmetic')}
+            className={cn(
+              "px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold border transition-all cursor-pointer",
+              selectedGroup === 'Arithmetic'
+                ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
+                : "bg-white text-slate-700 border-[#BCEBFC] hover:bg-slate-50"
+            )}
+          >
+            Commercial Arithmetic (6)
+          </button>
+          <button
+            onClick={() => setSelectedGroup('DI')}
+            className={cn(
+              "px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold border transition-all cursor-pointer",
+              selectedGroup === 'DI'
+                ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
+                : "bg-white text-slate-700 border-[#BCEBFC] hover:bg-slate-50"
+            )}
+          >
+            Data Interpretation (2)
+          </button>
+        </div>
 
-        {/* Advanced Interactive Scratchpad Modal */}
-        <ScratchpadModal
-          isOpen={showScratchpad}
-          onClose={() => setShowScratchpad(false)}
-          initialNotes={scratchNotes}
-          onNotesChange={setScratchNotes}
-        />
+        {/* Topics Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTopics.map((topic) => {
+            const meta = TOPICS_METADATA[topic.id] || {
+              id: topic.id,
+              name: topic.name,
+              group: topic.group_name as any,
+              examWeight: 'Prelims Topic',
+              targetPace: '30s per Q',
+              conceptSummary: 'Essential bank exam quantitative aptitude problem set.',
+              difficulty: 'Moderate',
+              shortcuts: ['Standard speed shortcut'],
+            };
 
-        {/* TAB 1: TOPIC PRACTICE */}
-        {activeTab === 'topics' && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Sidebar: Rebalanced, Sticky, Clean Hierarchy */}
-            {!focusMode && (
-              <aside className="lg:col-span-4 space-y-3 sticky top-20">
-                {/* Search & Category Filter Header */}
-                <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 space-y-2.5 shadow-2xs">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900">Topics</span>
-                    <span className="text-[11px] text-slate-500 font-medium">
-                      {filteredTopics.length} available
+            const isLoading = loadingTopicId === topic.id;
+
+            return (
+              <div
+                key={topic.id}
+                className="neu-glass-card rounded-3xl p-6 flex flex-col justify-between hover:shadow-md hover:border-[#005CE6]/40 transition-all group relative overflow-hidden"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-end">
+                    <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-slate-400" />
+                      {meta.targetPace}
                     </span>
                   </div>
 
-                  {/* Search Field */}
-                  <div className="relative">
-                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search topics..."
-                      className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#005CE6]"
-                    />
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#005CE6] transition-colors leading-snug">
+                      {topic.name}
+                    </h3>
+                    <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                      {meta.conceptSummary}
+                    </p>
                   </div>
 
-                  {/* Category Pills */}
-                  <div className="flex items-center gap-1 flex-wrap">
-                    {(
-                      [
-                        { id: 'all', label: 'All' },
-                        { id: 'Number-based', label: 'Speed Math' },
-                        { id: 'Arithmetic', label: 'Arithmetic' },
-                        { id: 'DI', label: 'DI' },
-                      ] as const
-                    ).map((cat) => (
+                  {/* Prelims Weight & Shortcuts */}
+                  <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-slate-100 space-y-2">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-500 font-medium">Exam Weightage:</span>
+                      <span className="font-bold text-[#005CE6]">{meta.examWeight}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-slate-500 font-medium">Difficulty Level:</span>
+                      <span className={cn(
+                        "font-bold",
+                        meta.difficulty === 'Easy' ? "text-emerald-700" : meta.difficulty === 'Moderate' ? "text-amber-700" : "text-rose-700"
+                      )}>
+                        {meta.difficulty}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Shortcuts preview */}
+                  <div className="space-y-1.5 pt-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                      Speed Shortcuts Covered:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {meta.shortcuts.map((sc, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10.5px] font-medium text-slate-700"
+                        >
+                          {sc}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2">
+                  <button
+                    onClick={() => handleStartDrill(topic.id, questionCount, feedbackMode)}
+                    disabled={isLoading}
+                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Starting Drill...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Start {questionCount}-Q Drill</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </button>
+
+                  {/* Customization Setting Button (Now opens dedicated Topic Drill Settings Modal without redirecting) */}
+                  <button
+                    type="button"
+                    onClick={() => openCustomizer(topic)}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-600 transition-colors cursor-pointer"
+                    title={`Configure custom drill settings for ${topic.name}`}
+                  >
+                    <SlidersHorizontal className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Dedicated Topic Drill Customizer Modal */}
+        {customizingTopic && (
+          <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-150">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <SlidersHorizontal className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">Customize Drill Settings</h3>
+                    <p className="text-xs text-slate-500">{customizingTopic.name}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setCustomizingTopic(null)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Mode Setting */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                  Learning Mode
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setCustomFeedbackMode('practice')}
+                    className={cn(
+                      "p-3.5 rounded-2xl border text-left transition-all cursor-pointer",
+                      customFeedbackMode === 'practice'
+                        ? "bg-emerald-50 border-emerald-400 text-emerald-900 ring-2 ring-emerald-400/20 shadow-xs"
+                        : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                    )}
+                  >
+                    <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
+                      <Lightbulb className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Practice Mode</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-tight">
+                      Instant solutions, shortcuts &amp; 0 negative marking penalty.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setCustomFeedbackMode('exam')}
+                    className={cn(
+                      "p-3.5 rounded-2xl border text-left transition-all cursor-pointer",
+                      customFeedbackMode === 'exam'
+                        ? "bg-blue-50 border-blue-400 text-blue-900 ring-2 ring-blue-400/20 shadow-xs"
+                        : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                    )}
+                  >
+                    <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
+                      <Clock className="w-3.5 h-3.5 text-[#005CE6]" />
+                      <span>Timed Exam</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-tight">
+                      Countdown timer with -0.25 negative marks &amp; final score report.
+                    </p>
+                  </button>
+                </div>
+              </div>
+
+              {/* Question Count Setting */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                  Number of Questions
+                </label>
+                <div className="grid grid-cols-4 gap-2">
+                  {[5, 10, 15, 20].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setCustomQuestionCount(num)}
+                      className={cn(
+                        "py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer",
+                        customQuestionCount === num
+                          ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
+                          : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                      )}
+                    >
+                      {num} Qs
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Duration Setting (For Exam Mode) */}
+              {customFeedbackMode === 'exam' && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                      Countdown Duration
+                    </label>
+                    <span className="text-xs font-mono font-bold text-[#005CE6]">{customDurationMin} Minutes</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[5, 8, 12, 15].map((mins) => (
                       <button
-                        key={cat.id}
-                        onClick={() => setSelectedCategory(cat.id)}
+                        key={mins}
+                        type="button"
+                        onClick={() => setCustomDurationMin(mins)}
                         className={cn(
-                          "px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors cursor-pointer",
-                          selectedCategory === cat.id
-                            ? "bg-[#005CE6] text-white"
-                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                          "py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer",
+                          customDurationMin === mins
+                            ? "bg-slate-900 text-white border-slate-900 shadow-xs"
+                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
                         )}
                       >
-                        {cat.label}
+                        {mins} Mins
                       </button>
                     ))}
                   </div>
                 </div>
+              )}
 
-                {/* Topic Cards List - Distinct, Informative, Non-repetitive */}
-                <div className="space-y-1.5 max-h-[calc(100vh-280px)] overflow-y-auto pr-1">
-                  {filteredTopics.map((topic) => {
-                    const isSelected = selectedTopic === topic.id;
-                    const meta = TOPIC_METADATA[topic.id] || {
-                      status: 'In progress',
-                      accuracy: 75,
-                      badgeColor: 'text-blue-700 bg-blue-50 border-blue-200',
-                      subtext: 'Practice available',
-                    };
-                    const qCount = INITIAL_QUESTIONS.filter((q) => q.topic_id === topic.id).length;
-
-                    return (
-                      <button
-                        key={topic.id}
-                        onClick={() => {
-                          setSelectedTopic(topic.id);
-                          setPracticeIdx(0);
-                          setSelectedOpt(null);
-                          setIsAnswerSubmitted(false);
-                          setShowDistractorRationales(false);
-                          setTimerSec(0);
-                        }}
-                        className={cn(
-                          "w-full p-3 rounded-xl border text-left transition-all cursor-pointer block",
-                          isSelected
-                            ? "bg-blue-50/80 border-[#005CE6]/60 shadow-xs"
-                            : "bg-white border-slate-200/80 hover:border-slate-300 hover:bg-slate-50/70"
-                        )}
-                      >
-                        <div className="flex items-center justify-between gap-2 mb-1">
-                          <span className={cn(
-                            "text-xs font-semibold",
-                            isSelected ? "text-[#005CE6] font-bold" : "text-slate-800"
-                          )}>
-                            {topic.name}
-                          </span>
-                          <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-md border", meta.badgeColor)}>
-                            {meta.accuracy}%
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between text-[11px] text-slate-500">
-                          <span>{qCount > 0 ? `${qCount} question${qCount > 1 ? 's' : ''}` : '1 question'}</span>
-                          <span className="text-[10px] text-slate-400 font-medium">{meta.subtext}</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </aside>
-            )}
-
-            {/* Right Question Area: The Dominant Visual Workspace */}
-            <div className={cn(focusMode ? "lg:col-span-12 max-w-3xl mx-auto w-full" : "lg:col-span-8", "space-y-4")}>
-              <div className="p-6 sm:p-7 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-6">
-                {/* Question Status Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 text-xs">
-                  <div>
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                      {activeTopic.group_name} · {activeTopic.name}
-                    </div>
-                    <div className="text-sm font-bold text-slate-900 mt-0.5">
-                      Question {practiceIdx + 1} of {topicQuestions.length}
-                    </div>
-                  </div>
-
-                  {/* Compact Status Indicators */}
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-slate-600 font-mono text-xs">
-                      <Clock className="w-3.5 h-3.5 text-[#005CE6]" />
-                      <span>{timerSec}s</span>
-                    </div>
-
-                    <button
-                      onClick={() => toggleBookmark(currentQ.id)}
-                      className={cn(
-                        "p-1.5 rounded-md border transition-colors cursor-pointer",
-                        isCurrentBookmarked
-                          ? "bg-blue-50 border-[#005CE6] text-[#005CE6]"
-                          : "bg-white border-slate-200 text-slate-400 hover:text-slate-600"
-                      )}
-                      title={isCurrentBookmarked ? "Bookmarked" : "Bookmark this question"}
-                      aria-label="Bookmark"
-                    >
-                      {isCurrentBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Stimulus Table for DI Questions if applicable */}
-                {currentQ.stimulus && currentQ.stimulus.chart_type === 'table' && (
-                  <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200 space-y-2">
-                    <div className="text-xs font-bold text-slate-800 flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-[#005CE6]" />
-                      <span>{currentQ.stimulus.title}</span>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-xs text-left border-collapse">
-                        <thead>
-                          <tr className="bg-slate-100 border-b border-slate-200">
-                            {currentQ.stimulus.structured_data.headers.map((h: string, idx: number) => (
-                              <th key={idx} className="p-2 font-semibold text-slate-700">
-                                {h}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {currentQ.stimulus.structured_data.rows.map((row: string[], rIdx: number) => (
-                            <tr key={rIdx} className="border-b border-slate-200/60 hover:bg-white">
-                              {row.map((cell: string, cIdx: number) => (
-                                <td key={cIdx} className={cn("p-2", cIdx === 0 ? "font-semibold text-slate-800" : "font-mono text-slate-600")}>
-                                  {cell}
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-
-                {/* Question Statement (Comfortable 17-18px typography with clear line-height) */}
-                <div className="text-[17px] sm:text-[18px] font-medium text-slate-900 leading-[1.65]">
-                  <MathRenderer content={currentQ.stem} />
-                </div>
-
-                {/* Answer Options: Neutral Before, Clear Selection, Restrained Green/Red After */}
-                <div className="space-y-2.5 pt-1">
-                  <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    {isAnswerSubmitted ? "Result & Answer Verification" : "Select one answer (or press A–E)"}
-                  </div>
-
-                  {currentQ.options.map((opt) => {
-                    const isSelected = selectedOpt === opt.id;
-                    const isCorrect = currentKey && opt.id === currentKey.correct_option;
-
-                    // Option styling states
-                    let optStyle = "border-slate-200 bg-white hover:border-slate-300 text-slate-800";
-
-                    if (!isAnswerSubmitted) {
-                      if (isSelected) {
-                        optStyle = "border-[#005CE6] bg-blue-50/50 text-[#005CE6] font-semibold ring-1 ring-[#005CE6]";
-                      }
-                    } else {
-                      if (isCorrect) {
-                        optStyle = "border-emerald-500 bg-emerald-50/90 text-emerald-950 font-semibold ring-1 ring-emerald-500";
-                      } else if (isSelected && !isCorrect) {
-                        optStyle = "border-rose-400 bg-rose-50 text-rose-950 font-semibold ring-1 ring-rose-400";
-                      } else {
-                        optStyle = "border-slate-200 bg-slate-50/60 text-slate-400";
-                      }
-                    }
-
-                    return (
-                      <div
-                        key={opt.id}
-                        onClick={() => handleSelectOption(opt.id)}
-                        className={cn(
-                          "p-3.5 sm:p-4 rounded-xl border text-sm flex items-center justify-between cursor-pointer transition-all",
-                          optStyle
-                        )}
-                      >
-                        <div className="flex items-center gap-3">
-                          <span
-                            className={cn(
-                              "w-7 h-7 rounded-lg flex items-center justify-center font-bold font-mono text-xs uppercase shrink-0 transition-colors",
-                              !isAnswerSubmitted && isSelected
-                                ? "bg-[#005CE6] text-white"
-                                : isAnswerSubmitted && isCorrect
-                                ? "bg-emerald-600 text-white"
-                                : isAnswerSubmitted && isSelected && !isCorrect
-                                ? "bg-rose-600 text-white"
-                                : "bg-slate-100 text-slate-600 border border-slate-200"
-                            )}
-                          >
-                            {opt.id}
-                          </span>
-                          <div className="leading-normal">
-                            <MathRenderer content={opt.text} />
-                          </div>
-                        </div>
-
-                        {/* Status Icon */}
-                        {isAnswerSubmitted && isCorrect && (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                        )}
-                        {isAnswerSubmitted && isSelected && !isCorrect && (
-                          <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Primary Action Button Before Submission: Check Answer */}
-                {!isAnswerSubmitted && (
-                  <div className="pt-2 flex items-center justify-between">
-                    <span className="text-xs text-slate-400">
-                      Shortcut: Press <kbd className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 font-mono text-[10px] text-slate-600">Enter</kbd> to confirm
-                    </span>
-                    <button
-                      onClick={handleCheckAnswer}
-                      disabled={!selectedOpt}
-                      className={cn(
-                        "px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer",
-                        selectedOpt
-                          ? "bg-[#005CE6] text-white hover:bg-blue-700 shadow-sm"
-                          : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                      )}
-                    >
-                      Check Answer
-                    </button>
-                  </div>
-                )}
-
-                {/* Structured Explanation Levels (After Submission) */}
-                {isAnswerSubmitted && currentKey && (
-                  <div className="space-y-4 pt-3 border-t border-slate-100 animate-in fade-in duration-200">
-                    {/* Level 1: Quick Explanation Banner */}
-                    <div
-                      className={cn(
-                        "p-3.5 rounded-xl border flex items-center justify-between flex-wrap gap-2 text-xs",
-                        selectedOpt === currentKey.correct_option
-                          ? "bg-emerald-50/80 border-emerald-200 text-emerald-900"
-                          : "bg-rose-50/80 border-rose-200 text-rose-900"
-                      )}
-                    >
-                      <div className="flex items-center gap-2 font-bold text-sm">
-                        {selectedOpt === currentKey.correct_option ? (
-                          <>
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                            <span>Correct answer: Option {currentKey.correct_option.toUpperCase()}</span>
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="w-4 h-4 text-rose-600" />
-                            <span>Incorrect. Correct answer is Option {currentKey.correct_option.toUpperCase()}</span>
-                          </>
-                        )}
-                      </div>
-                      <span className="font-mono text-[11px] font-semibold opacity-80">
-                        Pace: {timerSec} seconds
-                      </span>
-                    </div>
-
-                    {/* Level 2: Complete Step-by-Step Derivation */}
-                    <div className="space-y-1.5">
-                      <div className="text-xs font-bold text-slate-800">
-                        Step-by-Step Solution
-                      </div>
-                      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs sm:text-sm leading-relaxed">
-                        <MathRenderer content={currentKey.solution} />
-                      </div>
-                    </div>
-
-                    {/* Level 3: Exam Shortcut (Speed Technique) */}
-                    {currentKey.shortcut && (
-                      <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200/90 text-amber-950 text-xs space-y-1">
-                        <div className="flex items-center gap-1.5 font-bold text-amber-900">
-                          <Lightbulb className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
-                          <span>Bank Exam Shortcut Technique</span>
-                        </div>
-                        <div className="leading-relaxed text-slate-800">
-                          <MathRenderer content={currentKey.shortcut} />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Level 4: Why Other Options Are Wrong (Collapsed by default) */}
-                    {currentKey.option_rationales && (
-                      <div className="pt-1">
-                        <button
-                          onClick={() => setShowDistractorRationales(!showDistractorRationales)}
-                          className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#005CE6] transition-colors cursor-pointer"
-                        >
-                          <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", showDistractorRationales && "rotate-180")} />
-                          <span>{showDistractorRationales ? "Hide" : "Show"} distractor mistake analysis</span>
-                        </button>
-
-                        {showDistractorRationales && (
-                          <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2 animate-in fade-in duration-150">
-                            {Object.entries(currentKey.option_rationales).map(([optId, rationale]) => (
-                              <div
-                                key={optId}
-                                className={cn(
-                                  "p-2.5 rounded-lg border text-xs",
-                                  optId === currentKey.correct_option
-                                    ? "bg-emerald-50 border-emerald-200 text-emerald-900 font-medium"
-                                    : "bg-slate-50 border-slate-200 text-slate-600"
-                                )}
-                              >
-                                <span className="font-bold uppercase font-mono mr-1.5">[{optId}]:</span>
-                                <span>{rationale}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Solid Next Question Button */}
-                    <div className="pt-2">
-                      <button
-                        onClick={handleNextPractice}
-                        className="w-full py-3 rounded-xl bg-[#005CE6] hover:bg-blue-700 text-white text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
-                      >
-                        <span>Next Question</span>
-                        <ArrowRight className="w-4 h-4" />
-                        <span className="text-[10px] opacity-75 font-normal ml-1">(or press Enter ↵)</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: SAVED BOOKMARKS */}
-        {activeTab === 'bookmarks' && (
-          <div className="space-y-4">
-            <div className="p-4 rounded-2xl bg-white border border-slate-200/90 flex items-center justify-between flex-wrap gap-3">
-              <div>
-                <h2 className="text-base font-bold text-slate-900">Saved Bookmarks</h2>
-                <p className="text-xs text-slate-500">
-                  Questions flagged for recap of tricky steps, traps, and exam shortcuts.
-                </p>
-              </div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-100 text-slate-700">
-                {bookmarkedQuestions.length} Questions
-              </span>
-            </div>
-
-            {bookmarkedQuestions.length === 0 ? (
-              <div className="p-10 rounded-2xl bg-white border border-slate-200 text-center space-y-2.5">
-                <Bookmark className="w-8 h-8 text-slate-300 mx-auto" />
-                <h3 className="text-sm font-bold text-slate-800">No Questions Bookmarked Yet</h3>
-                <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                  Click the bookmark icon on any question in the Practice drill to save it here for quick review.
-                </p>
+              {/* Action Buttons */}
+              <div className="pt-2 flex items-center gap-3">
                 <button
-                  onClick={() => setActiveTab('topics')}
-                  className="px-4 py-2 rounded-lg bg-[#005CE6] text-white text-xs font-semibold cursor-pointer"
+                  type="button"
+                  onClick={() => setCustomizingTopic(null)}
+                  className="w-1/3 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs transition-colors cursor-pointer"
                 >
-                  Go to Practice
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLaunchCustomDrill}
+                  disabled={isStartingCustom}
+                  className="w-2/3 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {isStartingCustom ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Launching Drill...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      <span>Launch Custom Drill</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {bookmarkedQuestions.map((q) => {
-                  const key = INITIAL_KEYS[q.id];
-                  const topic = INITIAL_TOPICS.find((t) => t.id === q.topic_id);
-                  return (
-                    <div
-                      key={q.id}
-                      className="p-4 rounded-xl bg-white border border-slate-200/90 space-y-3 shadow-2xs"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-semibold text-[#005CE6] bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200">
-                          {topic?.name || q.topic_id}
-                        </span>
-                        <button
-                          onClick={() => toggleBookmark(q.id)}
-                          className="text-xs text-rose-500 hover:text-rose-700 font-medium cursor-pointer"
-                        >
-                          Remove
-                        </button>
-                      </div>
-
-                      <div className="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed line-clamp-3">
-                        <MathRenderer content={q.stem} />
-                      </div>
-
-                      {key && (
-                        <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs space-y-1">
-                          <div className="font-semibold text-emerald-800">
-                            Key: Option {key.correct_option.toUpperCase()}
-                          </div>
-                          {key.shortcut && (
-                            <div className="text-[11px] text-slate-600 line-clamp-2">
-                              {key.shortcut}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <button
-                        onClick={() => {
-                          setSelectedTopic(q.topic_id);
-                          setActiveTab('topics');
-                        }}
-                        className="w-full py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                      >
-                        <span>Practice in Topic Drill</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 3: SPACED REVISION */}
-        {activeTab === 'revision' && (
-          <div className="space-y-4">
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <RotateCcw className="w-4 h-4 text-[#005CE6]" />
-                  <h2 className="text-base font-bold text-slate-900">Spaced Repetition Schedule</h2>
-                </div>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Questions answered incorrectly automatically resurface at optimal intervals (1d, 3d, 7d).
-                </p>
-              </div>
-
-              <button
-                onClick={() => setActiveTab('topics')}
-                className="px-4 py-2 rounded-xl bg-[#005CE6] text-white text-xs font-bold transition-colors cursor-pointer"
-              >
-                Launch Spaced Drill (3 Qs)
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {spacedRevisionItems.map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-white border border-slate-200/90 space-y-3 shadow-2xs">
-                  <div className="flex items-center justify-between">
-                    <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-md border", item.dueColor)}>
-                      {item.due}
-                    </span>
-                    <span className="text-[11px] font-mono text-slate-400">{item.interval}</span>
-                  </div>
-
-                  <div className="text-xs font-medium text-slate-900 leading-relaxed line-clamp-3">
-                    <MathRenderer content={item.question.stem} />
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 text-[11px] space-y-0.5">
-                    <div className="font-medium text-slate-700">{item.reason}</div>
-                    <div className="text-slate-500 font-mono text-[10px]">{item.accuracyRetention}</div>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      setSelectedTopic(item.question.topic_id);
-                      setActiveTab('topics');
-                    }}
-                    className="w-full py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-colors cursor-pointer"
-                  >
-                    Solve Now
-                  </button>
-                </div>
-              ))}
             </div>
           </div>
         )}

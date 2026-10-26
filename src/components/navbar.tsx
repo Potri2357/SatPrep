@@ -64,13 +64,18 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   // Primary navigation destinations with icons
   const navItems = [
     { title: 'Home', href: '/', icon: Home },
-    { title: 'Mock Tests', href: '/tests/new', icon: Layers },
-    { title: 'Practice', href: '/practice', icon: BookOpen },
+    { title: 'Mock Tests', href: '/tests', icon: Layers },
+    { title: 'Topic Drills', href: '/practice', icon: BookOpen },
   ];
 
   const isItemActive = (href: string) => {
     if (href === '/') return pathname === '/';
-    if (href === '/tests/new') return pathname.startsWith('/tests');
+    if (href === '/practice') {
+      return pathname.startsWith('/practice');
+    }
+    if (href === '/tests') {
+      return pathname.startsWith('/tests');
+    }
     return pathname.startsWith(href);
   };
 

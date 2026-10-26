@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Navbar } from '@/components/navbar';
+import { Navbar, CandidateAvatar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
+import { Features10 } from '@/components/features-10';
+import { cn } from '@/lib/utils';
 import {
   ArrowRight,
   ShieldCheck,
@@ -15,125 +17,284 @@ import {
   Award,
   Play,
   BookOpen,
+  Sparkles,
+  CheckCircle2,
+  XCircle,
+  Lightbulb,
+  Check,
+  TrendingUp,
+  Calculator,
+  Flame,
+  HelpCircle,
+  RotateCcw,
 } from 'lucide-react';
 
 export default function LandingPage() {
+  const [mockupTab, setMockupTab] = useState<'mock' | 'practice'>('mock');
+  const [selectedOpt, setSelectedOpt] = useState<string>('C');
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F0F6FF] via-[#FFFFFF] to-[#F8FAFC] text-[#0F172A] selection:bg-[#2563EB] selection:text-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#F0F6FF] via-[#FFFFFF] to-[#F8FAFC] text-[#0F172A] selection:bg-[#005CE6] selection:text-white">
       {/* Consistent Unified Navbar */}
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative pt-16 pb-20 overflow-hidden bg-grid-pattern">
-        {/* Soft Blue Ambient Glow Orbs */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-blue-400/15 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute top-10 right-10 w-96 h-96 bg-indigo-300/15 blur-[100px] rounded-full pointer-events-none" />
+      {/* ================================================================
+          HERO SECTION — Compact, Premium
+          ================================================================ */}
+      <section className="relative pt-20 pb-14 sm:pt-24 sm:pb-18 overflow-hidden">
 
-        <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-[#0F172A] mb-6 leading-[1.15]">
-            Master Bank Exam Quant with <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#0096D6] to-[#60CEF8]">
-              Exam-Realistic Precision
+        {/* Background base */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#EEF6FF] via-[#F7FDFF] to-white" />
+
+        {/* Top-centre radial aurora */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[380px] pointer-events-none"
+          style={{background:"radial-gradient(ellipse 80% 70% at 50% 0%, rgba(0,92,230,0.20) 0%, rgba(0,150,214,0.08) 50%, transparent 78%)"}} />
+
+        {/* Corner glows */}
+        <div className="absolute bottom-0 left-0 w-[400px] h-[260px] pointer-events-none"
+          style={{background:"radial-gradient(ellipse 80% 70% at 0% 100%, rgba(96,206,248,0.14) 0%, transparent 70%)"}} />
+        <div className="absolute bottom-0 right-0 w-[360px] h-[240px] pointer-events-none"
+          style={{background:"radial-gradient(ellipse 80% 70% at 100% 100%, rgba(0,92,230,0.12) 0%, transparent 70%)"}} />
+
+        {/* Dot grid with radial fade */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:"radial-gradient(rgba(0,92,230,0.15) 1px, transparent 1px)",
+            backgroundSize:"26px 26px",
+            maskImage:"radial-gradient(ellipse 75% 80% at 50% 40%, black 20%, transparent 75%)",
+            WebkitMaskImage:"radial-gradient(ellipse 75% 80% at 50% 40%, black 20%, transparent 75%)"
+          }} />
+
+        {/* Ambient Mathematical Symbols Etched into Background Canvas */}
+        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
+          {/* Subtle Math Typographic Watermarks */}
+          <span className="absolute top-[8%] left-[6%] font-serif text-[6.5rem] font-bold leading-none text-[#005CE6]/[0.05] hidden lg:block">∑</span>
+          <span className="absolute top-[6%] right-[7%] font-serif text-[6.5rem] font-bold leading-none text-[#005CE6]/[0.05] hidden lg:block">π</span>
+          <span className="absolute top-[48%] left-[4%] font-serif text-[4rem] font-bold leading-none text-[#0096D6]/[0.06] hidden xl:block">√x</span>
+          <span className="absolute top-[44%] right-[5%] font-serif text-[4.5rem] font-bold leading-none text-[#005CE6]/[0.06] hidden xl:block">%</span>
+          <span className="absolute bottom-[8%] left-[10%] font-mono text-[13px] font-bold tracking-widest text-[#005CE6]/[0.08] hidden md:block">P(1+r/n)ⁿ</span>
+          <span className="absolute bottom-[8%] right-[10%] font-mono text-[13px] font-bold tracking-widest text-[#0096D6]/[0.08] hidden md:block">ax²+bx+c=0</span>
+          <span className="absolute top-[28%] left-[22%] font-serif text-[2.5rem] font-bold text-[#60CEF8]/[0.09] hidden 2xl:block">÷</span>
+          <span className="absolute top-[26%] right-[22%] font-serif text-[2.5rem] font-bold text-[#005CE6]/[0.08] hidden 2xl:block">≈</span>
+        </div>
+
+        {/* ── Content ── */}
+        <div className="relative z-10 max-w-3xl mx-auto px-5 sm:px-8 flex flex-col items-center text-center gap-6">
+
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black tracking-[-0.025em] leading-[1.08] text-[#0A1628]">
+            Master Bank Exam Quant{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#0074F0] to-[#00A8E8]">
+              with Real Exam Speed.
             </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 mb-10 leading-relaxed font-normal">
-            Practice calibrated questions in an authentic bank exam environment. Server-authoritative timer, psychometric distractor explanations, and zero mock latency.
+          {/* Subheading */}
+          <p className="max-w-xl text-sm sm:text-base text-slate-500 leading-[1.7]">
+            The precision training platform for banking aspirants —{' '}
+            <strong className="text-slate-700 font-semibold">full-fidelity IBPS simulations</strong>,{' '}
+            <strong className="text-slate-700 font-semibold">calibrated sectional speed</strong>, and{' '}
+            <strong className="text-slate-700 font-semibold">deep score telemetry</strong>.
           </p>
 
-          {/* CTA Chip Buttons Strip (Large, Distinct & Prominent) */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5">
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
             <Link
-              href="/tests/new"
-              className="px-8 sm:px-10 py-4 sm:py-4.5 rounded-2xl text-base sm:text-lg font-bold text-white bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] hover:from-[#004ec4] hover:to-[#0081ba] shadow-[0_8px_28px_rgba(0,92,230,0.38)] hover:shadow-[0_12px_36px_rgba(0,92,230,0.48)] hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group cursor-pointer"
+              href="/tests"
+              className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-white overflow-hidden transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+              style={{background:"linear-gradient(135deg, #005CE6 0%, #0074F0 50%, #0096D6 100%)", boxShadow:"0 6px 24px rgba(0,92,230,0.36), inset 0 1px 0 rgba(255,255,255,0.15)"}}
             >
-              <span>Launch Mock Test</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <Play className="w-3.5 h-3.5 fill-white" />
+              <span>Launch Mock Tests</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
+
             <Link
               href="/tests/result/sample-attempt-1"
-              className="px-8 sm:px-10 py-4 sm:py-4.5 rounded-2xl text-base sm:text-lg font-bold text-[#005CE6] bg-white border-2 border-[#BCEBFC] hover:border-[#005CE6] hover:bg-[#F0FAFF] shadow-[0_4px_16px_rgba(0,92,230,0.06)] hover:shadow-[0_8px_24px_rgba(0,92,230,0.14)] hover:scale-[1.03] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group cursor-pointer"
+              className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-[#005CE6] bg-white border border-[#C5E4F8] hover:border-[#005CE6]/40 hover:bg-[#F4FBFF] transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+              style={{boxShadow:"0 3px 12px rgba(0,92,230,0.07)"}}
             >
-              <Award className="w-5 h-5 text-[#005CE6] group-hover:scale-110 transition-transform" />
-              <span>View Exam Results</span>
+              <BarChart3 className="w-3.5 h-3.5" />
+              <span>View Sample Results</span>
             </Link>
           </div>
-        </div>
 
-        {/* Exam Terminal Mockup Container */}
-        <div className="max-w-6xl mx-auto px-6 mt-16 relative z-10">
-          <div className="rounded-3xl bg-white border border-[#BCEBFC] shadow-[0_20px_50px_rgba(0,92,230,0.08)] overflow-hidden">
-            {/* Window Top Bar */}
-            <div className="h-14 bg-gradient-to-r from-[#005CE6] to-[#0096D6] px-6 flex items-center justify-between text-white text-xs">
+          {/* Trust strip */}
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 pt-1">
+            {[
+              { icon: <ShieldCheck className="w-3 h-3" />, label: "Exact IBPS Interface" },
+              { icon: <Zap className="w-3 h-3" />, label: "Instant Speed Shortcuts" },
+              { icon: <Target className="w-3 h-3" />, label: "35 Calibrated Questions" },
+              { icon: <Clock className="w-3 h-3" />, label: "20-Min Sectional Timer" },
+            ].map(({ icon, label }) => (
+              <div key={label} className="flex items-center gap-1.5 text-[12px] font-medium text-slate-400">
+                <span className="text-[#005CE6]/70">{icon}</span>
+                {label}
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+
+
+      {/* Interactive Dual-Mode Exam Terminal Mockup — Below Hero */}
+
+      <section className="relative pb-16 sm:pb-24 bg-gradient-to-b from-[#F0F8FF] to-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+
+          <div className="rounded-3xl bg-white border border-[#BCEBFC] shadow-[0_20px_60px_rgba(0,92,230,0.1)] overflow-hidden">
+            {/* Terminal Window Header Bar */}
+            <div className="bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] px-4 sm:px-6 py-3 flex items-center justify-between text-white text-xs">
               <div className="flex items-center gap-3">
                 <BrandLogo size={24} showWordmark={false} />
-                <span className="font-bold tracking-tight">IBPS PO Prelims 2026 — Quantitative Aptitude</span>
-                <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-white/20 text-[10px] font-semibold border border-white/20">
-                  Sectional Test 01
+                <span className="font-bold tracking-tight text-white sm:text-sm">
+                  {mockupTab === 'mock' ? 'IBPS PO Prelims 2026 — Quantitative Aptitude' : 'Topic Drill: Profit, Loss & Successive Discounts'}
+                </span>
+                <span className={cn(
+                  "hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border",
+                  mockupTab === 'mock' ? "bg-white/20 border-white/30 text-white" : "bg-emerald-400/30 border-emerald-300 text-white"
+                )}>
+                  {mockupTab === 'mock' ? 'Sectional Test 01' : 'Instant Practice Mode'}
                 </span>
               </div>
-              <div className="flex items-center gap-4 font-mono">
-                <div className="flex items-center gap-1.5 bg-white text-[#005CE6] px-3 py-1 rounded-xl font-bold shadow-xs">
+
+              {/* Mode Switcher Tabs right in the Terminal Header */}
+              <div className="flex items-center gap-2">
+                <div className="inline-flex p-0.5 rounded-xl bg-black/20 border border-white/20">
+                  <button
+                    type="button"
+                    onClick={() => setMockupTab('mock')}
+                    className={cn(
+                      "px-3 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer",
+                      mockupTab === 'mock' ? "bg-white text-[#005CE6] shadow-xs" : "text-white/80 hover:text-white"
+                    )}
+                  >
+                    Mock Simulation
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMockupTab('practice')}
+                    className={cn(
+                      "px-3 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer",
+                      mockupTab === 'practice' ? "bg-emerald-500 text-white shadow-xs" : "text-white/80 hover:text-white"
+                    )}
+                  >
+                    Instant Practice
+                  </button>
+                </div>
+
+                <div className="hidden sm:flex items-center gap-1.5 bg-white text-[#005CE6] px-3 py-1 rounded-xl font-bold font-mono shadow-xs">
                   <Clock className="w-3.5 h-3.5 text-[#005CE6]" />
-                  <span>18:42</span>
+                  <span>{mockupTab === 'mock' ? '18:42 Left' : '00:24 Pace'}</span>
                 </div>
               </div>
             </div>
 
-            {/* Split Screen Mockup */}
+            {/* Split Screen Terminal View */}
             <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-100 bg-[#F8FAFC]">
               {/* Question Stem Area */}
-              <div className="lg:col-span-2 p-8 sm:p-10 bg-white flex flex-col justify-between">
-                <div className="space-y-6">
+              <div className="lg:col-span-2 p-6 sm:p-8 bg-white flex flex-col justify-between space-y-6">
+                <div className="space-y-5">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <span className="font-bold text-xs text-slate-500 uppercase tracking-wider">Question No. 4 of 35</span>
+                    <span className="font-bold text-xs text-slate-500 uppercase tracking-wider">
+                      Question No. 4 of {mockupTab === 'mock' ? '35' : '10'}
+                    </span>
                     <div className="flex gap-2">
-                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">+1.00</span>
-                      <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">-0.25</span>
+                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        +1.00 Correct
+                      </span>
+                      <span className={cn(
+                        "text-[10px] font-bold px-2 py-0.5 rounded border",
+                        mockupTab === 'mock' ? "text-rose-700 bg-rose-50 border-rose-200" : "text-emerald-700 bg-emerald-50 border-emerald-200"
+                      )}>
+                        {mockupTab === 'mock' ? '-0.25 Penalty' : '0 Penalty'}
+                      </span>
                     </div>
                   </div>
 
                   <p className="text-slate-800 text-sm sm:text-base leading-relaxed font-medium">
-                    A shopkeeper marked an article at $40\%$ above its cost price and offered two successive discounts of $10\%$ and $15\%$ respectively. If he made an overall profit of ₹$142.80$, calculate the cost price of the article.
+                    A shopkeeper marked an article at <strong>40%</strong> above its cost price and offered two successive discounts of <strong>10%</strong> and <strong>15%</strong> respectively. If he made an overall profit of <strong>₹142.80</strong>, calculate the cost price of the article.
                   </p>
 
-                  {/* Options */}
-                  <div className="space-y-3 pt-2">
+                  {/* Interactive Options */}
+                  <div className="space-y-2.5 pt-1">
                     {[
                       { id: 'A', text: '₹2,040' },
                       { id: 'B', text: '₹1,850' },
-                      { id: 'C', text: '₹2,100', checked: true },
+                      { id: 'C', text: '₹2,100', isCorrect: true },
                       { id: 'D', text: '₹2,400' },
                       { id: 'E', text: 'None of these' },
-                    ].map((opt) => (
-                      <div
-                        key={opt.id}
-                        className={`p-3.5 rounded-2xl border text-xs sm:text-sm font-medium flex items-center gap-3 transition-colors ${
-                          opt.checked
-                            ? 'bg-[#EFF6FF] border-[#2563EB] text-[#1E40AF] font-semibold shadow-xs'
-                            : 'bg-white border-slate-200 text-slate-700'
-                        }`}
-                      >
-                        <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                          opt.checked ? 'bg-[#2563EB] text-white' : 'border border-slate-300 text-slate-500'
-                        }`}>
-                          {opt.id}
-                        </span>
-                        <span>{opt.text}</span>
-                      </div>
-                    ))}
+                    ].map((opt) => {
+                      const isSelected = selectedOpt === opt.id;
+                      const isPractice = mockupTab === 'practice';
+                      let cardStyle = 'bg-white border-slate-200 text-slate-700 hover:border-blue-300';
+                      let badgeStyle = 'border border-slate-300 text-slate-500';
+
+                      if (isSelected) {
+                        if (isPractice) {
+                          cardStyle = 'bg-emerald-50/90 border-emerald-500 text-emerald-950 shadow-xs ring-1 ring-emerald-500';
+                          badgeStyle = 'bg-emerald-600 text-white border-transparent';
+                        } else {
+                          cardStyle = 'bg-[#EFF6FF] border-[#2563EB] text-[#1E40AF] font-semibold shadow-xs';
+                          badgeStyle = 'bg-[#2563EB] text-white border-transparent';
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => setSelectedOpt(opt.id)}
+                          className={cn(
+                            "w-full p-3 rounded-2xl border text-xs sm:text-sm font-medium flex items-center justify-between transition-all cursor-pointer text-left",
+                            cardStyle
+                          )}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className={cn("w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0", badgeStyle)}>
+                              {opt.id}
+                            </span>
+                            <span>{opt.text}</span>
+                          </div>
+
+                          {isSelected && isPractice && (
+                            <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1 bg-white px-2 py-0.5 rounded-md border border-emerald-200">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>Correct Option</span>
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
+
+                  {/* Instant Solution Drawer (When Practice Tab Active) */}
+                  {mockupTab === 'practice' && (
+                    <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 space-y-2 animate-in fade-in duration-200">
+                      <div className="flex items-center gap-2 text-xs font-bold text-emerald-900">
+                        <Lightbulb className="w-4 h-4 text-emerald-600" />
+                        <span>15-Second Speed Derivation</span>
+                      </div>
+                      <p className="text-xs text-emerald-800 font-mono leading-relaxed">
+                        CP = 100 → MP = 140. Successive discount: 10% &amp; 15% → Net multiplier = 0.9 × 0.85 = 0.765. SP = 140 × 0.765 = 107.10. Profit = 7.10 units = ₹142.80 → 1 unit = ₹20.11 → CP = ₹2,100.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between pt-8 border-t border-slate-100 mt-6">
+                {/* Bottom Navigation Buttons */}
+                <div className="flex items-center justify-between pt-6 border-t border-slate-100">
                   <span className="text-xs font-bold text-purple-700 bg-purple-50 px-3.5 py-1.5 rounded-full border border-purple-200">
                     Mark for Review &amp; Next
                   </span>
-                  <div className="flex gap-2.5">
+                  <div className="flex gap-2">
                     <span className="text-xs font-bold text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full">
                       Clear Response
                     </span>
-                    <span className="text-xs font-bold text-white bg-[#2563EB] px-5 py-1.5 rounded-full shadow-sm">
+                    <span className="text-xs font-bold text-white bg-[#005CE6] px-5 py-1.5 rounded-full shadow-xs">
                       Save &amp; Next
                     </span>
                   </div>
@@ -141,19 +302,28 @@ export default function LandingPage() {
               </div>
 
               {/* Question Palette Rail */}
-              <div className="p-6 bg-[#F8FAFC] flex flex-col justify-between">
+              <div className="p-6 bg-[#F8FAFC] flex flex-col justify-between space-y-6">
                 <div className="space-y-4">
-                  <div className="font-bold text-xs text-slate-700 uppercase tracking-wider">Question Palette</div>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-xs text-slate-700 uppercase tracking-wider">Question Palette</span>
+                    <span className="text-[11px] font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      Active Section
+                    </span>
+                  </div>
+
                   <div className="grid grid-cols-5 gap-2">
                     {Array.from({ length: 15 }).map((_, i) => {
                       let color = 'bg-white text-slate-700 border-slate-200';
-                      if (i === 0 || i === 1 || i === 3) color = 'bg-[#10B981] text-white border-transparent';
-                      if (i === 2) color = 'bg-[#EF4444] text-white border-transparent';
-                      if (i === 4) color = 'bg-[#8B5CF6] text-white border-transparent ring-2 ring-[#10B981]';
+                      if (i === 0 || i === 1 || i === 3) color = 'bg-emerald-600 text-white border-transparent';
+                      if (i === 2) color = 'bg-rose-500 text-white border-transparent';
+                      if (i === 4) color = 'bg-purple-600 text-white border-transparent ring-2 ring-emerald-500';
                       return (
                         <div
                           key={i}
-                          className={`h-8 rounded-xl border flex items-center justify-center font-mono font-bold text-xs shadow-xs ${color}`}
+                          className={cn(
+                            "h-8 rounded-xl border flex items-center justify-center font-mono font-bold text-xs shadow-2xs",
+                            color
+                          )}
                         >
                           {i + 1}
                         </div>
@@ -162,10 +332,12 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-slate-200/80 space-y-2 text-[11px] font-semibold text-slate-600">
-                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-[#10B981]" /> Answered: 3</div>
-                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-[#8B5CF6]" /> Review: 1</div>
-                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-white border border-slate-300" /> Not Visited: 11</div>
+                {/* Legend */}
+                <div className="pt-4 border-t border-slate-200 space-y-2 text-[11px] font-semibold text-slate-600">
+                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-emerald-600" /> Answered: 3</div>
+                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-purple-600" /> Marked for Review: 1</div>
+                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-rose-500" /> Not Answered: 1</div>
+                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-white border border-slate-300" /> Not Visited: 10</div>
                 </div>
               </div>
             </div>
@@ -173,74 +345,74 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Neat Exam Modules Strip */}
-      <section className="py-16 bg-white border-t border-[#E2E8F0]">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center max-w-xl mx-auto mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A] mb-3">
-              Comprehensive Quant &amp; DI Coverage
+      {/* Primary Exam Modules Section */}
+      <section className="py-16 sm:py-24 bg-white border-t border-slate-200/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-xl mx-auto mb-12 sm:mb-16 space-y-2">
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A]">
+              Comprehensive Bank Quant Coverage
             </h2>
             <p className="text-slate-600 text-xs sm:text-sm">
-              Practice exactly the syllabus topics that dominate bank exam cutoffs.
+              Practice exactly the syllabus topics that determine banking prelims &amp; mains cutoffs.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
-              href="/tests/new"
-              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group flex flex-col justify-between"
+              href="/tests"
+              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] hover:border-[#005CE6]/40 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#E0F4FD] text-[#005CE6] border border-[#BCEBFC] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-[#E0F4FD] text-[#005CE6] border border-[#BCEBFC] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <Award className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-[#0F172A] mb-2 flex items-center justify-between">
-                  <span>Full-Length Prelims Mocks</span>
+                <h3 className="text-lg font-bold text-[#0F172A] mb-2">
+                  Full-Length Prelims Mocks
                 </h3>
                 <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                  35 questions in 20 minutes timed test. Real exam difficulty distribution and negative marking.
+                  35 questions in 20 minutes timed test. Real exam difficulty distribution and authentic negative marking.
                 </p>
               </div>
               <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#007AE6] group-hover:from-[#004dc2] group-hover:to-[#0066cc] text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
-                <span>Take 35-Q Full Mock</span>
+                <span>View Mock Test Series</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
               </div>
             </Link>
 
             <Link
               href="/practice"
-              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group flex flex-col justify-between"
+              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] hover:border-emerald-400 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#D1FAE5] text-[#10B981] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <Target className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-[#0F172A] mb-2 flex items-center justify-between">
-                  <span>Speed Drills &amp; Arithmetic</span>
+                <h3 className="text-lg font-bold text-[#0F172A] mb-2">
+                  Speed Drills &amp; Arithmetic
                 </h3>
                 <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                  Topic-by-topic drills on Simplification, Quadratic Equations, Number Series, and Profit &amp; Loss.
+                  Chapter-wise drills on Simplification, Quadratic Equations, Number Series, and Profit &amp; Loss with instant solutions.
                 </p>
               </div>
               <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 group-hover:from-emerald-700 group-hover:to-teal-700 text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
-                <span>Practice Speed Drills</span>
+                <span>Explore Topic Drills</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
               </div>
             </Link>
 
             <Link
-              href="/tests/new"
-              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] transition-all group flex flex-col justify-between"
+              href="/practice"
+              className="neu-glass-card p-7 rounded-3xl hover:scale-[1.02] hover:border-purple-400 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#EDE9FE] text-[#8B5CF6] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 border border-purple-200 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <BarChart3 className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-[#0F172A] mb-2 flex items-center justify-between">
-                  <span>Data Interpretation Sets</span>
+                <h3 className="text-lg font-bold text-[#0F172A] mb-2">
+                  Data Interpretation Sets
                 </h3>
                 <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                  Tabular, Bar, Pie, and Caselet DI questions with step-by-step ratio and percentage calculations.
+                  Tabular, Missing Tables, Dual Pie Charts, and Stacked Bar questions with step-by-step ratio and percentage derivations.
                 </p>
               </div>
               <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 group-hover:from-purple-700 group-hover:to-indigo-700 text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
@@ -251,6 +423,10 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Features 10 Block: Interconnected Exam Ecosystem with Orbiting Nodes */}
+      <Features10 />
+
 
       {/* High-Impact Bottom Call to Action Section */}
       <section className="py-20 bg-gradient-to-r from-[#061226] via-[#0B234F] to-[#005CE6] text-white relative overflow-hidden">
@@ -264,10 +440,10 @@ export default function LandingPage() {
           </p>
           <div className="pt-4 flex justify-center">
             <Link
-              href="/tests/new"
+              href="/tests"
               className="px-10 py-5 rounded-2xl text-base sm:text-lg font-extrabold text-[#005CE6] bg-white hover:bg-[#F0FAFF] shadow-[0_12px_40px_rgba(0,0,0,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group cursor-pointer"
             >
-              <span>Start Free Prelims Mock Test</span>
+              <span>Explore Mock Tests Series</span>
               <ArrowRight className="w-5 h-5 text-[#005CE6] group-hover:translate-x-1.5 transition-transform" />
             </Link>
           </div>
@@ -281,7 +457,8 @@ export default function LandingPage() {
           <p>© 2026 SatPrep. Bank Exam Quantitative Aptitude Platform. All rights reserved.</p>
           <div className="flex gap-6 font-semibold">
             <Link href="/tests/result/sample-attempt-1" className="hover:text-[#2563EB] transition-colors">Exam Results</Link>
-            <Link href="/practice" className="hover:text-[#2563EB] transition-colors">Practice</Link>
+            <Link href="/practice" className="hover:text-[#2563EB] transition-colors">Topic Drills</Link>
+            <Link href="/tests" className="hover:text-[#2563EB] transition-colors">Mock Tests</Link>
             <Link href="/admin" className="hover:text-[#2563EB] transition-colors">Admin Console</Link>
           </div>
         </div>

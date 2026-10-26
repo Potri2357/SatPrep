@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Navbar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
 import { INITIAL_TOPICS } from '@/lib/store';
+import { cn } from '@/lib/utils';
 import {
   Zap,
   SlidersHorizontal,
@@ -22,6 +23,9 @@ import {
   BarChart3,
   Calculator,
   Plus,
+  Lightbulb,
+  ShieldCheck,
+  RotateCcw,
 } from 'lucide-react';
 
 interface ExamProfile {
@@ -100,12 +104,23 @@ const EXAM_PROFILES: Record<string, ExamProfile> = {
   },
 };
 
-export default function NewTestBuilderPage() {
+function TestBuilderForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Read URL query parameters if available
+  const queryMode = searchParams.get('mode');
+  const queryFeedback = searchParams.get('feedback');
+  const queryTopic = searchParams.get('topic');
 
   // Test Creation State
   const [examId, setExamId] = useState<string>('ibps-po-prelims-2026');
-  const [mode, setMode] = useState<'full_mock' | 'sectional' | 'topic_test'>('full_mock');
+  const [mode, setMode] = useState<'full_mock' | 'sectional' | 'topic_test'>(
+    queryMode === 'topic_test' || queryMode === 'sectional' ? queryMode : 'full_mock'
+  );
+  const [feedbackMode, setFeedbackMode] = useState<'exam' | 'practice'>(
+    queryFeedback === 'practice' || queryMode === 'topic_test' ? 'practice' : 'exam'
+  );
   const [difficultyMix, setDifficultyMix] = useState<string>('mixed');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
@@ -114,23 +129,39 @@ export default function NewTestBuilderPage() {
     return EXAM_PROFILES[examId] || EXAM_PROFILES['ibps-po-prelims-2026'];
   }, [examId]);
 
-  // Selected topics initialize from the current exam recommendation
-  const [selectedTopics, setSelectedTopics] = useState<string[]>(
-    EXAM_PROFILES['ibps-po-prelims-2026'].recommendedTopics
-  );
+  // Selected topics initialize from the current exam recommendation or query param
+  const [selectedTopics, setSelectedTopics] = useState<string[]>(() => {
+    if (queryTopic) {
+      const matched = queryTopic.split(',').filter(Boolean);
+      if (matched.length > 0) return matched;
+    }
+    return EXAM_PROFILES['ibps-po-prelims-2026'].recommendedTopics;
+  });
 
-  // When exam changes, update topics and pattern
+  // When exam changes, update topics and pattern (if not specifically locked by query)
   const handleExamChange = (newExamId: string) => {
     setExamId(newExamId);
     const profile = EXAM_PROFILES[newExamId] || EXAM_PROFILES['ibps-po-prelims-2026'];
-    setSelectedTopics(profile.recommendedTopics);
+    if (!queryTopic) {
+      setSelectedTopics(profile.recommendedTopics);
+    }
+  };
+
+  // Switch Mode helper: automatically selects ideal feedback mode
+  const handleModeChange = (newMode: 'full_mock' | 'sectional' | 'topic_test') => {
+    setMode(newMode);
+    if (newMode === 'topic_test') {
+      setFeedbackMode('practice');
+    } else {
+      setFeedbackMode('exam');
+    }
   };
 
   // Dynamic parameters based on exam + mode
   const currentPattern = currentExam.patterns[mode];
   const questionCount = currentPattern.questions;
   const durationMinutes = currentPattern.duration;
-  const negativeMarking = `-${currentPattern.negative} marks per wrong`;
+  const negativeMarking = feedbackMode === 'practice' ? 'No negative marking (0.00)' : `-${currentPattern.negative} marks per wrong`;
   const totalMarks = `${currentPattern.marks}.00`;
 
   // Group topics for easy selection
@@ -174,6 +205,7 @@ export default function NewTestBuilderPage() {
           question_count: questionCount,
           duration_min: durationMinutes,
           difficulty_mix: difficultyMix,
+          feedback_mode: feedbackMode,
         }),
       });
 
@@ -196,19 +228,29 @@ export default function NewTestBuilderPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
-        {/* Left 2 Cols: Exam Configuration */}
+        {/* Left 2 Cols: Exam & Mode Configuration */}
         <div className="lg:col-span-2 space-y-7">
           {/* Title Area */}
           <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-3 py-0.5 rounded-full bg-[#EBF5FF] text-[#005CE6] font-bold text-xs border border-[#BCEBFC]">
+                {mode === 'topic_test' ? 'Topic Practice & Drills' : 'Calibrated Mock Engine'}
+              </span>
+              {feedbackMode === 'practice' && (
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs border border-emerald-200 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" /> Instant Solutions Active
+                </span>
+              )}
+            </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A]">
-              Create a Practice Test
+              {mode === 'topic_test' ? 'Configure Topic Drill' : 'Create a Practice Test'}
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600 mt-1">
-              Select your exam pattern, test mode, and syllabus topics. Your paper is calibrated and assembled server-side.
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+              Choose your target exam pattern, drill mode, and feedback style. Practice questions now feature immediate step-by-step solutions and speed calculation methods.
             </p>
           </div>
 
-          {/* Section 1: Target Exam Picker */}
+          {/* Section 1: Target Exam Picker & Mode */}
           <div className="p-6 sm:p-7 rounded-3xl bg-white border border-[#BCEBFC] shadow-[0_4px_20px_rgba(0,92,230,0.05)] space-y-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
@@ -251,9 +293,6 @@ export default function NewTestBuilderPage() {
                     <div className="text-[11px] text-slate-500 font-medium">
                       {pattern.questions} Qs · {pattern.duration} Mins · -{pattern.negative} Mark
                     </div>
-                    <div className="mt-2 text-[10px] font-bold text-[#005CE6] bg-white px-2 py-0.5 rounded-md inline-block border border-[#BCEBFC]">
-                      {e.badge}
-                    </div>
                   </button>
                 );
               })}
@@ -262,19 +301,19 @@ export default function NewTestBuilderPage() {
             {/* Mode Selector (Pill Segmented Chips) */}
             <div className="pt-2">
               <label className="block text-xs font-bold text-slate-700 mb-2">
-                Exam Mode
+                Drill &amp; Test Format
               </label>
               <div className="p-1 rounded-full neu-inset flex gap-1">
                 {[
                   { id: 'full_mock', label: 'Full Prelims Mock (35 Qs)', desc: 'Official Pattern' },
                   { id: 'sectional', label: 'Sectional Speed Test', desc: '15 Mins' },
-                  { id: 'topic_test', label: 'Topic Sprint Drill', desc: '10 Mins' },
+                  { id: 'topic_test', label: 'Topic Drill', desc: '10 Qs' },
                 ].map((m) => {
                   const isActive = mode === m.id;
                   return (
                     <button
                       key={m.id}
-                      onClick={() => setMode(m.id as any)}
+                      onClick={() => handleModeChange(m.id as any)}
                       className={`flex-1 py-2.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
                         isActive
                           ? 'neu-chip-primary text-white scale-[1.01]'
@@ -287,9 +326,96 @@ export default function NewTestBuilderPage() {
                 })}
               </div>
             </div>
+
+            {/* Feedback & Learning Style Selector (The Unified Practice Engine Bridge) */}
+            <div className="pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between mb-2.5">
+                <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#005CE6]" />
+                  <span>Feedback &amp; Learning Mode</span>
+                </label>
+                <span className="text-[11px] font-medium text-slate-500">
+                  {feedbackMode === 'practice' ? 'Instant derivations on' : 'Exam hall simulation'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Practice Mode Card */}
+                <button
+                  type="button"
+                  onClick={() => setFeedbackMode('practice')}
+                  className={cn(
+                    "p-4 rounded-2xl border text-left transition-all cursor-pointer relative",
+                    feedbackMode === 'practice'
+                      ? "border-[#005CE6] bg-[#F0FAFF] ring-2 ring-[#005CE6]/30 shadow-xs"
+                      : "border-slate-200 bg-white hover:border-[#005CE6]/40 hover:bg-[#F0FAFF]/20 text-slate-700"
+                  )}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+                        <Lightbulb className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-extrabold text-xs text-[#0F172A]">
+                        Practice Mode (Instant Feedback)
+                      </span>
+                    </div>
+                    {feedbackMode === 'practice' && (
+                      <span className="w-4 h-4 rounded-full bg-[#005CE6] text-white flex items-center justify-center text-[10px]">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11.5px] text-slate-600 leading-relaxed">
+                    Immediate step-by-step derivation, 15-second shortcut, and option trap review after each question. Untimed, zero negative marks.
+                  </p>
+                  <div className="mt-2.5 flex items-center gap-2 text-[10px] font-bold text-emerald-700">
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200">
+                      Recommended for Topic Drills
+                    </span>
+                  </div>
+                </button>
+
+                {/* Exam Mode Card */}
+                <button
+                  type="button"
+                  onClick={() => setFeedbackMode('exam')}
+                  className={cn(
+                    "p-4 rounded-2xl border text-left transition-all cursor-pointer relative",
+                    feedbackMode === 'exam'
+                      ? "border-[#005CE6] bg-[#F0FAFF] ring-2 ring-[#005CE6]/30 shadow-xs"
+                      : "border-slate-200 bg-white hover:border-[#005CE6]/40 hover:bg-[#F0FAFF]/20 text-slate-700"
+                  )}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-blue-100 text-[#005CE6] flex items-center justify-center">
+                        <Clock className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-extrabold text-xs text-[#0F172A]">
+                        Exam Mode (Strict Countdown)
+                      </span>
+                    </div>
+                    {feedbackMode === 'exam' && (
+                      <span className="w-4 h-4 rounded-full bg-[#005CE6] text-white flex items-center justify-center text-[10px]">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11.5px] text-slate-600 leading-relaxed">
+                    Simulates actual IBPS/SBI exam hall. Strict countdown timer, -0.25 negative marking penalty, all solutions unlocked upon final submission.
+                  </p>
+                  <div className="mt-2.5 flex items-center gap-2 text-[10px] font-bold text-slate-600">
+                    <span className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">
+                      Standard Prelims Exam
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Section 2: Syllabus Topics Selection (Replaces old manual basket) */}
+          {/* Section 2: Syllabus Topics Selection */}
           <div className="p-6 sm:p-7 rounded-3xl bg-white border border-[#BCEBFC] shadow-[0_4px_20px_rgba(0,92,230,0.05)] space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
@@ -429,12 +555,12 @@ export default function NewTestBuilderPage() {
           </div>
         </div>
 
-        {/* Right Col: Live Updating Summary Rail (Changes according to exam & mode chosen!) */}
+        {/* Right Col: Live Updating Summary Rail */}
         <div className="space-y-6">
           <div className="p-6 sm:p-7 rounded-3xl bg-white border border-[#BCEBFC] shadow-[0_8px_30px_rgba(0,92,230,0.08)] sticky top-24 space-y-5">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-extrabold text-[#0F172A]">
-                Test Summary
+                Drill Summary
               </h2>
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Ready to assemble" />
             </div>
@@ -453,22 +579,34 @@ export default function NewTestBuilderPage() {
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
+                <span className="text-slate-500">Learning Style</span>
+                <span className="font-extrabold text-[#005CE6] text-right">
+                  {feedbackMode === 'practice' ? '💡 Practice (Instant Solutions)' : '⚡ Real Exam (Timed Mock)'}
+                </span>
+              </div>
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-slate-500">Total Questions</span>
                 <span className="font-extrabold font-mono text-[#005CE6] text-sm">
                   {questionCount} Questions
                 </span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Estimated Duration</span>
-                <span className="font-extrabold font-mono text-slate-900">{durationMinutes} Minutes</span>
+                <span className="text-slate-500">Timer Behavior</span>
+                <span className="font-bold font-mono text-slate-900">
+                  {feedbackMode === 'practice' ? 'Untimed (Self-Paced)' : `${durationMinutes} Mins Countdown`}
+                </span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Total Marks</span>
-                <span className="font-bold font-mono text-slate-900">{totalMarks} Marks</span>
+                <span className="text-slate-500">Negative Penalty</span>
+                <span className={cn("font-bold", feedbackMode === 'practice' ? "text-emerald-700" : "text-rose-600")}>
+                  {feedbackMode === 'practice' ? '0.00 (Practice Mode)' : negativeMarking}
+                </span>
               </div>
               <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Negative Marking</span>
-                <span className="font-bold text-rose-600">{negativeMarking}</span>
+                <span className="text-slate-500">Step Solutions</span>
+                <span className="font-bold text-emerald-700">
+                  {feedbackMode === 'practice' ? 'Instant per question' : 'After submission'}
+                </span>
               </div>
             </div>
 
@@ -479,26 +617,46 @@ export default function NewTestBuilderPage() {
                 <span className="font-bold text-slate-800">Unseen Questions</span>
               </div>
               <span className="font-extrabold font-mono text-[#005CE6] bg-white px-2.5 py-0.5 rounded-full shadow-xs border border-[#BCEBFC]">
-                92% Fresh
+                94% Fresh
               </span>
             </div>
 
-            {/* Launch Action (Chip UI Primary with Arrow) */}
+            {/* Launch Action */}
             <button
               onClick={handleBuildTest}
               disabled={isSubmitting || selectedTopics.length === 0}
-              className="w-full neu-chip-primary uppercase tracking-wider text-xs py-3.5 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full neu-chip-primary uppercase tracking-wider text-xs py-3.5 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer shadow-md"
             >
-              <span>{isSubmitting ? 'Freezing Bundle...' : 'Assemble & Freeze Test'}</span>
+              <span>
+                {isSubmitting
+                  ? 'Assembling Drill...'
+                  : feedbackMode === 'practice'
+                  ? 'Start Topic Practice Drill'
+                  : 'Assemble & Begin Exam'}
+              </span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
             <p className="text-[11px] text-center text-slate-400 leading-tight">
-              Pre-assembled server-side before the clock starts for zero runtime latency.
+              Pre-assembled server-side with zero runtime latency.
             </p>
           </div>
         </div>
       </main>
     </div>
+  );
+}
+
+export default function NewTestBuilderPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F7FDFF] flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#005CE6]" />
+        </div>
+      }
+    >
+      <TestBuilderForm />
+    </Suspense>
   );
 }

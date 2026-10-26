@@ -4,7 +4,7 @@ import { globalStore } from '@/lib/store';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { exam_id, mode, topics, question_count, duration_min, source_type, selected_qids } = body;
+    const { exam_id, mode, topics, question_count, duration_min, source_type, selected_qids, feedback_mode } = body;
 
     const test = globalStore.assembleTest({
       exam_id: exam_id || 'ibps-po-prelims-2026',
@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
       duration_min: duration_min ? Number(duration_min) : undefined,
       source_type: source_type || 'auto',
       selected_qids,
+      feedback_mode,
     });
 
     return NextResponse.json({

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/brand-logo';
@@ -33,6 +33,7 @@ import {
   Lightbulb,
   ArrowRight,
   Pencil,
+  RotateCcw,
 } from 'lucide-react';
 
 export default function ExamTestWindow() {
@@ -53,6 +54,12 @@ export default function ExamTestWindow() {
   const [reviewAttemptId, setReviewAttemptId] = useState<string>('');
   const [reviewQuestions, setReviewQuestions] = useState<any[]>([]);
   const [reviewSolutionTab, setReviewSolutionTab] = useState<'step' | 'shortcut' | 'traps'>('step');
+
+  // Practice & Learning Mode State
+  const [feedbackMode, setFeedbackMode] = useState<'exam' | 'practice'>('exam');
+  const isPracticeMode = feedbackMode === 'practice';
+  const [practiceSolutionTab, setPracticeSolutionTab] = useState<'step' | 'shortcut' | 'traps'>('step');
+  const [elapsedPracticeSeconds, setElapsedPracticeSeconds] = useState<number>(0);
 
   // Answers Map: qid -> { selected_option, state, time_spent }
   const [answers, setAnswers] = useState<
@@ -133,6 +140,9 @@ export default function ExamTestWindow() {
           const qList = data.bundle.sections[0]?.questions || [];
           setQuestions(qList);
           setExamName(data.bundle.exam_name || 'IBPS PO Prelims 2026');
+          if (data.bundle.feedback_mode === 'practice') {
+            setFeedbackMode('practice');
+          }
 
           // Initialize answer states
           const initAnswers: Record<string, { selectedOption?: string; state: PaletteState; timeSpent: number }> = {};
@@ -153,6 +163,9 @@ export default function ExamTestWindow() {
             const b = dataFallback.test.bundle;
             setQuestions(b.sections[0]?.questions || []);
             setExamName(b.exam_name || 'IBPS PO Prelims 2026');
+            if (b.feedback_mode === 'practice') {
+              setFeedbackMode('practice');
+            }
             setSecondsRemaining((b.duration_min || 20) * 60);
             setLoading(false);
           }
@@ -165,9 +178,9 @@ export default function ExamTestWindow() {
     initTest();
   }, [testId]);
 
-  // 2. Countdown Timer Loop (Auto-submit on expiry, disabled in review mode)
+  // 2. Countdown Timer Loop (Auto-submit on expiry, disabled in practice and review mode)
   useEffect(() => {
-    if (loading || isReviewMode || secondsRemaining <= 0) return;
+    if (loading || isReviewMode || isPracticeMode || secondsRemaining <= 0) return;
 
     const timer = setInterval(() => {
       setSecondsRemaining((prev) => {
@@ -181,7 +194,16 @@ export default function ExamTestWindow() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [loading, secondsRemaining]);
+  }, [loading, secondsRemaining, isPracticeMode, isReviewMode]);
+
+  // 3. Practice Mode Elapsed Stopwatch
+  useEffect(() => {
+    if (loading || isReviewMode || !isPracticeMode) return;
+    const timer = setInterval(() => {
+      setElapsedPracticeSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [loading, isReviewMode, isPracticeMode]);
 
   // Online / Offline monitor
   useEffect(() => {
@@ -364,6 +386,38 @@ export default function ExamTestWindow() {
     },
   };
 
+  // Practice Stats for Live Real-Time Dashboard
+  const practiceStats = useMemo(() => {
+    let answered = 0;
+    let correct = 0;
+    let wrong = 0;
+    questions.forEach((q) => {
+      const userOpt = answers[q.id]?.selectedOption;
+      if (userOpt) {
+        answered++;
+        if (q.correct_option && userOpt === q.correct_option) {
+          correct++;
+        } else if (q.correct_option) {
+          wrong++;
+        }
+      }
+    });
+    return {
+      answered,
+      correct,
+      wrong,
+      remaining: Math.max(0, questions.length - answered),
+    };
+  }, [questions, answers]);
+
+  // Practice Mode Option Select with Instant Persistence
+  const handleSelectOptionInPractice = (optId: string) => {
+    if (!currentQ) return;
+    const elapsed = getElapsedSeconds();
+    setSelectedOption(optId);
+    persistAnswer(currentQ.id, optId, 'answered', elapsed);
+  };
+
   // Reusable Question Palette Button Renderer
   const renderPaletteButton = (q: AssembledQuestion, idx: number) => {
     const isCurrent = idx === currentIdx;
@@ -394,6 +448,43 @@ export default function ExamTestWindow() {
           )}
         >
           {idx + 1}
+        </button>
+      );
+    }
+
+    if (isPracticeMode) {
+      const ans = answers[q.id];
+      const hasAnswered = !!ans?.selectedOption;
+      const isCorrect = hasAnswered && q.correct_option && ans.selectedOption === q.correct_option;
+      const isWrong = hasAnswered && q.correct_option && ans.selectedOption !== q.correct_option;
+
+      let style = "bg-[#F8FAFC] text-slate-700 border border-slate-200/90 hover:bg-[#F0FAFF] hover:border-[#60CEF8] shadow-2xs";
+      if (isCorrect) {
+        style = "bg-emerald-600 text-white font-bold border border-emerald-700 shadow-2xs";
+      } else if (isWrong) {
+        style = "bg-rose-500 text-white font-bold border border-rose-600 shadow-2xs";
+      }
+
+      return (
+        <button
+          key={q.id}
+          onClick={() => {
+            handlePaletteJump(idx);
+            setIsMobilePaletteOpen(false);
+          }}
+          className={cn(
+            "h-10 w-full rounded-xl font-mono text-xs font-semibold flex items-center justify-center transition-all cursor-pointer relative",
+            style,
+            isCurrent && "border-2 border-[#005CE6] ring-2 ring-[#005CE6]/30 font-black shadow-xs scale-105"
+          )}
+        >
+          {idx + 1}
+          {isCorrect && (
+            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-300 ring-1 ring-white" />
+          )}
+          {isWrong && (
+            <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-300 ring-1 ring-white" />
+          )}
         </button>
       );
     }
@@ -478,28 +569,40 @@ export default function ExamTestWindow() {
           </div>
         </div>
 
-        {/* Center: Authoritative Sectional Countdown Clock */}
+        {/* Center: Authoritative Sectional Countdown Clock OR Practice Stopwatch */}
         <div className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-blue-100">
-            <Clock className="w-4 h-4 text-white" />
-            <span>Time Left:</span>
+            <Clock className={cn("w-4 h-4", isPracticeMode ? "text-amber-300" : "text-white")} />
+            <span>{isPracticeMode ? 'Elapsed:' : 'Time Left:'}</span>
           </div>
           <div
             className={cn(
               "font-mono text-sm sm:text-base font-bold tabular-nums px-3.5 py-1 rounded-xl border transition-all shadow-xs",
-              isRed
+              isPracticeMode
+                ? "bg-white text-slate-900 border-blue-200"
+                : isRed
                 ? "bg-rose-500 text-white border-rose-400 animate-pulse"
                 : isAmber
                 ? "bg-amber-400 text-slate-950 border-amber-300 font-extrabold"
                 : "bg-white text-slate-900 border-blue-200"
             )}
           >
-            {formatTimer(secondsRemaining)}
+            {formatTimer(isPracticeMode ? elapsedPracticeSeconds : secondsRemaining)}
           </div>
         </div>
 
-        {/* Right: Candidate Details */}
+        {/* Right: Candidate Details & Finish Action */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {isPracticeMode && (
+            <button
+              onClick={() => setShowSubmitModal(true)}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs border border-white/30 transition-colors cursor-pointer shadow-2xs"
+            >
+              <span>Finish Drill</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          )}
+
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-white text-[#005CE6] font-extrabold text-xs flex items-center justify-center shadow-xs">
               SM
@@ -520,37 +623,41 @@ export default function ExamTestWindow() {
         </div>
       </header>
 
-      {/* 2. SECTION TABS BAR (Official Bank Prelims 3-Section Format) */}
+      {/* 2. SECTION TABS BAR */}
       <div className="h-11 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between z-20 text-xs">
         <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
           <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-2 hidden sm:inline">
-            Sections:
+            {isPracticeMode ? 'Drill Mode:' : 'Sections:'}
           </span>
 
-          {/* Active Section: Quantitative Aptitude */}
+          {/* Active Section */}
           <button
             className="px-3.5 py-1 rounded-md bg-[#005CE6] text-white font-bold flex items-center gap-1.5 shadow-2xs shrink-0"
           >
-            <span>Quantitative Aptitude ({questions.length})</span>
+            <span>{isPracticeMode ? 'Topic Practice Drill' : 'Quantitative Aptitude'} ({questions.length})</span>
           </button>
 
-          {/* Locked Section 2: Reasoning Ability */}
-          <div
-            className="px-3 py-1 rounded-md bg-slate-100 text-slate-400 font-medium flex items-center gap-1.5 border border-slate-200 shrink-0 cursor-not-allowed opacity-80"
-            title="Section locked: Complete Quantitative Aptitude section first"
-          >
-            <Lock className="w-3 h-3 text-slate-400" />
-            <span>Reasoning (35)</span>
-          </div>
+          {!isPracticeMode && (
+            <>
+              {/* Locked Section 2: Reasoning Ability */}
+              <div
+                className="px-3 py-1 rounded-md bg-slate-100 text-slate-400 font-medium flex items-center gap-1.5 border border-slate-200 shrink-0 cursor-not-allowed opacity-80"
+                title="Section locked: Complete Quantitative Aptitude section first"
+              >
+                <Lock className="w-3 h-3 text-slate-400" />
+                <span>Reasoning (35)</span>
+              </div>
 
-          {/* Locked Section 3: English Language */}
-          <div
-            className="px-3 py-1 rounded-md bg-slate-100 text-slate-400 font-medium flex items-center gap-1.5 border border-slate-200 shrink-0 cursor-not-allowed opacity-80"
-            title="Section locked: Complete Quantitative Aptitude section first"
-          >
-            <Lock className="w-3 h-3 text-slate-400" />
-            <span>English (30)</span>
-          </div>
+              {/* Locked Section 3: English Language */}
+              <div
+                className="px-3 py-1 rounded-md bg-slate-100 text-slate-400 font-medium flex items-center gap-1.5 border border-slate-200 shrink-0 cursor-not-allowed opacity-80"
+                title="Section locked: Complete Quantitative Aptitude section first"
+              >
+                <Lock className="w-3 h-3 text-slate-400" />
+                <span>English (30)</span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Section Utilities: Question Paper & Instructions */}
@@ -590,11 +697,17 @@ export default function ExamTestWindow() {
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#005CE6]/10 text-[#005CE6] font-bold text-xs">
-                      <span>Question {currentIdx + 1}</span>
+                      <span>Question {currentIdx + 1} of {questions.length}</span>
                     </span>
                     <span className="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 font-medium text-[11px] capitalize border border-slate-200/50">
                       {currentQ.topic_id.replace(/-/g, ' ')}
                     </span>
+                    {isPracticeMode && (
+                      <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 font-bold text-[10px] border border-amber-200 flex items-center gap-1">
+                        <Lightbulb className="w-3 h-3 text-amber-600" />
+                        <span>Practice Drill</span>
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold">
@@ -610,6 +723,22 @@ export default function ExamTestWindow() {
                       ) : (
                         <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-bold text-xs border border-slate-200">
                           0.00 Marks (Skipped)
+                        </span>
+                      )
+                    ) : isPracticeMode ? (
+                      selectedOption ? (
+                        selectedOption === currentQ.correct_option ? (
+                          <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center gap-1 border border-emerald-200">
+                            <Check className="w-3 h-3 stroke-[3]" /> Correct (+1.00)
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold text-xs flex items-center gap-1 border border-rose-200">
+                            <X className="w-3 h-3 stroke-[3]" /> Incorrect (0.00)
+                          </span>
+                        )
+                      ) : (
+                        <span className="px-2.5 py-0.5 rounded-md bg-blue-50 text-[#005CE6] border border-blue-200 font-medium">
+                          Select option for instant answer
                         </span>
                       )
                     ) : (
@@ -714,11 +843,66 @@ export default function ExamTestWindow() {
                       );
                     }
 
+                    if (isPracticeMode && selectedOption) {
+                      const isCorrect = opt.id === currentQ.correct_option;
+                      const isUserSelected = opt.id === selectedOption;
+
+                      return (
+                        <div
+                          key={opt.id}
+                          className={cn(
+                            "px-3.5 py-2.5 rounded-xl border flex items-center justify-between transition-all select-none text-xs sm:text-[13.5px]",
+                            isCorrect
+                              ? "border-emerald-400 bg-emerald-50/80 font-semibold text-emerald-950 ring-1 ring-emerald-300 shadow-2xs"
+                              : isUserSelected
+                              ? "border-rose-400 bg-rose-50/80 font-semibold text-rose-950 ring-1 ring-rose-300 shadow-2xs"
+                              : "border-slate-200 bg-white/70 opacity-75 text-slate-600 hover:opacity-100"
+                          )}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span
+                              className={cn(
+                                "w-6 h-6 rounded-md flex items-center justify-center font-bold text-xs font-mono uppercase shrink-0",
+                                isCorrect
+                                  ? "bg-emerald-600 text-white"
+                                  : isUserSelected
+                                  ? "bg-rose-600 text-white"
+                                  : "bg-slate-100 text-slate-600"
+                              )}
+                            >
+                              {opt.id}
+                            </span>
+                            <div className="font-medium leading-snug">
+                              <MathRenderer content={opt.text} />
+                            </div>
+                          </div>
+                          <div className="shrink-0 pl-2">
+                            {isCorrect && (
+                              <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100/90 px-2 py-0.5 rounded-full flex items-center gap-1 border border-emerald-200">
+                                <Check className="w-3 h-3 stroke-[3]" /> Correct Key
+                              </span>
+                            )}
+                            {isUserSelected && !isCorrect && (
+                              <span className="text-[11px] font-bold text-rose-700 bg-rose-100/90 px-2 py-0.5 rounded-full flex items-center gap-1 border border-rose-200">
+                                <X className="w-3 h-3 stroke-[3]" /> Your Choice
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+
                     const isSelected = selectedOption === opt.id;
                     return (
                       <div
                         key={opt.id}
-                        onClick={() => setSelectedOption(opt.id)}
+                        onClick={() => {
+                          if (isPracticeMode) {
+                            handleSelectOptionInPractice(opt.id);
+                          } else {
+                            setSelectedOption(opt.id);
+                          }
+                        }}
                         className={cn(
                           "group px-3.5 py-2.5 rounded-xl border flex items-center gap-3 cursor-pointer transition-all select-none text-xs sm:text-[13.5px]",
                           isSelected
@@ -758,6 +942,120 @@ export default function ExamTestWindow() {
                     );
                   })}
                 </div>
+
+                {/* IN PRACTICE MODE: Instant Tabbed Solution Drawer */}
+                {isPracticeMode && selectedOption && (currentQ.solution || currentQ.shortcut) && (
+                  <div className="mt-4 pt-3 border-t border-slate-100 space-y-3 animate-in fade-in duration-200">
+                    {/* Status Alert Banner */}
+                    <div className={cn(
+                      "p-3 rounded-xl border flex items-center justify-between text-xs",
+                      selectedOption === currentQ.correct_option
+                        ? "bg-emerald-50/90 border-emerald-200 text-emerald-900"
+                        : "bg-rose-50/90 border-rose-200 text-rose-900"
+                    )}>
+                      <div className="flex items-center gap-2 font-bold">
+                        {selectedOption === currentQ.correct_option ? (
+                          <>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                            <span>Correct! +1.00 Mark awarded.</span>
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="w-4 h-4 text-rose-600" />
+                            <span>Incorrect. Correct answer is Option {currentQ.correct_option?.toUpperCase()}.</span>
+                          </>
+                        )}
+                      </div>
+                      <span className="text-[11px] font-medium text-slate-500">
+                        {selectedOption === currentQ.correct_option ? 'Concept verified' : 'Review derivation below'}
+                      </span>
+                    </div>
+
+                    {/* Solution Tabs */}
+                    <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100/90 border border-slate-200/60 w-fit text-xs">
+                      <button
+                        onClick={() => setPracticeSolutionTab('step')}
+                        className={cn(
+                          "px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                          practiceSolutionTab === 'step'
+                            ? "bg-white text-[#005CE6] shadow-2xs"
+                            : "text-slate-600 hover:text-slate-900"
+                        )}
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Step-by-Step Derivation</span>
+                      </button>
+
+                      {currentQ.shortcut && (
+                        <button
+                          onClick={() => setPracticeSolutionTab('shortcut')}
+                          className={cn(
+                            "px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                            practiceSolutionTab === 'shortcut'
+                              ? "bg-white text-amber-900 shadow-2xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          )}
+                        >
+                          <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Speed Shortcut</span>
+                        </button>
+                      )}
+
+                      {currentQ.option_rationales && (
+                        <button
+                          onClick={() => setPracticeSolutionTab('traps')}
+                          className={cn(
+                            "px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                            practiceSolutionTab === 'traps'
+                              ? "bg-white text-slate-900 shadow-2xs"
+                              : "text-slate-600 hover:text-slate-900"
+                          )}
+                        >
+                          <Layers className="w-3.5 h-3.5 text-[#0096D6]" />
+                          <span>Trap Diagnosis</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Tab Contents */}
+                    {practiceSolutionTab === 'step' && currentQ.solution && (
+                      <div className="p-3.5 rounded-xl bg-[#F0FAFF] border border-[#BCEBFC] space-y-1.5 text-xs text-slate-800 leading-relaxed animate-in fade-in duration-150">
+                        <div className="font-bold text-[#005CE6] text-[11px] uppercase tracking-wider">
+                          Official Mathematical Breakdown
+                        </div>
+                        <div className="leading-relaxed">
+                          <MathRenderer content={currentQ.solution} />
+                        </div>
+                      </div>
+                    )}
+
+                    {practiceSolutionTab === 'shortcut' && currentQ.shortcut && (
+                      <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 space-y-1 text-xs leading-relaxed animate-in fade-in duration-150">
+                        <div className="font-bold text-amber-900 text-[11px] uppercase tracking-wider flex items-center gap-1">
+                          <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+                          <span>Exam Speed Shortcut (15–20 Seconds)</span>
+                        </div>
+                        <p className="leading-relaxed">{currentQ.shortcut}</p>
+                      </div>
+                    )}
+
+                    {practiceSolutionTab === 'traps' && currentQ.option_rationales && (
+                      <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs animate-in fade-in duration-150">
+                        <div className="font-bold text-slate-800 text-[11px] uppercase tracking-wider">
+                          Option Trap Breakdown
+                        </div>
+                        <div className="space-y-1.5">
+                          {Object.entries(currentQ.option_rationales).map(([optId, rationale]: [string, any]) => (
+                            <div key={optId} className="flex items-start gap-2 text-slate-600 text-[11.5px]">
+                              <span className="font-mono font-bold uppercase text-slate-900 shrink-0">Option {optId}:</span>
+                              <span>{rationale}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* In Review Mode: Compact Tabbed Solution Drawer */}
                 {isReviewMode && currentRevQ && (
@@ -848,9 +1146,59 @@ export default function ExamTestWindow() {
                 )}
               </div>
 
-              {/* CARD ACTION FOOTER (Integrated inside the card seamlessly) */}
+              {/* CARD ACTION FOOTER */}
               <div className="px-4 sm:px-5 py-2.5 bg-slate-50/90 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
-                {isReviewMode ? (
+                {isPracticeMode ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      {selectedOption && (
+                        <button
+                          onClick={handleClearResponse}
+                          className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                          <span>Try Again</span>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => setShowScratchpad(!showScratchpad)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+                      >
+                        <Pencil className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Rough Scratchpad</span>
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
+                        disabled={currentIdx === 0}
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 transition-colors cursor-pointer shadow-2xs flex items-center gap-1"
+                      >
+                        <ChevronLeft className="w-3.5 h-3.5" />
+                        <span>Previous</span>
+                      </button>
+
+                      {currentIdx < questions.length - 1 ? (
+                        <button
+                          onClick={() => setCurrentIdx((prev) => prev + 1)}
+                          className="neu-chip-primary px-4 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        >
+                          <span>Next Question</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setShowSubmitModal(true)}
+                          className="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        >
+                          <span>Finish Practice Drill</span>
+                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </button>
+                      )}
+                    </div>
+                  </>
+                ) : isReviewMode ? (
                   <>
                     <Link
                       href={`/tests/result/${reviewAttemptId}`}
@@ -933,65 +1281,108 @@ export default function ExamTestWindow() {
         <aside className="w-80 bg-white border-l border-slate-200 p-4 sm:p-5 hidden lg:flex flex-col justify-between shrink-0 z-20">
           <div className="space-y-4">
             {/* Status Summary & Counts Card */}
-            <div className="p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/80 space-y-2.5">
-              <div className="flex items-center justify-between text-xs font-bold text-slate-800">
-                <span>Question Status</span>
-                <span className="font-mono text-[11px] font-semibold text-[#005CE6] bg-[#005CE6]/10 px-2 py-0.5 rounded-md border border-[#005CE6]/20">
-                  {counts.answered} / {questions.length} Attempted
-                </span>
-              </div>
-
-              {/* Progress bar */}
-              <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
-                <div
-                  className="bg-[#005CE6] h-1.5 rounded-full transition-all duration-300"
-                  style={{ width: `${questions.length > 0 ? (counts.answered / questions.length) * 100 : 0}%` }}
-                />
-              </div>
-
-              {/* 5 Status Legend Chips */}
-              <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600 pt-0.5">
-                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
-                  <span className="w-5 h-5 rounded-md bg-emerald-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-                    {counts.answered}
+            {isPracticeMode ? (
+              <div className="p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/80 space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                  <span>Drill Progress</span>
+                  <span className="font-mono text-[11px] font-semibold text-[#005CE6] bg-[#005CE6]/10 px-2 py-0.5 rounded-md border border-[#005CE6]/20">
+                    {practiceStats.answered} / {questions.length} Practiced
                   </span>
-                  <span className="truncate font-medium">Answered</span>
                 </div>
 
-                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
-                  <span className="w-5 h-5 rounded-md bg-rose-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-                    {counts.not_answered}
-                  </span>
-                  <span className="truncate font-medium">Not Answered</span>
+                {/* Progress bar */}
+                <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className="bg-[#005CE6] h-1.5 rounded-full transition-all duration-300"
+                    style={{ width: `${questions.length > 0 ? (practiceStats.answered / questions.length) * 100 : 0}%` }}
+                  />
                 </div>
 
-                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
-                  <span className="w-5 h-5 rounded-md bg-slate-200 text-slate-700 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-                    {counts.not_visited}
-                  </span>
-                  <span className="truncate font-medium">Not Visited</span>
-                </div>
-
-                <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
-                  <span className="w-5 h-5 rounded-md bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
-                    {counts.marked_for_review}
-                  </span>
-                  <span className="truncate font-medium">Review</span>
-                </div>
-
-                <div className="col-span-2 flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
-                  <div className="relative shrink-0">
-                    <span className="w-5 h-5 rounded-md bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center">
-                      {counts.answered_and_marked}
+                {/* Practice Status Chips */}
+                <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600 pt-0.5">
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-emerald-50 border border-emerald-200/70 shadow-2xs">
+                    <span className="w-5 h-5 rounded-md bg-emerald-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {practiceStats.correct}
                     </span>
-                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-white" />
+                    <span className="truncate font-semibold text-emerald-900">Correct</span>
                   </div>
-                  <span className="text-[10px] text-slate-600 truncate font-medium">
-                    Ans &amp; Review (Evaluated)
-                  </span>
+
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-rose-50 border border-rose-200/70 shadow-2xs">
+                    <span className="w-5 h-5 rounded-md bg-rose-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {practiceStats.wrong}
+                    </span>
+                    <span className="truncate font-semibold text-rose-900">Review</span>
+                  </div>
+
+                  <div className="col-span-2 flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                    <span className="w-5 h-5 rounded-md bg-slate-200 text-slate-700 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {practiceStats.remaining}
+                    </span>
+                    <span className="truncate font-medium text-slate-600">Remaining to Practice</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/80 space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                  <span>Question Status</span>
+                  <span className="font-mono text-[11px] font-semibold text-[#005CE6] bg-[#005CE6]/10 px-2 py-0.5 rounded-md border border-[#005CE6]/20">
+                    {counts.answered} / {questions.length} Attempted
+                  </span>
+                </div>
+
+                {/* Progress bar */}
+                <div className="w-full bg-slate-200/80 rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className="bg-[#005CE6] h-1.5 rounded-full transition-all duration-300"
+                    style={{ width: `${questions.length > 0 ? (counts.answered / questions.length) * 100 : 0}%` }}
+                  />
+                </div>
+
+                {/* 5 Status Legend Chips */}
+                <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600 pt-0.5">
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                    <span className="w-5 h-5 rounded-md bg-emerald-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {counts.answered}
+                    </span>
+                    <span className="truncate font-medium">Answered</span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                    <span className="w-5 h-5 rounded-md bg-rose-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {counts.not_answered}
+                    </span>
+                    <span className="truncate font-medium">Not Answered</span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                    <span className="w-5 h-5 rounded-md bg-slate-200 text-slate-700 font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {counts.not_visited}
+                    </span>
+                    <span className="truncate font-medium">Not Visited</span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                    <span className="w-5 h-5 rounded-md bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0">
+                      {counts.marked_for_review}
+                    </span>
+                    <span className="truncate font-medium">Review</span>
+                  </div>
+
+                  <div className="col-span-2 flex items-center gap-1.5 p-1.5 rounded-lg bg-white border border-slate-200/70 shadow-2xs">
+                    <div className="relative shrink-0">
+                      <span className="w-5 h-5 rounded-md bg-purple-600 text-white font-mono text-[10px] font-bold flex items-center justify-center">
+                        {counts.answered_and_marked}
+                      </span>
+                      <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-white" />
+                    </div>
+                    <span className="text-[10px] text-slate-600 truncate font-medium">
+                      Ans &amp; Review (Evaluated)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* 5-Column Question Grid */}
             <div className="space-y-1.5">
@@ -1007,7 +1398,14 @@ export default function ExamTestWindow() {
 
           {/* Submit Exam Button or Back to Scorecard */}
           <div className="pt-3 border-t border-slate-100">
-            {isReviewMode ? (
+            {isPracticeMode ? (
+              <button
+                onClick={() => setShowSubmitModal(true)}
+                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-xs hover:shadow text-center block"
+              >
+                Finish Drill &amp; Score
+              </button>
+            ) : isReviewMode ? (
               <Link
                 href={`/tests/result/${reviewAttemptId}`}
                 className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm text-center block"
@@ -1115,16 +1513,20 @@ export default function ExamTestWindow() {
         </div>
       )}
 
-      {/* MODAL 3: OFFICIAL SUBMISSION CONFIRMATION MODAL */}
+      {/* MODAL 3: SUBMISSION CONFIRMATION MODAL */}
       {showSubmitModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 space-y-4 shadow-2xl animate-in fade-in duration-150">
-            <h2 className="text-base font-bold text-slate-900">Exam Submission Summary</h2>
+            <h2 className="text-base font-bold text-slate-900">
+              {isPracticeMode ? 'Finish Topic Practice Drill' : 'Exam Submission Summary'}
+            </h2>
             <p className="text-xs text-slate-500">
-              Please review your question response statistics before final submission.
+              {isPracticeMode
+                ? 'Review your practice statistics before finalizing your session and opening the performance scorecard.'
+                : 'Please review your question response statistics before final submission.'}
             </p>
 
-            {/* Official Exam Summary Table */}
+            {/* Official Summary Table */}
             <div className="rounded-xl border border-slate-200 overflow-hidden text-xs">
               <table className="w-full text-left border-collapse">
                 <tbody>
@@ -1132,26 +1534,49 @@ export default function ExamTestWindow() {
                     <td className="p-2.5 font-medium text-slate-700">Total Questions</td>
                     <td className="p-2.5 font-bold font-mono text-slate-900 text-right">{questions.length}</td>
                   </tr>
-                  <tr className="border-b border-slate-100">
-                    <td className="p-2.5 font-medium text-emerald-700">Answered</td>
-                    <td className="p-2.5 font-bold font-mono text-emerald-800 text-right">{counts.answered}</td>
-                  </tr>
-                  <tr className="border-b border-slate-100">
-                    <td className="p-2.5 font-medium text-rose-700">Not Answered</td>
-                    <td className="p-2.5 font-bold font-mono text-rose-800 text-right">{counts.not_answered}</td>
-                  </tr>
-                  <tr className="border-b border-slate-100">
-                    <td className="p-2.5 font-medium text-purple-700">Marked for Review</td>
-                    <td className="p-2.5 font-bold font-mono text-purple-800 text-right">{counts.marked_for_review}</td>
-                  </tr>
-                  <tr className="border-b border-slate-100">
-                    <td className="p-2.5 font-medium text-purple-900">Ans &amp; Marked for Review (Evaluated)</td>
-                    <td className="p-2.5 font-bold font-mono text-purple-900 text-right">{counts.answered_and_marked}</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2.5 font-medium text-slate-500">Not Visited</td>
-                    <td className="p-2.5 font-bold font-mono text-slate-700 text-right">{counts.not_visited}</td>
-                  </tr>
+                  {isPracticeMode ? (
+                    <>
+                      <tr className="border-b border-slate-100">
+                        <td className="p-2.5 font-medium text-emerald-700">Correctly Answered (+1.00)</td>
+                        <td className="p-2.5 font-bold font-mono text-emerald-800 text-right">{practiceStats.correct}</td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="p-2.5 font-medium text-rose-700">Review Needed (0.00)</td>
+                        <td className="p-2.5 font-bold font-mono text-rose-800 text-right">{practiceStats.wrong}</td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="p-2.5 font-medium text-slate-500">Remaining Unanswered</td>
+                        <td className="p-2.5 font-bold font-mono text-slate-700 text-right">{practiceStats.remaining}</td>
+                      </tr>
+                      <tr>
+                        <td className="p-2.5 font-medium text-slate-700">Elapsed Practice Time</td>
+                        <td className="p-2.5 font-bold font-mono text-[#005CE6] text-right">{formatTimer(elapsedPracticeSeconds)}</td>
+                      </tr>
+                    </>
+                  ) : (
+                    <>
+                      <tr className="border-b border-slate-100">
+                        <td className="p-2.5 font-medium text-emerald-700">Answered</td>
+                        <td className="p-2.5 font-bold font-mono text-emerald-800 text-right">{counts.answered}</td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="p-2.5 font-medium text-rose-700">Not Answered</td>
+                        <td className="p-2.5 font-bold font-mono text-rose-800 text-right">{counts.not_answered}</td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="p-2.5 font-medium text-purple-700">Marked for Review</td>
+                        <td className="p-2.5 font-bold font-mono text-purple-800 text-right">{counts.marked_for_review}</td>
+                      </tr>
+                      <tr className="border-b border-slate-100">
+                        <td className="p-2.5 font-medium text-purple-900">Ans &amp; Marked for Review (Evaluated)</td>
+                        <td className="p-2.5 font-bold font-mono text-purple-900 text-right">{counts.answered_and_marked}</td>
+                      </tr>
+                      <tr>
+                        <td className="p-2.5 font-medium text-slate-500">Not Visited</td>
+                        <td className="p-2.5 font-bold font-mono text-slate-700 text-right">{counts.not_visited}</td>
+                      </tr>
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1161,13 +1586,16 @@ export default function ExamTestWindow() {
                 onClick={() => setShowSubmitModal(false)}
                 className="w-1/2 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold cursor-pointer"
               >
-                Return to Exam
+                {isPracticeMode ? 'Continue Practice' : 'Return to Exam'}
               </button>
               <button
                 onClick={() => handleSubmitTest(false)}
-                className="w-1/2 py-2.5 rounded-xl bg-[#005CE6] hover:bg-blue-700 text-white text-xs font-bold cursor-pointer shadow-xs"
+                className={cn(
+                  "w-1/2 py-2.5 rounded-xl text-white text-xs font-bold cursor-pointer shadow-xs",
+                  isPracticeMode ? "bg-emerald-600 hover:bg-emerald-700" : "bg-[#005CE6] hover:bg-blue-700"
+                )}
               >
-                Yes, Submit Final
+                {isPracticeMode ? 'Score Drill' : 'Yes, Submit Final'}
               </button>
             </div>
           </div>

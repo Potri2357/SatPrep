@@ -50,6 +50,31 @@ export default function ResultAnalysisPage() {
   const [reportText, setReportText] = useState<string>('');
   const [reportSubmitted, setReportSubmitted] = useState<boolean>(false);
 
+  // Deduplicate questions by stem to ensure zero repetition in questions review (Unconditionally top-level)
+  const uniqueQuestionsReview = React.useMemo(() => {
+    if (!snapshot?.questions_review) return [];
+    const seen = new Set<string>();
+    const list: typeof snapshot.questions_review = [];
+    snapshot.questions_review.forEach((q) => {
+      const stemNorm = q.stem.trim();
+      if (!seen.has(stemNorm)) {
+        seen.add(stemNorm);
+        list.push({ ...q, position: list.length + 1 });
+      }
+    });
+    return list;
+  }, [snapshot?.questions_review]);
+
+  const filteredQuestions = React.useMemo(() => {
+    return uniqueQuestionsReview.filter((q) => {
+      if (filter === 'correct') return q.is_correct;
+      if (filter === 'wrong') return !q.is_correct && !!q.your_answer;
+      if (filter === 'skipped') return !q.your_answer;
+      if (filter === 'slow') return q.time_taken_sec > q.ideal_time_sec;
+      return true;
+    });
+  }, [uniqueQuestionsReview, filter]);
+
   useEffect(() => {
     let isMounted = true;
     let fetchedSnapshot: ResultSnapshot | null = null;
@@ -149,7 +174,7 @@ export default function ResultAnalysisPage() {
     }
   };
 
-  if (loading || !snapshot) {
+  if (loading) {
     const steps = [
       { num: 1, title: 'Aggregating Section Responses', desc: 'Verified candidate submissions & autosave records' },
       { num: 2, title: 'Applying Scoring Scheme', desc: '+1.00 for correct, -0.25 negative marking deduction' },
@@ -246,30 +271,36 @@ export default function ResultAnalysisPage() {
     );
   }
 
+  if (!snapshot) {
+    return (
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between text-[#0F172A]">
+        <Navbar />
+        <main className="max-w-md mx-auto w-full pt-16 pb-12 px-4 text-center space-y-6 my-auto">
+          <div className="w-16 h-16 rounded-3xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center mx-auto">
+            <AlertTriangle className="w-8 h-8" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-slate-900">Scorecard Not Available</h1>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              We couldn&apos;t load the specified attempt data. You can view our verified benchmark exam results.
+            </p>
+          </div>
+          <Link
+            href="/tests/result/sample-attempt-1"
+            className="px-6 py-3 rounded-2xl bg-[#005CE6] text-white font-bold text-xs sm:text-sm shadow-md inline-flex items-center gap-2"
+          >
+            <span>View Verified Benchmark Results</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </main>
+        <footer className="py-6 text-xs text-center text-slate-400">
+          SatPrep &bull; Official Examination Analytics
+        </footer>
+      </div>
+    );
+  }
+
   const sc = snapshot.score_card;
-
-  // Deduplicate questions by stem to ensure zero repetition in questions review
-  const uniqueQuestionsReview = React.useMemo(() => {
-    if (!snapshot?.questions_review) return [];
-    const seen = new Set<string>();
-    const list: typeof snapshot.questions_review = [];
-    snapshot.questions_review.forEach((q) => {
-      const stemNorm = q.stem.trim();
-      if (!seen.has(stemNorm)) {
-        seen.add(stemNorm);
-        list.push({ ...q, position: list.length + 1 });
-      }
-    });
-    return list;
-  }, [snapshot?.questions_review]);
-
-  const filteredQuestions = uniqueQuestionsReview.filter((q) => {
-    if (filter === 'correct') return q.is_correct;
-    if (filter === 'wrong') return !q.is_correct && !!q.your_answer;
-    if (filter === 'skipped') return !q.your_answer;
-    if (filter === 'slow') return q.time_taken_sec > q.ideal_time_sec;
-    return true;
-  });
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col text-slate-800 relative overflow-hidden">
@@ -296,18 +327,18 @@ export default function ResultAnalysisPage() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/tests/new"
+              href="/tests"
               className="neu-chip-primary text-xs"
             >
               <Zap className="w-3.5 h-3.5" />
-              <span>Build Next Calibrated Test</span>
+              <span>Take Another Mock Test</span>
             </Link>
             <Link
               href="/practice"
               className="chip-btn text-xs"
             >
               <Bookmark className="w-3.5 h-3.5 text-[#2563EB]" />
-              <span>Practice Weak Areas</span>
+              <span>Drill Weak Areas (Topic Practice)</span>
             </Link>
           </div>
         </div>

@@ -630,6 +630,7 @@ class SatPrepStore {
     duration_min?: number;
     difficulty_mix?: string;
     selected_qids?: string[];
+    feedback_mode?: 'exam' | 'practice';
   }): TestRecord {
     const testId = `test-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     const exam = INITIAL_EXAMS.find((e) => e.id === config.exam_id) || INITIAL_EXAMS[0];
@@ -693,6 +694,8 @@ class SatPrepStore {
       }
     }
 
+    const feedbackMode: 'exam' | 'practice' = config.feedback_mode || (config.mode === 'topic_test' ? 'practice' : 'exam');
+
     // Freeze bundle with unique instance IDs to prevent React key collisions and answer crosstalk
     const assembledQuestions = selected.map((q, idx) => {
       const instanceId = `${q.id}-inst-${idx + 1}`;
@@ -711,7 +714,11 @@ class SatPrepStore {
         difficulty: q.difficulty_assigned,
         stimulus: q.stimulus,
         marks_positive: 1.0,
-        marks_negative: 0.25,
+        marks_negative: feedbackMode === 'practice' ? 0 : 0.25,
+        solution: feedbackMode === 'practice' ? (originalKey?.solution || 'Step-by-step breakdown available in review.') : undefined,
+        shortcut: feedbackMode === 'practice' ? originalKey?.shortcut : undefined,
+        correct_option: feedbackMode === 'practice' ? originalKey?.correct_option : undefined,
+        option_rationales: feedbackMode === 'practice' ? originalKey?.option_rationales : undefined,
       };
     });
 
@@ -727,13 +734,14 @@ class SatPrepStore {
     const bundle: FrozenTestBundle = {
       test_id: testId,
       assembled_at: new Date().toISOString(),
-      exam_name: exam.name,
+      exam_name: feedbackMode === 'practice' ? `${exam.name} · Topic Practice Drill` : exam.name,
       duration_min: testDuration,
       total_questions: assembledQuestions.length,
       total_marks: assembledQuestions.length * 1.0,
-      negative_marks: 0.25,
+      negative_marks: feedbackMode === 'practice' ? 0 : 0.25,
       section_lock: true,
       freshness_percent: 92,
+      feedback_mode: feedbackMode,
       sections: [
         {
           id: 'quant-section-1',
@@ -756,6 +764,7 @@ class SatPrepStore {
         source_type: config.source_type || 'auto',
         topics: config.topics,
         question_count: config.question_count,
+        feedback_mode: feedbackMode,
       },
       status: 'ready',
       bundle,
@@ -898,6 +907,8 @@ class SatPrepStore {
     };
     const timeAnalysis: ResultSnapshot['time_analysis'] = [];
 
+    const isPractice = test.bundle.feedback_mode === 'practice';
+
     questions.forEach((q, idx) => {
       const ans = userAnswers.get(q.id);
       const key = this.keys.get(q.id);
@@ -925,7 +936,9 @@ class SatPrepStore {
           difficultyStats[q.difficulty].correct++;
         } else {
           wrong++;
-          totalScore -= 0.25;
+          if (!isPractice) {
+            totalScore -= 0.25;
+          }
           qResult = 'wrong';
         }
       } else {
@@ -1017,7 +1030,7 @@ class SatPrepStore {
         correct,
         wrong,
         skipped,
-        negative_marks_lost: wrong * 0.25,
+        negative_marks_lost: isPractice ? 0 : wrong * 0.25,
         accuracy_percent: accuracyPercent,
         total_time_spent_sec: totalTimeSpent,
         percentile: 88.4,

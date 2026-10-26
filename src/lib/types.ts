@@ -114,6 +114,7 @@ export interface TestConfig {
   difficulty_mix?: 'easy' | 'moderate' | 'hard' | 'mixed' | 'exam_like';
   selected_qids?: string[];
   fresh_only?: boolean;
+  feedback_mode?: 'exam' | 'practice';
 }
 
 export interface AssembledQuestion {
@@ -128,6 +129,10 @@ export interface AssembledQuestion {
   stimulus?: Stimulus;
   marks_positive: number;
   marks_negative: number;
+  solution?: string;
+  shortcut?: string;
+  correct_option?: string;
+  option_rationales?: Record<string, string>;
 }
 
 export interface FrozenTestBundle {
@@ -140,6 +145,7 @@ export interface FrozenTestBundle {
   negative_marks: number;
   section_lock: boolean;
   freshness_percent: number;
+  feedback_mode?: 'exam' | 'practice';
   sections: {
     id: string;
     name: string;

@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Navbar, CandidateAvatar } from '@/components/navbar';
 import { BrandLogo } from '@/components/brand-logo';
+import { cn } from '@/lib/utils';
 import {
   Check,
   ShieldCheck,
@@ -20,6 +21,7 @@ import {
   ChevronLeft,
   Loader2,
   WifiOff,
+  Lightbulb,
 } from 'lucide-react';
 
 export default function ExamInstructionsPage() {
@@ -162,6 +164,8 @@ export default function ExamInstructionsPage() {
   const questionCount = testData?.bundle?.total_questions || 10;
   const totalMarks = testData?.bundle?.total_marks || questionCount;
 
+  const isPracticeMode = testData?.bundle?.feedback_mode === 'practice' || testData?.config?.feedback_mode === 'practice';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F0F6FF] via-[#F8FAFC] to-[#EFF6FF] flex flex-col justify-between text-[#0F172A] relative selection:bg-[#2563EB] selection:text-white">
       {/* Decorative ambient background glows */}
@@ -180,28 +184,32 @@ export default function ExamInstructionsPage() {
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF]">
                 <Award className="w-3.5 h-3.5 text-[#2563EB]" />
-                <span>Official Examination Pattern</span>
+                <span>{isPracticeMode ? 'Topic Practice & Instant Solutions Drill' : 'Official Examination Pattern'}</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
                 {examName}
               </h1>
               <p className="text-xs text-slate-500 font-medium">
-                Quantitative Aptitude &amp; Data Interpretation Paper
+                {isPracticeMode ? 'Instant Step-by-Step Derivations & Speed Shortcuts' : 'Quantitative Aptitude & Data Interpretation Paper'}
               </p>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
               <div className="px-4 py-3 rounded-2xl neu-pill text-center">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Duration</span>
-                <span className="text-base font-extrabold font-mono text-[#2563EB]">{durationMin} Mins</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Mode</span>
+                <span className="text-base font-extrabold font-mono text-[#2563EB]">
+                  {isPracticeMode ? 'Practice' : `${durationMin} Mins`}
+                </span>
               </div>
               <div className="px-4 py-3 rounded-2xl neu-pill text-center">
                 <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Questions</span>
                 <span className="text-base font-extrabold font-mono text-slate-900">{questionCount} Qs</span>
               </div>
               <div className="px-4 py-3 rounded-2xl neu-pill text-center">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Total Marks</span>
-                <span className="text-base font-extrabold font-mono text-slate-900">{totalMarks}.00</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Neg. Penalty</span>
+                <span className={cn("text-base font-extrabold font-mono", isPracticeMode ? "text-emerald-700" : "text-slate-900")}>
+                  {isPracticeMode ? '0.00' : '-0.25'}
+                </span>
               </div>
             </div>
           </div>
@@ -210,37 +218,71 @@ export default function ExamInstructionsPage() {
           <div className="p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
             <h2 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
               <FileText className="w-4 h-4 text-[#2563EB]" />
-              <span>General Examination Guidelines</span>
+              <span>{isPracticeMode ? 'Practice Drill Learning Guidelines' : 'General Examination Guidelines'}</span>
             </h2>
 
             <div className="text-xs space-y-3 leading-relaxed text-slate-600">
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                <Clock className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-slate-900">1. Server Clock:</strong> The countdown timer displayed at the top of the exam screen reflects the authoritative server clock. When the timer hits 00:00, your exam will be automatically submitted without manual intervention.
-                </div>
-              </div>
+              {isPracticeMode ? (
+                <>
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">1. Instant Derivations &amp; Shortcuts:</strong> As soon as you select an option, the system verifies your answer and immediately reveals full step-by-step mathematical solutions, speed derivation shortcuts, and distractor trap analysis.
+                    </div>
+                  </div>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                <Award className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-slate-900">2. Marking Scheme:</strong> You will be awarded <strong className="text-emerald-700 font-bold">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700 font-bold">-0.25 marks</strong>. Unattempted questions carry zero penalties.
-                </div>
-              </div>
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <Clock className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">2. Untimed &amp; Self-Paced:</strong> No countdown timer stress. An ambient per-question stopwatch lets you track your natural solving speed while you master formulas and arithmetic shortcuts.
+                    </div>
+                  </div>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-slate-900">3. Continuous Autosave:</strong> Every question response is transmitted and verified against the server. An active sync beacon confirms persistence on every selection.
-                </div>
-              </div>
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <Award className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">3. Zero Negative Penalties:</strong> Wrong answers incur 0 negative marks. Practice is meant for learning and exploring options without fear of penalty deductions.
+                    </div>
+                  </div>
 
-              <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-slate-900">4. Saving Responses:</strong> To lock in your answer, you must click <strong className="text-[#2563EB]">&quot;Save &amp; Next&quot;</strong>. Simply tapping on an option without proceeding does not save your choice.
-                </div>
-              </div>
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">4. Built-in Scratchpad &amp; Bookmarks:</strong> Use the interactive rough scratchpad for calculations and star tricky questions for automated spaced repetition review.
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <Clock className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">1. Server Clock:</strong> The countdown timer displayed at the top of the exam screen reflects the authoritative server clock. When the timer hits 00:00, your exam will be automatically submitted without manual intervention.
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <Award className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">2. Marking Scheme:</strong> You will be awarded <strong className="text-emerald-700 font-bold">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700 font-bold">-0.25 marks</strong>. Unattempted questions carry zero penalties.
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">3. Continuous Autosave:</strong> Every question response is transmitted and verified against the server. An active sync beacon confirms persistence on every selection.
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                    <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-slate-900">4. Saving Responses:</strong> To lock in your answer, you must click <strong className="text-[#2563EB]">&quot;Save &amp; Next&quot;</strong>. Simply tapping on an option without proceeding does not save your choice.
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
@@ -400,7 +442,9 @@ export default function ExamInstructionsPage() {
                   className="mt-0.5 w-4 h-4 rounded text-[#2563EB] focus:ring-blue-500 border-slate-300 accent-[#2563EB]"
                 />
                 <span className="text-xs text-slate-600 group-hover:text-slate-900 leading-snug">
-                  I have read and understood all instructions. I declare that I will attempt the exam independently and without any unfair means.
+                  {isPracticeMode
+                    ? 'I understand that this is a practice drill with immediate solutions, speed shortcuts, and zero negative markings.'
+                    : 'I have read and understood all instructions. I declare that I will attempt the exam independently and without any unfair means.'}
                 </span>
               </label>
 
@@ -408,9 +452,9 @@ export default function ExamInstructionsPage() {
               <button
                 onClick={handleStartExam}
                 disabled={!hasAgreed}
-                className="w-full neu-chip-primary disabled:opacity-40 disabled:cursor-not-allowed uppercase tracking-wider text-xs py-3.5"
+                className="w-full neu-chip-primary disabled:opacity-40 disabled:cursor-not-allowed uppercase tracking-wider text-xs py-3.5 cursor-pointer shadow-md"
               >
-                <span>I am ready to begin</span>
+                <span>{isPracticeMode ? 'Launch Practice Drill' : 'I am ready to begin the exam'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
