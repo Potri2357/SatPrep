@@ -1,26 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { globalStore, INITIAL_TOPICS } from '@/lib/store';
-import { generateBankingQuestionWithGemini } from '@/lib/gemini';
+import { generateBankingQuestionWithCascade } from '@/lib/gemini';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-    const { topic_id, difficulty, count, method } = await req.json();
+    const { topic_id, difficulty, count, method, preferred_model } = await req.json();
     const topicObj = INITIAL_TOPICS.find((t) => t.id === topic_id);
     const topicName = topicObj ? topicObj.name : 'Quantitative Aptitude';
 
     let generatedQuestion = null;
+    let telemetry = null;
     let actualMethod = method || 'template';
 
     if (method === 'llm_twist') {
-      generatedQuestion = await generateBankingQuestionWithGemini(
+      const cascadeResult = await generateBankingQuestionWithCascade(
         topic_id,
         topicName,
-        difficulty || 3
+        difficulty || 3,
+        preferred_model
       );
 
-      if (generatedQuestion) {
+      if (cascadeResult) {
+        generatedQuestion = cascadeResult.question;
+        telemetry = cascadeResult.telemetry;
+
         const qId = `q-ai-${Date.now()}`;
         globalStore.addQuestion(
           {
@@ -56,6 +61,7 @@ export async function POST(req: NextRequest) {
       success: true,
       job,
       generated_question: generatedQuestion,
+      telemetry,
       ai_powered: Boolean(generatedQuestion),
     });
   } catch (err: any) {
