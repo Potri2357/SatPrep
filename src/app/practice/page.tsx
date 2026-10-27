@@ -315,10 +315,6 @@ export default function TopicDrillsHubPage() {
         {/* Header Hero */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC]">
           <div className="space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Targeted Topic Mastery &amp; Speed Drills</span>
-            </div>
             <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
               Topic Drills &amp; Practice
             </h1>
@@ -607,20 +603,40 @@ export default function TopicDrillsHubPage() {
                     </p>
                   </div>
 
-                  {/* Prelims Weight & Shortcuts */}
-                  <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-slate-100 space-y-2">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-500 font-medium">Exam Weightage:</span>
-                      <span className="font-bold text-[#005CE6]">{meta.examWeight}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-500 font-medium">Difficulty Level:</span>
-                      <span className={cn(
-                        "font-bold",
-                        meta.difficulty === 'Easy' ? "text-emerald-700" : meta.difficulty === 'Moderate' ? "text-amber-700" : "text-rose-700"
-                      )}>
-                        {meta.difficulty}
+                  {/* Improvised Exam Weightage & Difficulty Metrics Card */}
+                  <div className="grid grid-cols-2 gap-2 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] border border-[#BCEBFC] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)]">
+                    {/* Weightage Block */}
+                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 border border-[#D6EEFC] flex flex-col justify-center shadow-2xs">
+                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 uppercase tracking-wider mb-0.5">
+                        <Target className="w-3 h-3 text-[#005CE6]" />
+                        <span>Weightage</span>
+                      </div>
+                      <span className="text-xs font-black text-[#005CE6] tracking-tight truncate">
+                        {meta.examWeight}
                       </span>
+                    </div>
+
+                    {/* Difficulty Block */}
+                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 border border-[#D6EEFC] flex flex-col justify-center shadow-2xs">
+                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 uppercase tracking-wider mb-0.5">
+                        <Flame className={cn(
+                          "w-3 h-3",
+                          meta.difficulty === 'Easy' ? "text-emerald-500" : meta.difficulty === 'Moderate' ? "text-amber-500" : "text-rose-500"
+                        )} />
+                        <span>Difficulty</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className={cn(
+                          "w-1.5 h-1.5 rounded-full shrink-0",
+                          meta.difficulty === 'Easy' ? "bg-emerald-500" : meta.difficulty === 'Moderate' ? "bg-amber-500" : "bg-rose-500"
+                        )} />
+                        <span className={cn(
+                          "text-xs font-black tracking-tight",
+                          meta.difficulty === 'Easy' ? "text-emerald-700" : meta.difficulty === 'Moderate' ? "text-amber-700" : "text-rose-700"
+                        )}>
+                          {meta.difficulty}
+                        </span>
+                      </div>
                     </div>
                   </div>
 

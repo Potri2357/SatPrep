@@ -4,9 +4,10 @@ import { globalStore } from '@/lib/store';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { exam_id, mode, topics, question_count, duration_min, source_type, selected_qids, feedback_mode } = body;
+    const { title, exam_id, mode, topics, question_count, duration_min, source_type, selected_qids, feedback_mode } = body;
 
     const test = globalStore.assembleTest({
+      title: title || body.test_name,
       exam_id: exam_id || 'ibps-po-prelims-2026',
       mode: mode || 'topic_test',
       topics: topics || ['quadratic-equations'],

@@ -206,6 +206,7 @@ export default function MockTestsHubPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          title: test.title,
           exam_id: test.examId,
           mode: test.category,
           question_count: overrides?.question_count ?? test.questionCount,

@@ -15,6 +15,8 @@ import {
   GenerationJob,
   ReportItem,
   PaletteState,
+  TestAttemptSummary,
+  OverallResultsData,
 } from './types';
 import { FULL_MOCK_35_QUESTIONS, FULL_MOCK_35_KEYS } from './bank-exam-blueprint';
 
@@ -592,8 +594,8 @@ class SatPrepStore {
       created_at: new Date(Date.now() - 7200000).toISOString(),
     });
 
-    // Seed sample attempt snapshot for instant preview
-    this.generateFallbackSnapshot('sample-attempt-1');
+    // Seed realistic mock test attempts for the Overall Results section
+    this.seedInitialAttempts();
   }
 
   getUser(): UserProfile {
@@ -622,6 +624,7 @@ class SatPrepStore {
 
   // Backend-First Test Assembly (PRD Section 8)
   assembleTest(config: {
+    title?: string;
     exam_id: string;
     mode: 'full_mock' | 'sectional' | 'topic_test' | 'weak_area' | 'revision';
     source_type?: 'auto' | 'manual' | 'curated';
@@ -733,8 +736,9 @@ class SatPrepStore {
 
     const bundle: FrozenTestBundle = {
       test_id: testId,
+      title: config.title,
       assembled_at: new Date().toISOString(),
-      exam_name: feedbackMode === 'practice' ? `${exam.name} · Topic Practice Drill` : exam.name,
+      exam_name: config.title || (feedbackMode === 'practice' ? `${exam.name} · Topic Practice Drill` : exam.name),
       duration_min: testDuration,
       total_questions: assembledQuestions.length,
       total_marks: assembledQuestions.length * 1.0,
@@ -754,11 +758,13 @@ class SatPrepStore {
 
     const record: TestRecord = {
       id: testId,
+      title: config.title,
       owner: this.user.id,
       exam_id: config.exam_id,
       mode: config.mode,
       source_type: config.source_type || 'auto',
       config: {
+        title: config.title,
         exam_id: config.exam_id,
         mode: config.mode,
         source_type: config.source_type || 'auto',
@@ -1019,9 +1025,21 @@ class SatPrepStore {
       };
     });
 
+    const testTitle = test.title || test.bundle?.title || (test.bundle?.exam_name ? `${test.bundle.exam_name}` : 'Quantitative Aptitude Mock Test');
+    const category = (test.mode as any) || (questions.length <= 20 ? 'sectional' : 'full_mock');
+    const dateFormatted = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const cutoff = category === 'full_mock' ? 21.0 : questions.length >= 20 ? 14.0 : 10.0;
+    let statusLabel: 'Cleared Cutoff' | 'Needs Improvement' | 'Target Exceeded' = 'Cleared Cutoff';
+    if (totalScore >= cutoff * 1.25) statusLabel = 'Target Exceeded';
+    else if (totalScore < cutoff) statusLabel = 'Needs Improvement';
+
     const snapshot: ResultSnapshot = {
       attempt_id: attemptId,
       test_id: attempt.test_id,
+      test_name: testTitle,
+      category,
+      date_formatted: dateFormatted,
+      status_label: statusLabel,
       computed_at: new Date().toISOString(),
       score_card: {
         total_score: totalScore,
@@ -1195,6 +1213,10 @@ class SatPrepStore {
     const snapshot: ResultSnapshot = {
       attempt_id: attemptId,
       test_id: 'test-official-01',
+      test_name: 'IBPS PO Prelims 2026 — Diagnostic Benchmark Mock',
+      category: 'full_mock',
+      date_formatted: 'Oct 23, 2026',
+      status_label: 'Cleared Cutoff',
       computed_at: new Date().toISOString(),
       score_card: {
         total_score: Math.max(0, Number(totalScore.toFixed(2))),
@@ -1227,6 +1249,332 @@ class SatPrepStore {
 
     this.snapshots.set(attemptId, snapshot);
     return snapshot;
+  }
+
+  createSeededAttempt(opts: {
+    attemptId: string;
+    testId: string;
+    testName: string;
+    category: 'full_mock' | 'sectional' | 'topic_test';
+    totalScore: number;
+    maxMarks: number;
+    attempted: number;
+    correct: number;
+    wrong: number;
+    skipped: number;
+    accuracyPercent: number;
+    percentile: number;
+    rank: number;
+    totalCohort: number;
+    timeSpentSec: number;
+    durationMin: number;
+    cutoff: number;
+    dateFormatted: string;
+    status: 'Cleared Cutoff' | 'Needs Improvement' | 'Target Exceeded';
+  }) {
+    const snap = this.generateFallbackSnapshot(opts.attemptId);
+    snap.test_id = opts.testId;
+    snap.test_name = opts.testName;
+    snap.category = opts.category;
+    snap.date_formatted = opts.dateFormatted;
+    snap.status_label = opts.status;
+    snap.score_card = {
+      ...snap.score_card,
+      total_score: opts.totalScore,
+      max_marks: opts.maxMarks,
+      attempted: opts.attempted,
+      correct: opts.correct,
+      wrong: opts.wrong,
+      skipped: opts.skipped,
+      accuracy_percent: opts.accuracyPercent,
+      percentile: opts.percentile,
+      rank: opts.rank,
+      total_cohort_attempts: opts.totalCohort,
+      total_time_spent_sec: opts.timeSpentSec,
+      negative_marks_lost: Number((opts.wrong * 0.25).toFixed(2)),
+    };
+    if (opts.category === 'sectional') {
+      snap.questions_review = snap.questions_review.slice(0, opts.maxMarks);
+      snap.time_analysis = snap.time_analysis.slice(0, opts.maxMarks);
+    }
+    this.snapshots.set(opts.attemptId, snap);
+
+    if (!this.tests.has(opts.testId)) {
+      this.tests.set(opts.testId, {
+        id: opts.testId,
+        title: opts.testName,
+        exam_id: 'ibps-po-prelims-2026',
+        mode: opts.category,
+        source_type: 'curated',
+        config: {
+          title: opts.testName,
+          exam_id: 'ibps-po-prelims-2026',
+          mode: opts.category,
+          source_type: 'curated',
+          topics: ['simplification', 'quadratic-equations', 'tabular-di'],
+          question_count: opts.maxMarks,
+        },
+        status: 'ready',
+        ready_at: new Date().toISOString(),
+        expires_at: new Date(Date.now() + 864000000).toISOString(),
+        created_at: new Date().toISOString(),
+      });
+    }
+
+    if (!this.attempts.has(opts.attemptId)) {
+      this.attempts.set(opts.attemptId, {
+        id: opts.attemptId,
+        test_id: opts.testId,
+        user_id: this.user.id,
+        started_at: new Date(Date.now() - 3600000).toISOString(),
+        current_section_id: 'quant-section-1',
+        section_deadlines: {},
+        status: 'submitted',
+        score: opts.totalScore,
+        submitted_at: new Date(Date.now() - 1800000).toISOString(),
+      });
+    }
+  }
+
+  seedInitialAttempts() {
+    // 1. IBPS PO Prelims 2026 — All India Mock #1
+    this.createSeededAttempt({
+      attemptId: 'ibps-po-mock-1-att',
+      testId: 'ibps-po-mock-1',
+      testName: 'IBPS PO Prelims 2026 — All India Mock #1',
+      category: 'full_mock',
+      totalScore: 27.50,
+      maxMarks: 35,
+      attempted: 35,
+      correct: 29,
+      wrong: 6,
+      skipped: 0,
+      accuracyPercent: 83,
+      percentile: 93.8,
+      rank: 142,
+      totalCohort: 2300,
+      timeSpentSec: 1115,
+      durationMin: 20,
+      cutoff: 21.0,
+      dateFormatted: 'Oct 27, 2026',
+      status: 'Cleared Cutoff',
+    });
+
+    // 2. SBI Clerk Prelims 2026 — Speed Crunch Mock #1
+    this.createSeededAttempt({
+      attemptId: 'sbi-clerk-mock-1-att',
+      testId: 'sbi-clerk-mock-1',
+      testName: 'SBI Clerk Prelims 2026 — Speed Crunch Mock #1',
+      category: 'full_mock',
+      totalScore: 29.25,
+      maxMarks: 35,
+      attempted: 33,
+      correct: 30,
+      wrong: 3,
+      skipped: 2,
+      accuracyPercent: 91,
+      percentile: 96.2,
+      rank: 78,
+      totalCohort: 2050,
+      timeSpentSec: 1070,
+      durationMin: 20,
+      cutoff: 28.0,
+      dateFormatted: 'Oct 26, 2026',
+      status: 'Target Exceeded',
+    });
+
+    // 3. Quant Sectional Test 01 — Speed Math Blitz
+    this.createSeededAttempt({
+      attemptId: 'sectional-speed-1-att',
+      testId: 'sectional-speed-math-1',
+      testName: 'Quant Sectional Test 01 — Speed Math Blitz',
+      category: 'sectional',
+      totalScore: 17.00,
+      maxMarks: 20,
+      attempted: 19,
+      correct: 17,
+      wrong: 2,
+      skipped: 1,
+      accuracyPercent: 89,
+      percentile: 89.5,
+      rank: 185,
+      totalCohort: 1750,
+      timeSpentSec: 670,
+      durationMin: 12,
+      cutoff: 14.0,
+      dateFormatted: 'Oct 25, 2026',
+      status: 'Cleared Cutoff',
+    });
+
+    // 4. Quant Sectional Test 02 — Data Interpretation Mastery
+    this.createSeededAttempt({
+      attemptId: 'sectional-di-1-att',
+      testId: 'sectional-di-mastery-1',
+      testName: 'Quant Sectional Test 02 — Data Interpretation Mastery',
+      category: 'sectional',
+      totalScore: 12.25,
+      maxMarks: 15,
+      attempted: 14,
+      correct: 13,
+      wrong: 1,
+      skipped: 1,
+      accuracyPercent: 93,
+      percentile: 88.0,
+      rank: 210,
+      totalCohort: 1750,
+      timeSpentSec: 690,
+      durationMin: 12,
+      cutoff: 10.0,
+      dateFormatted: 'Oct 24, 2026',
+      status: 'Cleared Cutoff',
+    });
+
+    // 5. IBPS PO Prelims 2026 — Diagnostic Benchmark Mock (sample-attempt-1)
+    this.createSeededAttempt({
+      attemptId: 'sample-attempt-1',
+      testId: 'sample-test-1',
+      testName: 'IBPS PO Prelims 2026 — Diagnostic Benchmark Mock',
+      category: 'full_mock',
+      totalScore: 25.75,
+      maxMarks: 35,
+      attempted: 32,
+      correct: 27,
+      wrong: 5,
+      skipped: 3,
+      accuracyPercent: 84,
+      percentile: 91.8,
+      rank: 142,
+      totalCohort: 1740,
+      timeSpentSec: 1140,
+      durationMin: 20,
+      cutoff: 21.0,
+      dateFormatted: 'Oct 23, 2026',
+      status: 'Cleared Cutoff',
+    });
+  }
+
+  getAllAttemptsSummary(): OverallResultsData {
+    if (this.snapshots.size <= 1) {
+      this.seedInitialAttempts();
+    }
+
+    const testSummaries: TestAttemptSummary[] = [];
+    let sumScore = 0;
+    let sumMaxMarks = 0;
+    let sumAccuracy = 0;
+    let sumPercentile = 0;
+    let totalAttempted = 0;
+    let totalCorrect = 0;
+    let totalWrong = 0;
+    let totalSkipped = 0;
+    let totalTimeSec = 0;
+    let highestScore = 0;
+    let highestPercentile = 0;
+
+    const topicAgg: Record<string, { name: string; attempts: number; correct: number }> = {};
+
+    this.snapshots.forEach((snap, attId) => {
+      const sc = snap.score_card;
+      const test = this.tests.get(snap.test_id);
+      const testName = snap.test_name || test?.title || test?.bundle?.title || test?.bundle?.exam_name || 'Quantitative Aptitude Test';
+      const category = snap.category || (test?.mode as any) || (sc.max_marks <= 20 ? 'sectional' : 'full_mock');
+      const dateFormatted = snap.date_formatted || new Date(snap.computed_at).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
+      const cutoff = category === 'full_mock' ? 21.0 : sc.max_marks >= 20 ? 14.0 : 10.0;
+      let status: 'Cleared Cutoff' | 'Needs Improvement' | 'Target Exceeded' = 'Cleared Cutoff';
+      if (sc.total_score >= cutoff * 1.25) status = 'Target Exceeded';
+      else if (sc.total_score < cutoff) status = 'Needs Improvement';
+
+      testSummaries.push({
+        attempt_id: attId,
+        test_id: snap.test_id,
+        test_name: testName,
+        category,
+        date: snap.computed_at,
+        date_formatted: dateFormatted,
+        score: sc.total_score,
+        max_marks: sc.max_marks,
+        accuracy: sc.accuracy_percent,
+        percentile: sc.percentile || 90.0,
+        rank: sc.rank || 150,
+        total_cohort: sc.total_cohort_attempts || 1800,
+        attempted: sc.attempted,
+        correct: sc.correct,
+        wrong: sc.wrong,
+        skipped: sc.skipped,
+        negative_marks: sc.negative_marks_lost,
+        time_spent_sec: sc.total_time_spent_sec,
+        duration_min: Math.round((sc.total_time_spent_sec || 1200) / 60),
+        cutoff,
+        status,
+      });
+
+      sumScore += sc.total_score;
+      sumMaxMarks += sc.max_marks;
+      sumAccuracy += sc.accuracy_percent;
+      sumPercentile += (sc.percentile || 90);
+      totalAttempted += sc.attempted;
+      totalCorrect += sc.correct;
+      totalWrong += sc.wrong;
+      totalSkipped += sc.skipped;
+      totalTimeSec += sc.total_time_spent_sec;
+      if (sc.total_score > highestScore) highestScore = sc.total_score;
+      if ((sc.percentile || 0) > highestPercentile) highestPercentile = sc.percentile || 0;
+
+      if (snap.topic_breakdown) {
+        snap.topic_breakdown.forEach((t) => {
+          if (!topicAgg[t.topic_id]) {
+            topicAgg[t.topic_id] = { name: t.topic_name, attempts: 0, correct: 0 };
+          }
+          topicAgg[t.topic_id].attempts += t.attempts;
+          topicAgg[t.topic_id].correct += t.correct;
+        });
+      }
+    });
+
+    testSummaries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const count = Math.max(1, testSummaries.length);
+    const avgScore = Number((sumScore / count).toFixed(2));
+    const maxPossibleAvg = Number((sumMaxMarks / count).toFixed(2));
+    const overallAccuracy = totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) : Math.round(sumAccuracy / count);
+    const avgPercentile = Number((sumPercentile / count).toFixed(1));
+
+    const topicSummary = Object.entries(topicAgg).map(([topicId, val]) => {
+      const acc = val.attempts > 0 ? Math.round((val.correct / val.attempts) * 100) : 0;
+      let strength: 'Strong' | 'Average' | 'Weak' = 'Average';
+      if (acc >= 80) strength = 'Strong';
+      else if (acc < 60) strength = 'Weak';
+      return {
+        topic_id: topicId,
+        topic_name: val.name,
+        total_attempts: val.attempts,
+        total_correct: val.correct,
+        accuracy: acc,
+        strength,
+      };
+    });
+
+    return {
+      total_tests_written: testSummaries.length,
+      avg_score: avgScore,
+      max_possible_avg: maxPossibleAvg,
+      overall_accuracy: overallAccuracy,
+      avg_percentile: avgPercentile,
+      total_questions_attempted: totalAttempted,
+      total_correct: totalCorrect,
+      total_wrong: totalWrong,
+      total_skipped: totalSkipped,
+      total_time_spent_min: Math.round(totalTimeSec / 60),
+      highest_score: highestScore,
+      highest_percentile: highestPercentile,
+      tests: testSummaries,
+      topic_summary: topicSummary,
+    };
   }
 
   reportQuestion(qid: string, reason: ReportItem['reason'], text?: string): ReportItem {

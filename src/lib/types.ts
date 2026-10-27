@@ -106,6 +106,7 @@ export type PaletteState =
   | 'answered_and_marked';
 
 export interface TestConfig {
+  title?: string;
   exam_id: string;
   mode: 'full_mock' | 'sectional' | 'topic_test' | 'weak_area' | 'revision';
   source_type: 'auto' | 'manual' | 'curated';
@@ -137,6 +138,7 @@ export interface AssembledQuestion {
 
 export interface FrozenTestBundle {
   test_id: string;
+  title?: string;
   assembled_at: string;
   exam_name: string;
   duration_min: number;
@@ -156,6 +158,7 @@ export interface FrozenTestBundle {
 
 export interface TestRecord {
   id: string;
+  title?: string;
   owner?: string;
   exam_id: string;
   mode: string;
@@ -191,9 +194,61 @@ export interface Attempt {
   submitted_at?: string;
 }
 
+export interface TestAttemptSummary {
+  attempt_id: string;
+  test_id: string;
+  test_name: string;
+  category: 'full_mock' | 'sectional' | 'topic_test';
+  date: string;
+  date_formatted: string;
+  score: number;
+  max_marks: number;
+  accuracy: number;
+  percentile: number;
+  rank: number;
+  total_cohort: number;
+  attempted: number;
+  correct: number;
+  wrong: number;
+  skipped: number;
+  negative_marks: number;
+  time_spent_sec: number;
+  duration_min: number;
+  cutoff: number;
+  status: 'Cleared Cutoff' | 'Needs Improvement' | 'Target Exceeded';
+}
+
+export interface OverallResultsData {
+  total_tests_written: number;
+  avg_score: number;
+  max_possible_avg: number;
+  overall_accuracy: number;
+  avg_percentile: number;
+  total_questions_attempted: number;
+  total_correct: number;
+  total_wrong: number;
+  total_skipped: number;
+  total_time_spent_min: number;
+  highest_score: number;
+  highest_percentile: number;
+  tests: TestAttemptSummary[];
+  topic_summary?: {
+    topic_id: string;
+    topic_name: string;
+    total_attempts: number;
+    total_correct: number;
+    accuracy: number;
+    strength: 'Strong' | 'Average' | 'Weak';
+  }[];
+}
+
 export interface ResultSnapshot {
   attempt_id: string;
   test_id: string;
+  test_name?: string;
+  category?: 'full_mock' | 'sectional' | 'topic_test';
+  date_formatted?: string;
+  status_label?: string;
   computed_at: string;
   score_card: {
     total_score: number;

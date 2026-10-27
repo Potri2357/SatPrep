@@ -111,12 +111,12 @@ export default function LandingPage() {
             </Link>
 
             <Link
-              href="/tests/result/sample-attempt-1"
+              href="/results"
               className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm text-[#005CE6] bg-white border border-[#C5E4F8] hover:border-[#005CE6]/40 hover:bg-[#F4FBFF] transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
               style={{boxShadow:"0 3px 12px rgba(0,92,230,0.07)"}}
             >
               <BarChart3 className="w-3.5 h-3.5" />
-              <span>View Sample Results</span>
+              <span>View Exam Results</span>
             </Link>
           </div>
 
@@ -456,7 +456,7 @@ export default function LandingPage() {
           <BrandLogo size={32} showWordmark={true} />
           <p>© 2026 SatPrep. Bank Exam Quantitative Aptitude Platform. All rights reserved.</p>
           <div className="flex gap-6 font-semibold">
-            <Link href="/tests/result/sample-attempt-1" className="hover:text-[#2563EB] transition-colors">Exam Results</Link>
+            <Link href="/results" className="hover:text-[#2563EB] transition-colors">Exam Results</Link>
             <Link href="/practice" className="hover:text-[#2563EB] transition-colors">Topic Drills</Link>
             <Link href="/tests" className="hover:text-[#2563EB] transition-colors">Mock Tests</Link>
             <Link href="/admin" className="hover:text-[#2563EB] transition-colors">Admin Console</Link>

@@ -66,6 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
     { title: 'Home', href: '/', icon: Home },
     { title: 'Mock Tests', href: '/tests', icon: Layers },
     { title: 'Topic Drills', href: '/practice', icon: BookOpen },
+    { title: 'Results', href: '/results', icon: Award },
   ];
 
   const isItemActive = (href: string) => {
@@ -74,7 +75,10 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
       return pathname.startsWith('/practice');
     }
     if (href === '/tests') {
-      return pathname.startsWith('/tests');
+      return pathname === '/tests' || pathname.startsWith('/tests/new') || (pathname.startsWith('/tests/') && !pathname.startsWith('/tests/result'));
+    }
+    if (href === '/results') {
+      return pathname.startsWith('/results') || pathname.startsWith('/tests/result');
     }
     return pathname.startsWith(href);
   };
@@ -165,7 +169,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                 </div>
 
                 <Link
-                  href="/tests/result/sample-attempt-1"
+                  href="/results"
                   onClick={() => setProfileDropdownOpen(false)}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-slate-700 hover:text-[#005CE6] hover:bg-[#F0FAFF] transition-colors"
                 >

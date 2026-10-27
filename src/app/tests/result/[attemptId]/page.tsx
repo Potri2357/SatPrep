@@ -25,6 +25,8 @@ import {
   ChevronUp,
   Check,
   X,
+  ArrowLeft,
+  BarChart3,
 } from 'lucide-react';
 
 export default function ResultAnalysisPage() {
@@ -34,8 +36,6 @@ export default function ResultAnalysisPage() {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [snapshot, setSnapshot] = useState<ResultSnapshot | null>(null);
-  const [progress, setProgress] = useState<number>(30);
-  const [activeStep, setActiveStep] = useState<number>(1);
 
   // Filter for Questions Review
   const [filter, setFilter] = useState<'all' | 'correct' | 'wrong' | 'skipped' | 'slow'>('all');
@@ -77,12 +77,6 @@ export default function ResultAnalysisPage() {
 
   useEffect(() => {
     let isMounted = true;
-    let fetchedSnapshot: ResultSnapshot | null = null;
-
-    // Smooth live progress stages
-    const t1 = setTimeout(() => { if (isMounted) { setProgress(60); setActiveStep(2); } }, 350);
-    const t2 = setTimeout(() => { if (isMounted) { setProgress(85); setActiveStep(3); } }, 750);
-    const t3 = setTimeout(() => { if (isMounted) { setProgress(100); setActiveStep(4); } }, 1150);
 
     const fetchResult = async () => {
       try {
@@ -94,52 +88,26 @@ export default function ResultAnalysisPage() {
         const text = await res.text();
         if (!text) return;
         const data = JSON.parse(text);
-        if (data.success && data.snapshot) {
-          fetchedSnapshot = data.snapshot;
-          if (isMounted) {
-            setSnapshot(data.snapshot);
-            const firstWrongIdx = data.snapshot.questions_review.findIndex((q: any) => !q.is_correct && q.your_answer);
-            if (firstWrongIdx !== -1) {
-              setSelectedQIndex(firstWrongIdx);
-            }
+        if (data.success && data.snapshot && isMounted) {
+          setSnapshot(data.snapshot);
+          const firstWrongIdx = data.snapshot.questions_review.findIndex((q: any) => !q.is_correct && q.your_answer);
+          if (firstWrongIdx !== -1) {
+            setSelectedQIndex(firstWrongIdx);
           }
         }
       } catch (e) {
         console.error('Fetch result error:', e);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchResult();
 
-    // Transition smoothly after calibration animation completes (~1.4s)
-    const completionTimer = setTimeout(async () => {
-      if (!isMounted) return;
-      if (!fetchedSnapshot) {
-        try {
-          const cleanId = attemptId && attemptId !== 'undefined' ? attemptId : 'sample-attempt-1';
-          const res = await fetch(`/api/test/result/${cleanId}`, { cache: 'no-store' });
-          const text = await res.text();
-          if (text) {
-            const data = JSON.parse(text);
-            if (data.snapshot && isMounted) {
-              setSnapshot(data.snapshot);
-            }
-          }
-        } catch {
-          // Handled gracefully
-        }
-      }
-      if (isMounted) {
-        setLoading(false);
-      }
-    }, 1400);
-
     return () => {
       isMounted = false;
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(completionTimer);
     };
   }, [attemptId]);
 
@@ -175,95 +143,13 @@ export default function ResultAnalysisPage() {
   };
 
   if (loading) {
-    const steps = [
-      { num: 1, title: 'Aggregating Section Responses', desc: 'Verified candidate submissions & autosave records' },
-      { num: 2, title: 'Applying Scoring Scheme', desc: '+1.00 for correct, -0.25 negative marking deduction' },
-      { num: 3, title: 'Calibrating Cohort Percentile', desc: 'Benchmarking against active banking exam aspirants' },
-      { num: 4, title: 'Compiling Comprehensive Scorecard', desc: 'Preparing topic analytics, speed trends & solutions' },
-    ];
-
     return (
-      <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between text-[#0F172A] relative overflow-hidden">
-        {/* Soft Ambient Glows */}
-        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Unified Navbar */}
+      <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between text-[#0F172A]">
         <Navbar />
-
-        {/* Main Content */}
-        <main className="max-w-md sm:max-w-lg mx-auto w-full pt-8 pb-12 px-4 text-center space-y-6 z-10 my-auto">
-          {/* Animated Brand Motif with Radial Pulse */}
-          <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-[#005CE6]/15 animate-ping" />
-            <div className="relative z-10 transition-transform duration-500">
-              <BrandLogo size={56} showWordmark={false} />
-            </div>
-          </div>
-
-          {/* Heading & Subtitle */}
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase bg-blue-50 text-[#005CE6] border border-blue-200">
-              <Zap className="w-3.5 h-3.5 text-[#005CE6] animate-pulse" />
-              <span>Real-Time Scoring Engine</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-              Computing Your Scorecard...
-            </h1>
-
-            <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-              Evaluating sectional accuracy, percentile ranking, and psychometric topic breakdown.
-            </p>
-          </div>
-
-          {/* Card with Progress Bar & Live Stepped Checklist */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[#BCEBFC] shadow-[0_8px_30px_rgba(0,92,230,0.06)] text-left space-y-4">
-            {/* Live Progress Bar */}
-            <div className="space-y-2 pb-2 border-b border-slate-100">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-600">Calibration Progress</span>
-                <span className="font-mono font-bold text-[#005CE6]">{progress}%</span>
-              </div>
-              <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/60">
-                <div
-                  className="h-full bg-gradient-to-r from-[#005CE6] via-[#0096D6] to-[#60CEF8] rounded-full transition-all duration-300"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Stepped Checklist */}
-            <div className="space-y-3 pt-1">
-              {steps.map((st) => {
-                const isCompleted = activeStep > st.num || progress === 100;
-                const isCurrent = activeStep === st.num && progress < 100;
-                return (
-                  <div key={st.num} className="flex items-start gap-3">
-                    <div className="mt-0.5 shrink-0">
-                      {isCompleted ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      ) : isCurrent ? (
-                        <div className="w-4 h-4 rounded-full border-2 border-[#005CE6] border-t-transparent animate-spin" />
-                      ) : (
-                        <div className="w-4 h-4 rounded-full border-2 border-slate-200" />
-                      )}
-                    </div>
-                    <div>
-                      <div className={cn("text-xs font-bold", isCompleted || isCurrent ? "text-slate-900" : "text-slate-400")}>
-                        {st.title}
-                      </div>
-                      <div className="text-[11px] text-slate-500 mt-0.5">
-                        {st.desc}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        <main className="max-w-md mx-auto w-full pt-20 pb-16 px-4 text-center space-y-4 my-auto">
+          <div className="w-10 h-10 border-3 border-[#005CE6] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm font-semibold text-slate-600">Loading test results...</p>
         </main>
-
         <footer className="py-6 text-xs text-center text-slate-400">
           SatPrep &bull; Official Examination Analytics
         </footer>
@@ -314,32 +200,50 @@ export default function ResultAnalysisPage() {
       {/* Main Body */}
       <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 flex-1 space-y-8 z-10">
         {/* Quick Action Bar for Exam Results */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF] mb-2">
-              <Award className="w-3.5 h-3.5 text-[#2563EB]" />
-              <span>Exam Performance Scorecard</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A]">
-              Test Result &amp; Diagnostic Dashboard
-            </h1>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <Link href="/results" className="hover:text-[#005CE6] transition-colors flex items-center gap-1 font-bold">
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>All Exam Results</span>
+            </Link>
+            <span>/</span>
+            <span className="text-slate-700 font-bold truncate max-w-md">{snapshot.test_name || 'Individual Test Scorecard'}</span>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/tests"
-              className="neu-chip-primary text-xs"
-            >
-              <Zap className="w-3.5 h-3.5" />
-              <span>Take Another Mock Test</span>
-            </Link>
-            <Link
-              href="/practice"
-              className="chip-btn text-xs"
-            >
-              <Bookmark className="w-3.5 h-3.5 text-[#2563EB]" />
-              <span>Drill Weak Areas (Topic Practice)</span>
-            </Link>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF] mb-1.5">
+                <Award className="w-3.5 h-3.5 text-[#2563EB]" />
+                <span>{snapshot.test_name || 'Exam Performance Scorecard'}</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A]">
+                Test Result &amp; Diagnostic Dashboard
+              </h1>
+            </div>
+
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <Link
+                href="/results"
+                className="px-4 py-2.5 rounded-xl bg-white border border-[#BCEBFC] text-[#005CE6] hover:bg-[#F0FAFF] font-bold text-xs flex items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all"
+              >
+                <BarChart3 className="w-3.5 h-3.5" />
+                <span>Overall Results</span>
+              </Link>
+              <Link
+                href="/tests"
+                className="neu-chip-primary text-xs"
+              >
+                <Zap className="w-3.5 h-3.5" />
+                <span>Take Another Mock</span>
+              </Link>
+              <Link
+                href="/practice"
+                className="chip-btn text-xs"
+              >
+                <Bookmark className="w-3.5 h-3.5 text-[#2563EB]" />
+                <span>Drill Topics</span>
+              </Link>
+            </div>
           </div>
         </div>
 
