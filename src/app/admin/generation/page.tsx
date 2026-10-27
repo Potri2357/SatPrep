@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { INITIAL_TOPICS, globalStore } from '@/lib/store';
 import {
   Cpu,
@@ -12,6 +12,9 @@ import {
   AlertCircle,
   Zap,
   Layers,
+  Sparkles,
+  Loader2,
+  Check,
 } from 'lucide-react';
 
 export default function GenerationControlCentrePage() {
@@ -19,12 +22,33 @@ export default function GenerationControlCentrePage() {
   const [topicId, setTopicId] = useState<string>('quadratic-equations');
   const [difficulty, setDifficulty] = useState<number>(3);
   const [count, setCount] = useState<number>(20);
-  const [method, setMethod] = useState<'template' | 'llm_twist'>('template');
+  const [method, setMethod] = useState<'template' | 'llm_twist'>('llm_twist');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [killSwitchActive, setKillSwitchActive] = useState<boolean>(false);
+  const [aiStatus, setAiStatus] = useState<{ success: boolean; model?: string; message?: string; error?: string } | null>(null);
+  const [checkingAi, setCheckingAi] = useState<boolean>(true);
+  const [lastGeneratedQ, setLastGeneratedQ] = useState<any | null>(null);
+
+  const checkConnection = async () => {
+    setCheckingAi(true);
+    try {
+      const res = await fetch('/api/admin/ai-status');
+      const data = await res.json();
+      setAiStatus(data);
+    } catch (e: any) {
+      setAiStatus({ success: false, error: e.message });
+    } finally {
+      setCheckingAi(false);
+    }
+  };
+
+  useEffect(() => {
+    checkConnection();
+  }, []);
 
   const handleLaunchJob = async () => {
     setIsSubmitting(true);
+    setLastGeneratedQ(null);
     try {
       const res = await fetch('/api/admin/generate', {
         method: 'POST',
@@ -39,6 +63,9 @@ export default function GenerationControlCentrePage() {
       const data = await res.json();
       if (data.success && data.job) {
         setJobs([data.job, ...jobs]);
+        if (data.generated_question) {
+          setLastGeneratedQ(data.generated_question);
+        }
       }
     } catch {
       // Fallback
@@ -51,30 +78,60 @@ export default function GenerationControlCentrePage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
-            <Cpu className="w-3.5 h-3.5" />
-            <span>AI Pipeline &amp; Synthesis</span>
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              <Cpu className="w-3.5 h-3.5" />
+              <span>AI Pipeline &amp; Synthesis</span>
+            </div>
+
+            {/* Live AI Status Pill */}
+            {checkingAi ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                <Loader2 className="w-3 h-3 animate-spin text-[#005CE6]" />
+                <span>Checking Gemini API...</span>
+              </span>
+            ) : aiStatus?.success ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Google Gemini ({aiStatus.model}): Connected &amp; Ready</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+                <span>Gemini API: {aiStatus?.error || 'Offline'}</span>
+              </span>
+            )}
           </div>
+
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             Question Generation Control Centre
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Manage parametric templates, dispatch Gemini generation jobs, and supervise calibrated test packs.
+            Manage parametric templates, dispatch live Gemini generation jobs, and supervise calibrated test packs.
           </p>
         </div>
 
         {/* Global Kill Switch (AD-35) */}
-        <button
-          onClick={() => setKillSwitchActive(!killSwitchActive)}
-          className={`px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 transition-all shadow-sm ${
-            killSwitchActive
-              ? 'bg-red-600 text-white animate-pulse'
-              : 'border border-blue-200 bg-white text-slate-700 hover:border-red-400 hover:text-red-600'
-          }`}
-        >
-          {killSwitchActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 text-emerald-600" />}
-          <span>{killSwitchActive ? 'Kill Switch ACTIVE (Paused)' : 'Generation Pipeline Normal'}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={checkConnection}
+            className="px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-all cursor-pointer"
+            title="Refresh Gemini Connection Status"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => setKillSwitchActive(!killSwitchActive)}
+            className={`px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 transition-all shadow-sm ${
+              killSwitchActive
+                ? 'bg-red-600 text-white animate-pulse'
+                : 'border border-blue-200 bg-white text-slate-700 hover:border-red-400 hover:text-red-600'
+            }`}
+          >
+            {killSwitchActive ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 text-emerald-600" />}
+            <span>{killSwitchActive ? 'Kill Switch ACTIVE (Paused)' : 'Generation Pipeline Normal'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Launch Job Creator Card */}
@@ -142,12 +199,45 @@ export default function GenerationControlCentrePage() {
           <button
             onClick={handleLaunchJob}
             disabled={isSubmitting || killSwitchActive}
-            className="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02]"
+            className="px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-blue-500/20 transition-all hover:scale-[1.02] cursor-pointer"
           >
-            <Zap className="w-4 h-4" />
-            <span>{isSubmitting ? 'Dispatching...' : 'Dispatch Generation Job'}</span>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Calling Gemini AI...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                <span>Dispatch Generation Job</span>
+              </>
+            )}
           </button>
         </div>
+
+        {/* Live AI Question Generation Success Showcase */}
+        {lastGeneratedQ && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50/70 border border-emerald-300 space-y-3 animate-in fade-in duration-300">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>Live Gemini AI Synthesis Successful — Question Added to Active Pool!</span>
+              </span>
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                Correct: Option {lastGeneratedQ.correct_option?.toUpperCase()}
+              </span>
+            </div>
+            <div className="p-3 bg-white rounded-xl border border-emerald-200 text-xs text-slate-800 font-medium">
+              <div className="font-semibold text-slate-900 mb-1">Question Stem:</div>
+              <p>{lastGeneratedQ.stem}</p>
+            </div>
+            {lastGeneratedQ.shortcut && (
+              <div className="text-[11px] text-emerald-800 bg-white/60 p-2.5 rounded-xl border border-emerald-200">
+                <strong>Vedic Speed Shortcut:</strong> {lastGeneratedQ.shortcut}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Job Monitor Table (AD-32) */}
