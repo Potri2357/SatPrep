@@ -612,6 +612,14 @@ class SatPrepStore {
     return this.questions.get(id);
   }
 
+  getKeys(): Map<string, QuestionKey> {
+    return this.keys;
+  }
+
+  getKey(id: string): QuestionKey | undefined {
+    return this.keys.get(id);
+  }
+
   addQuestion(q: Question, key?: QuestionKey) {
     this.questions.set(q.id, q);
     if (key) {

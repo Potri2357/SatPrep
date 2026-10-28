@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { globalStore } from '@/lib/store';
+import { ALL_PRACTICE_KEYS, globalStore } from '@/lib/store';
 import { Question, QuestionKey } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
 import fs from 'fs';
@@ -10,11 +10,17 @@ export const dynamic = 'force-dynamic';
 const DATA_FILE_PATH = path.join(process.cwd(), 'src/data/uploaded_questions.json');
 
 export async function GET() {
-  const map = new Map<string, Question>();
+  const map = new Map<string, any>();
+  const keysMap = new Map<string, any>();
+
+  // Load initial store keys
+  for (const [qid, k] of Object.entries(ALL_PRACTICE_KEYS)) {
+    keysMap.set(qid, k);
+  }
 
   // 1. In-memory / initial store questions
   for (const q of globalStore.getQuestions()) {
-    map.set(q.id, q);
+    map.set(q.id, { ...q });
   }
 
   // 2. Persisted local file questions
@@ -24,7 +30,10 @@ export async function GET() {
       if (Array.isArray(persisted)) {
         for (const item of persisted) {
           if (item?.question) {
-            map.set(item.question.id, item.question);
+            map.set(item.question.id, { ...item.question });
+          }
+          if (item?.key) {
+            keysMap.set(item.key.question_id, item.key);
           }
         }
       }
@@ -56,6 +65,15 @@ export async function GET() {
             status: 'live',
             source: 'manual',
             version: 1,
+            correct_option: item.correct,
+            solution: item.solution,
+            shortcut: item.shortcut,
+          });
+          keysMap.set(item.id, {
+            question_id: item.id,
+            correct_option: item.correct,
+            solution: item.solution,
+            shortcut: item.shortcut,
           });
         }
       }
@@ -64,15 +82,26 @@ export async function GET() {
     console.warn('Could not read ibps_po_2025_quant.json:', err);
   }
 
-  // 4. Supabase Cloud Database Questions
+  // 4. Supabase Cloud Database Questions & Keys
   try {
-    const { data: sbQuestions, error } = await supabase
+    const { data: sbQuestions, error: qErr } = await supabase
       .from('questions')
       .select('*')
       .order('id', { ascending: false });
 
-    if (!error && Array.isArray(sbQuestions)) {
+    const { data: sbKeys } = await supabase
+      .from('question_keys')
+      .select('*');
+
+    if (Array.isArray(sbKeys)) {
+      for (const k of sbKeys) {
+        keysMap.set(k.question_id, k);
+      }
+    }
+
+    if (!qErr && Array.isArray(sbQuestions)) {
       for (const q of sbQuestions) {
+        const k = keysMap.get(q.id);
         map.set(q.id, {
           id: q.id,
           stem: q.stem,
@@ -83,6 +112,9 @@ export async function GET() {
           status: q.status || 'live',
           source: q.source || 'manual',
           version: q.version || 1,
+          correct_option: k?.correct_option || 'a',
+          solution: k?.solution,
+          shortcut: k?.shortcut,
         });
       }
     }
@@ -90,13 +122,105 @@ export async function GET() {
     console.warn('Supabase fetch questions notice:', sbErr);
   }
 
-  const allQuestions = Array.from(map.values());
+  // Attach key to all questions
+  const allQuestions = Array.from(map.values()).map((q) => {
+    const k = keysMap.get(q.id);
+    return {
+      ...q,
+      correct_option: q.correct_option || k?.correct_option || 'a',
+      solution: q.solution || k?.solution,
+      shortcut: q.shortcut || k?.shortcut,
+    };
+  });
 
   return NextResponse.json({
     success: true,
     count: allQuestions.length,
     questions: allQuestions,
   });
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { question, key } = body;
+
+    if (!question || !question.id) {
+      return NextResponse.json(
+        { success: false, error: 'Question with valid ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // 1. Update in Supabase
+    try {
+      const qRow = {
+        id: question.id,
+        stem: question.stem,
+        options: question.options,
+        type: question.type || 'mcq',
+        topic_id: question.topic_id,
+        difficulty_assigned: Number(question.difficulty_assigned) || 2,
+        status: question.status || 'live',
+        source: question.source || 'manual',
+        version: (question.version || 1) + 1,
+      };
+
+      await supabase.from('questions').upsert([qRow]);
+
+      const correctOpt = (key?.correct_option || question.correct_option || 'a').toLowerCase();
+      const sol = key?.solution || question.solution || 'Updated solution.';
+      const short = key?.shortcut || question.shortcut || null;
+
+      const kRow = {
+        question_id: question.id,
+        correct_option: correctOpt,
+        solution: sol,
+        shortcut: short,
+      };
+
+      await supabase.from('question_keys').upsert([kRow]);
+    } catch (sbErr) {
+      console.warn('Supabase PUT notice:', sbErr);
+    }
+
+    // 2. Update local in-memory store
+    const fullQuestion: Question = {
+      id: question.id,
+      stem: question.stem,
+      options: question.options,
+      type: question.type || 'mcq',
+      topic_id: question.topic_id,
+      difficulty_assigned: Number(question.difficulty_assigned) || 2,
+      status: question.status || 'live',
+      source: question.source || 'manual',
+      version: (question.version || 1) + 1,
+    };
+
+    const fullKey: QuestionKey = {
+      question_id: question.id,
+      correct_option: (key?.correct_option || question.correct_option || 'a').toLowerCase(),
+      solution: key?.solution || question.solution || 'Updated solution.',
+      shortcut: key?.shortcut || question.shortcut,
+    };
+
+    globalStore.addQuestion(fullQuestion, fullKey);
+
+    return NextResponse.json({
+      success: true,
+      question: {
+        ...fullQuestion,
+        correct_option: fullKey.correct_option,
+        solution: fullKey.solution,
+        shortcut: fullKey.shortcut,
+      },
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, error: err?.message || 'Failed to update question' },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: NextRequest) {
