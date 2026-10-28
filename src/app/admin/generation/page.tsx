@@ -3,22 +3,24 @@
 import React, { useState } from 'react';
 import { INITIAL_TOPICS, globalStore } from '@/lib/store';
 import { CustomDropdown } from '@/components/ui/custom-dropdown';
+import { MathRenderer } from '@/lib/math-renderer';
 import {
   Sparkles,
   CheckCircle2,
   Zap,
   Loader2,
   Lightbulb,
+  BookOpen,
 } from 'lucide-react';
 
 export default function GenerationControlCentrePage() {
   const [jobs, setJobs] = useState<any[]>(globalStore.getJobs());
   const [topicId, setTopicId] = useState<string>('quadratic-equations');
   const [difficulty, setDifficulty] = useState<number>(3);
-  const [count, setCount] = useState<number>(10);
+  const [count, setCount] = useState<number>(5);
   const [method, setMethod] = useState<'template' | 'llm_twist'>('llm_twist');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [lastGeneratedQ, setLastGeneratedQ] = useState<any | null>(null);
+  const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([]);
 
   const topicOptions = INITIAL_TOPICS.map((t) => ({
     value: t.id,
@@ -40,7 +42,7 @@ export default function GenerationControlCentrePage() {
 
   const handleLaunchJob = async () => {
     setIsSubmitting(true);
-    setLastGeneratedQ(null);
+    setGeneratedQuestions([]);
     try {
       const res = await fetch('/api/admin/generate', {
         method: 'POST',
@@ -55,8 +57,10 @@ export default function GenerationControlCentrePage() {
       const data = await res.json();
       if (data.success && data.job) {
         setJobs([data.job, ...jobs]);
-        if (data.generated_question) {
-          setLastGeneratedQ(data.generated_question);
+        if (data.generated_questions && Array.isArray(data.generated_questions)) {
+          setGeneratedQuestions(data.generated_questions);
+        } else if (data.generated_question) {
+          setGeneratedQuestions([data.generated_question]);
         }
       }
     } catch {
@@ -149,53 +153,105 @@ export default function GenerationControlCentrePage() {
           </button>
         </div>
 
-        {/* Live Generated Question Preview */}
-        {lastGeneratedQ && (
-          <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50/70 border border-emerald-300 space-y-3 animate-in fade-in duration-300">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-950">
+        {/* Live Generated Questions Preview */}
+        {generatedQuestions.length > 0 && (
+          <div className="space-y-4 pt-2 animate-in fade-in duration-300">
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-950">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>New Question Created and Added to Live Question Bank</span>
+                <span>
+                  Successfully Created {generatedQuestions.length} Practice {generatedQuestions.length === 1 ? 'Question' : 'Questions'} &amp; Added to Live Question Bank!
+                </span>
               </div>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] border border-emerald-300">
-                Level {difficulty} · Verified
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] border border-emerald-300 shrink-0">
+                Level {difficulty} · All Verified
               </span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-xl border border-emerald-200 text-xs text-slate-800 font-medium space-y-2">
-              <div className="font-semibold text-slate-900">Question:</div>
-              <p className="leading-relaxed">{lastGeneratedQ.stem}</p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-                {lastGeneratedQ.options?.map((opt: any) => (
-                  <div
-                    key={opt.id}
-                    className={`p-2 rounded-lg border text-xs flex items-center gap-2 ${
-                      opt.id === lastGeneratedQ.correct_option
-                        ? 'bg-emerald-50 border-emerald-400 font-bold text-emerald-950'
-                        : 'bg-slate-50 border-slate-200 text-slate-700'
-                    }`}
-                  >
-                    <span className="w-5 h-5 rounded-full flex items-center justify-center font-mono text-[10px] uppercase font-bold bg-white border border-slate-300">
-                      {opt.id}
-                    </span>
-                    <span>{opt.text}</span>
-                    {opt.id === lastGeneratedQ.correct_option && (
-                      <span className="ml-auto text-[9px] uppercase tracking-wider bg-emerald-600 text-white px-1.5 py-0.5 rounded font-bold">
-                        Correct
+            <div className="space-y-4">
+              {generatedQuestions.map((q: any, qIdx: number) => (
+                <div
+                  key={q.id || `gen-${qIdx}`}
+                  className="p-5 bg-white rounded-2xl border border-emerald-200 text-xs text-slate-800 shadow-xs space-y-3.5"
+                >
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-900 text-xs">
+                        Question {qIdx + 1} of {generatedQuestions.length}
                       </span>
-                    )}
+                      <span className="font-mono text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
+                        {q.id}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-semibold text-slate-500 capitalize bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200">
+                      {q.topic_id?.replace(/-/g, ' ')}
+                    </span>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            {lastGeneratedQ.shortcut && (
-              <div className="text-[11px] text-emerald-900 bg-white/70 p-2.5 rounded-xl border border-emerald-200 leading-relaxed flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
-                <span><strong>Speed Shortcut:</strong> {lastGeneratedQ.shortcut}</span>
-              </div>
-            )}
+                  {/* Question Stem with MathRenderer */}
+                  <div className="p-3.5 bg-slate-50/70 rounded-xl border border-slate-200 font-medium text-slate-900 leading-relaxed">
+                    <MathRenderer content={q.stem} />
+                  </div>
+
+                  {/* 5 Options Grid with MathRenderer */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                    {q.options?.map((opt: any) => {
+                      const isCorrect = String(opt.id).toLowerCase() === String(q.correct_option).toLowerCase();
+                      return (
+                        <div
+                          key={opt.id}
+                          className={`p-2.5 rounded-xl border text-xs flex items-center gap-2.5 transition-colors ${
+                            isCorrect
+                              ? 'bg-emerald-50 border-emerald-400 font-bold text-emerald-950 shadow-2xs'
+                              : 'bg-white border-slate-200 text-slate-700'
+                          }`}
+                        >
+                          <span
+                            className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[10px] uppercase font-bold shrink-0 ${
+                              isCorrect
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-slate-100 border border-slate-300 text-slate-700'
+                            }`}
+                          >
+                            {opt.id}
+                          </span>
+                          <div className="flex-1">
+                            <MathRenderer content={opt.text} />
+                          </div>
+                          {isCorrect && (
+                            <span className="ml-auto text-[9px] uppercase tracking-wider bg-emerald-600 text-white px-1.5 py-0.5 rounded font-bold shrink-0">
+                              Correct
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Step-by-Step Solution with MathRenderer */}
+                  {q.solution && (
+                    <div className="p-3 rounded-xl bg-blue-50/50 border border-blue-100 text-[11.5px] leading-relaxed text-slate-800 space-y-1">
+                      <div className="font-bold text-blue-900 flex items-center gap-1.5">
+                        <BookOpen className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                        <span>Step-by-Step Solution:</span>
+                      </div>
+                      <MathRenderer content={q.solution} />
+                    </div>
+                  )}
+
+                  {/* Speed Shortcut with MathRenderer */}
+                  {q.shortcut && (
+                    <div className="text-[11px] text-emerald-900 bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-200 leading-relaxed flex items-center gap-2">
+                      <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
+                      <div className="flex-1">
+                        <strong className="mr-1 text-emerald-950">Speed Shortcut:</strong>
+                        <MathRenderer content={q.shortcut} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

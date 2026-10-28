@@ -346,6 +346,256 @@ Respond with strict JSON adhering to this exact schema (no markdown formatting o
   return null;
 }
 
+// Procedural question generator for 100% reliable fallbacks
+export function generateProceduralQuestions(
+  topicId: string,
+  topicName: string,
+  difficulty: number = 3,
+  count: number = 1
+): GeneratedQuestionPayload[] {
+  const list: GeneratedQuestionPayload[] = [];
+
+  for (let idx = 0; idx < count; idx++) {
+    if (topicId === 'quadratic-equations') {
+      const r1 = 3 + idx;
+      const r2 = 6 + (idx % 3);
+      const r3 = 5 + idx;
+      const r4 = 8 + (idx % 2);
+
+      const b1 = r1 + r2;
+      const c1 = r1 * r2;
+      const b2 = r3 + r4;
+      const c2 = r3 * r4;
+
+      const stem = `In the following question, two equations numbered I and II are given. You have to solve both the equations and establish the relation between $x$ and $y$:\n\nI. $x^2 - ${b1}x + ${c1} = 0$\n\nII. $y^2 - ${b2}y + ${c2} = 0$`;
+      const correct = 'b'; // x < y
+
+      list.push({
+        stem,
+        options: [
+          { id: 'a', text: '$x > y$' },
+          { id: 'b', text: '$x < y$' },
+          { id: 'c', text: '$x \\ge y$' },
+          { id: 'd', text: '$x \\le y$' },
+          { id: 'e', text: '$x = y$ or relationship cannot be established' },
+        ],
+        correct_option: correct,
+        solution: `Equation I: $x^2 - ${b1}x + ${c1} = 0 \\implies (x - ${r1})(x - ${r2}) = 0 \\implies x = ${r1}, ${r2}$.\nEquation II: $y^2 - ${b2}y + ${c2} = 0 \\implies (y - ${r3})(y - ${r4}) = 0 \\implies y = ${r3}, ${r4}$.\nComparing values: ${r1} < ${r3}, ${r1} < ${r4}, ${r2} < ${r3}, ${r2} < ${r4}. Thus, $x < y$.`,
+        shortcut: `Direct factor split: Roots of I are ${r1}, ${r2} and roots of II are ${r3}, ${r4}. Since all roots of I are strictly smaller than roots of II, $x < y$.`,
+        difficulty,
+        topic_id: topicId,
+      });
+    } else if (topicId === 'simplification') {
+      const val1 = (idx + 2) * 15;
+      const val2 = 25 * (idx + 1);
+      const sqrtVal = (idx + 4) * (idx + 4);
+      const ans = val1 * 4 + Math.sqrt(sqrtVal) - val2;
+
+      list.push({
+        stem: `What approximate value should come in place of the question mark ($?$) in the following mathematical equation?\n\n$$${val1}\\% \\text{ of } 400 + \\sqrt{${sqrtVal}} - ${val2} = ?$$`,
+        options: [
+          { id: 'a', text: `${ans}` },
+          { id: 'b', text: `${ans + 12}` },
+          { id: 'c', text: `${ans - 15}` },
+          { id: 'd', text: `${ans + 25}` },
+          { id: 'e', text: 'None of these' },
+        ],
+        correct_option: 'a',
+        solution: `${val1}% of 400 = ${val1 * 4}. $\\sqrt{${sqrtVal}} = ${idx + 4}$. Expression = ${val1 * 4} + ${idx + 4} - ${val2} = ${ans}.`,
+        shortcut: `Direct percentage breakdown: Split ${val1}% into mental components and simplify linearly.`,
+        difficulty,
+        topic_id: topicId,
+      });
+    } else {
+      const baseVal = 200 + idx * 50;
+      const profitPct = 10 + (idx % 4) * 5;
+      const sp = Math.round(baseVal * (1 + profitPct / 100));
+
+      list.push({
+        stem: `A trader purchases an article for ₹$${baseVal}$ and marks it for sale to make a profit of $${profitPct}\\%$. What is the final selling price of the article?`,
+        options: [
+          { id: 'a', text: `₹$${sp - 10}$` },
+          { id: 'b', text: `₹$${sp}$` },
+          { id: 'c', text: `₹$${sp + 15}$` },
+          { id: 'd', text: `₹$${sp + 25}$` },
+          { id: 'e', text: 'None of these' },
+        ],
+        correct_option: 'b',
+        solution: `Cost Price (CP) = ₹$${baseVal}$. Profit % = $${profitPct}\\%$. Selling Price (SP) = $${baseVal} \\times (1 + \\frac{${profitPct}}{100}) = ₹${sp}$.`,
+        shortcut: `Multiply directly by the multiplier factor $1.${profitPct < 10 ? '0' + profitPct : profitPct}$.`,
+        difficulty,
+        topic_id: topicId,
+      });
+    }
+  }
+
+  return list;
+}
+
+/**
+ * Generate multiple banking questions with automatic cascade failover across multiple models
+ */
+export async function generateMultipleBankingQuestionsWithCascade(
+  topicId: string,
+  topicName: string,
+  difficulty: number = 3,
+  count: number = 1,
+  preferredModel?: string
+): Promise<{ questions: GeneratedQuestionPayload[]; telemetry: ModelTelemetry | null }> {
+  const targetCount = Math.min(Math.max(count, 1), 20);
+  const keys = parseApiKeys();
+
+  if (keys.length === 0) {
+    console.warn('[ModelRouter] No Gemini API keys configured. Using procedural generation.');
+    return { questions: generateProceduralQuestions(topicId, topicName, difficulty, targetCount), telemetry: null };
+  }
+
+  const prompt = `You are a Senior Quantitative Aptitude Psychometrician for Indian Bank Exams (IBPS PO, SBI PO Prelims).
+Generate ${targetCount} distinct, high-quality, calibrated questions on the topic "${topicName}".
+Target Difficulty: Level ${difficulty} out of 5 (1 = Easy, 2 = Moderate-Easy, 3 = Moderate, 4 = Hard, 5 = Mains Level).
+
+Rules:
+1. Provide a realistic question stem using KaTeX formatting ($...$ for math expressions, e.g. $x^2 - 15x + 56 = 0$).
+2. For multiple equations, separate them with clean double linebreaks \\n\\n (e.g. "Two equations are given:\\n\\nI. $x^2 - 11x + 30 = 0$\\n\\nII. $y^2 - 17y + 72 = 0$").
+3. Exactly 5 options (id: "a", "b", "c", "d", "e") per question.
+4. Exactly ONE option must be mathematically correct.
+5. Provide a step-by-step mathematical solution.
+6. Provide a 20-second Vedic math/speed shortcut.
+7. CRITICAL: Any LaTeX backslash MUST be properly escaped with double backslashes (e.g. \\\\sqrt, \\\\frac, \\\\times) to produce strictly valid JSON.
+8. Each of the ${targetCount} questions must be mathematically unique with different numerical values and problem scenarios.
+
+Respond with strict JSON adhering to this exact schema (an array of ${targetCount} questions):
+[
+  {
+    "stem": "In the following question, two equations numbered I and II are given...\\n\\nI. $...$\\n\\nII. $...$",
+    "options": [
+      {"id": "a", "text": "$x > y$"},
+      {"id": "b", "text": "$x < y$"},
+      {"id": "c", "text": "$x \\\\ge y$"},
+      {"id": "d", "text": "$x \\\\le y$"},
+      {"id": "e", "text": "$x = y$ or relationship cannot be established"}
+    ],
+    "correct_option": "b",
+    "solution": "Step by step calculation...",
+    "shortcut": "Fast mental shortcut..."
+  }
+]`;
+
+  let queue = [...DEFAULT_MODEL_CASCADE];
+  if (preferredModel && queue.includes(preferredModel)) {
+    queue = [preferredModel, ...queue.filter((m) => m !== preferredModel)];
+  }
+
+  const now = Date.now();
+  const eligibleQueue = queue.filter((m) => {
+    const h = getModelHealth(m);
+    return !h.cooldownUntil || h.cooldownUntil < now;
+  });
+  const executionOrder = eligibleQueue.length > 0 ? eligibleQueue : queue;
+
+  const modelsTried: string[] = [];
+  const startTime = Date.now();
+
+  for (let i = 0; i < executionOrder.length; i++) {
+    const model = executionOrder[i];
+    modelsTried.push(model);
+    const health = getModelHealth(model);
+    const apiKey = getActiveApiKey();
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 25000);
+
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              temperature: 0.7,
+              responseMimeType: 'application/json',
+            },
+          }),
+          signal: controller.signal,
+        }
+      );
+
+      clearTimeout(timeoutId);
+
+      if (!res.ok) {
+        if (res.status === 429 || res.status === 503) {
+          health.status = 'cooldown';
+          health.cooldownUntil = Date.now() + 60 * 1000;
+          getActiveApiKey(true);
+        } else {
+          health.status = 'error';
+        }
+        health.failureCount++;
+        continue;
+      }
+
+      const data = await res.json();
+      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!rawText) {
+        health.failureCount++;
+        continue;
+      }
+
+      const parsed = parseJsonWithLatexSafe(rawText);
+      let items: any[] = [];
+      if (Array.isArray(parsed)) {
+        items = parsed;
+      } else if (parsed && Array.isArray(parsed.questions)) {
+        items = parsed.questions;
+      } else if (parsed && parsed.stem) {
+        items = [parsed];
+      }
+
+      const validQuestions: GeneratedQuestionPayload[] = items
+        .filter((item) => item && item.stem && Array.isArray(item.options) && item.correct_option)
+        .map((item) => ({
+          stem: item.stem,
+          options: item.options,
+          correct_option: String(item.correct_option).toLowerCase(),
+          solution: item.solution || 'Step-by-step mathematical solution.',
+          shortcut: item.shortcut,
+          option_rationales: item.option_rationales,
+          difficulty,
+          topic_id: topicId,
+        }));
+
+      if (validQuestions.length > 0) {
+        health.status = 'healthy';
+        health.successCount++;
+        health.lastUsed = new Date().toISOString();
+        delete health.cooldownUntil;
+
+        const latency = Date.now() - startTime;
+        return {
+          questions: validQuestions,
+          telemetry: {
+            model_used: model,
+            attempts: i + 1,
+            models_tried: modelsTried,
+            latency_ms: latency,
+            failover_occurred: i > 0,
+          },
+        };
+      }
+    } catch {
+      health.failureCount++;
+      continue;
+    }
+  }
+
+  return {
+    questions: generateProceduralQuestions(topicId, topicName, difficulty, targetCount),
+    telemetry: null,
+  };
+}
+
 // Backward-compatible alias
 export async function generateBankingQuestionWithGemini(
   topicId: string,

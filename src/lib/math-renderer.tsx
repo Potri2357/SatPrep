@@ -26,8 +26,9 @@ export const MathRenderer: React.FC<MathRendererProps> = ({
     if (!content) return null;
 
     try {
-      // Normalize delimiters: convert \[...\] to $$...$$ and \(...\) to $...$
+      // Normalize delimiters: convert escaped newlines, \[...\] to $$...$$ and \(...\) to $...$
       let normalized = content
+        .replace(/\\n/g, '\n')
         .replace(/\\\[([\s\S]*?)\\\]/g, '$$$$$1$$$$')
         .replace(/\\\(([\s\S]*?)\\\)/g, '$$$1$$');
 
