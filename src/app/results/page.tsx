@@ -32,7 +32,7 @@ export default function OverallResultsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'full_mock' | 'sectional'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortBy, setSortBy] = useState<'latest' | 'score' | 'accuracy' | 'percentile'>('latest');
+  const [sortBy, setSortBy] = useState<'latest' | 'score' | 'accuracy'>('latest');
 
   useEffect(() => {
     let isMounted = true;
@@ -79,7 +79,6 @@ export default function OverallResultsPage() {
     .sort((a, b) => {
       if (sortBy === 'score') return b.score - a.score;
       if (sortBy === 'accuracy') return b.accuracy - a.accuracy;
-      if (sortBy === 'percentile') return b.percentile - a.percentile;
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
@@ -91,15 +90,11 @@ export default function OverallResultsPage() {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC]">
           <div className="space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E0F4FD] border border-[#BCEBFC] text-[#005CE6] text-xs font-bold">
-              <Award className="w-3.5 h-3.5" />
-              <span>Consolidated Candidate Analytics</span>
-            </div>
             <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
               Overall Exam Results
             </h1>
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              Consolidated performance record for all tests written. Review your test-by-test scores, accuracy progression, and banking exam percentile benchmarks.
+              Consolidated performance record for all tests written. Review your test-by-test scores, accuracy progression, and topic-level breakdowns.
             </p>
           </div>
 
@@ -122,7 +117,7 @@ export default function OverallResultsPage() {
         ) : (
           <>
             {/* Top Aggregate KPI Cards Ribbon */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               {/* Card 1: Total Tests Written */}
               <div className="neu-glass-card p-5 sm:p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
                 <div className="flex items-center justify-between mb-3">
@@ -156,14 +151,14 @@ export default function OverallResultsPage() {
                 </div>
                 <div>
                   <div className="text-2xl sm:text-3xl font-black font-mono text-[#005CE6]">
-                    {data?.avg_score.toFixed(2) || '0.00'}
+                    {data?.avg_score ? data.avg_score.toFixed(2) : '0.00'}
                     <span className="text-xs font-normal text-slate-400 font-sans ml-1">
                       / {data?.max_possible_avg || 35} avg
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 mt-1 flex items-center gap-1 font-medium">
                     <TrendingUp className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                    <span>Peak Score: {data?.highest_score.toFixed(2)} Marks</span>
+                    <span>Peak Score: {data?.highest_score ? data.highest_score.toFixed(2) : '0.00'} Marks</span>
                   </p>
                 </div>
               </div>
@@ -184,28 +179,7 @@ export default function OverallResultsPage() {
                   </div>
                   <p className="text-xs text-slate-500 mt-1 flex items-center gap-1 font-medium">
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                    <span>{data?.total_correct} Correct / {data?.total_questions_attempted} Attempted</span>
-                  </p>
-                </div>
-              </div>
-
-              {/* Card 4: Average Percentile */}
-              <div className="neu-glass-card p-5 sm:p-6 rounded-3xl relative overflow-hidden flex flex-col justify-between">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Avg Percentile
-                  </span>
-                  <div className="w-9 h-9 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-200 shadow-2xs">
-                    <BarChart3 className="w-4 h-4" />
-                  </div>
-                </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-black font-mono text-purple-700">
-                    {data?.avg_percentile || 0}%ile
-                  </div>
-                  <p className="text-xs text-slate-500 mt-1 flex items-center gap-1 font-medium">
-                    <ShieldCheck className="w-3.5 h-3.5 text-purple-600 shrink-0" />
-                    <span>Top ~{Math.max(1, Math.round(100 - (data?.avg_percentile || 90)))}% banking cohort</span>
+                    <span>{data?.total_correct || 0} Correct / {data?.total_questions_attempted || 0} Attempted</span>
                   </p>
                 </div>
               </div>
@@ -274,7 +248,6 @@ export default function OverallResultsPage() {
                   <option value="latest">Sort: Most Recent</option>
                   <option value="score">Sort: Highest Score</option>
                   <option value="accuracy">Sort: Highest Accuracy</option>
-                  <option value="percentile">Sort: Highest Percentile</option>
                 </select>
               </div>
             </div>
@@ -290,7 +263,28 @@ export default function OverallResultsPage() {
                 </h2>
               </div>
 
-              {filteredTests.length === 0 ? (
+              {testsList.length === 0 ? (
+                <div className="p-12 sm:p-16 rounded-3xl bg-white border border-[#BCEBFC] text-center space-y-5">
+                  <div className="w-16 h-16 rounded-3xl bg-[#E0F4FD] text-[#005CE6] flex items-center justify-center mx-auto border border-[#BCEBFC] shadow-2xs">
+                    <Award className="w-8 h-8" />
+                  </div>
+                  <div className="space-y-2 max-w-md mx-auto">
+                    <h3 className="text-xl font-black text-slate-900">No Tests Written Yet</h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      You haven&apos;t taken any mock tests yet. Take your first test to see detailed section scores, accuracy, and topic-wise diagnostic breakdowns.
+                    </p>
+                  </div>
+                  <div className="pt-2">
+                    <Link
+                      href="/tests"
+                      className="px-6 py-3 rounded-2xl bg-gradient-to-r from-[#005CE6] to-[#007AE6] hover:from-[#004dc2] hover:to-[#0066cc] text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all inline-flex items-center gap-2 cursor-pointer"
+                    >
+                      <Zap className="w-4 h-4" />
+                      <span>Take Your First Mock Test</span>
+                    </Link>
+                  </div>
+                </div>
+              ) : filteredTests.length === 0 ? (
                 <div className="p-12 rounded-3xl bg-white border border-slate-200 text-center space-y-4">
                   <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
                     <Search className="w-6 h-6" />
@@ -412,16 +406,16 @@ export default function OverallResultsPage() {
                                 </div>
                               </div>
 
-                              {/* Percentile */}
+                              {/* Time Spent */}
                               <div className="p-2 sm:p-0 rounded-2xl bg-slate-50 sm:bg-transparent">
                                 <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                  Percentile
+                                  Time Spent
                                 </div>
-                                <div className="text-lg sm:text-xl font-black font-mono text-purple-700">
-                                  {test.percentile}%ile
+                                <div className="text-lg sm:text-xl font-black font-mono text-slate-800">
+                                  {Math.floor(test.time_spent_sec / 60)}m {test.time_spent_sec % 60}s
                                 </div>
                                 <div className="text-[10px] font-semibold text-slate-500">
-                                  Rank #{test.rank}
+                                  Cutoff: {test.cutoff.toFixed(1)}
                                 </div>
                               </div>
                             </div>

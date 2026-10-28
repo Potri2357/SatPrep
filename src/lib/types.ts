@@ -204,9 +204,9 @@ export interface TestAttemptSummary {
   score: number;
   max_marks: number;
   accuracy: number;
-  percentile: number;
-  rank: number;
-  total_cohort: number;
+  percentile?: number;
+  rank?: number;
+  total_cohort?: number;
   attempted: number;
   correct: number;
   wrong: number;
@@ -223,14 +223,14 @@ export interface OverallResultsData {
   avg_score: number;
   max_possible_avg: number;
   overall_accuracy: number;
-  avg_percentile: number;
+  avg_percentile?: number;
   total_questions_attempted: number;
   total_correct: number;
   total_wrong: number;
   total_skipped: number;
   total_time_spent_min: number;
   highest_score: number;
-  highest_percentile: number;
+  highest_percentile?: number;
   tests: TestAttemptSummary[];
   topic_summary?: {
     topic_id: string;

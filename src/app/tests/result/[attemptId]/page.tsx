@@ -80,7 +80,11 @@ export default function ResultAnalysisPage() {
 
     const fetchResult = async () => {
       try {
-        const cleanId = attemptId && attemptId !== 'undefined' ? attemptId : 'sample-attempt-1';
+        const cleanId = attemptId && attemptId !== 'undefined' ? attemptId : '';
+        if (!cleanId) {
+          setLoading(false);
+          return;
+        }
         const res = await fetch(`/api/test/result/${cleanId}`, {
           cache: 'no-store',
           headers: { Accept: 'application/json' },
@@ -166,18 +170,26 @@ export default function ResultAnalysisPage() {
             <AlertTriangle className="w-8 h-8" />
           </div>
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-slate-900">Scorecard Not Available</h1>
+            <h1 className="text-2xl font-bold text-slate-900">Scorecard Not Found</h1>
             <p className="text-xs text-slate-600 leading-relaxed">
-              We couldn&apos;t load the specified attempt data. You can view our verified benchmark exam results.
+              We couldn&apos;t find this test attempt record. Take a mock test or review your overall results.
             </p>
           </div>
-          <Link
-            href="/tests/result/sample-attempt-1"
-            className="px-6 py-3 rounded-2xl bg-[#005CE6] text-white font-bold text-xs sm:text-sm shadow-md inline-flex items-center gap-2"
-          >
-            <span>View Verified Benchmark Results</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/tests"
+              className="px-6 py-3 rounded-2xl bg-[#005CE6] hover:bg-[#004dc2] text-white font-bold text-xs sm:text-sm shadow-md inline-flex items-center gap-2"
+            >
+              <span>Take a Mock Test</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/results"
+              className="px-6 py-3 rounded-2xl bg-white border border-[#BCEBFC] text-[#005CE6] hover:bg-[#F0FAFF] font-bold text-xs sm:text-sm shadow-2xs inline-flex items-center gap-2"
+            >
+              <span>View Overall Results</span>
+            </Link>
+          </div>
         </main>
         <footer className="py-6 text-xs text-center text-slate-400">
           SatPrep &bull; Official Examination Analytics
@@ -347,10 +359,6 @@ export default function ResultAnalysisPage() {
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <TrendingUp className="w-3.5 h-3.5" />
                     <span>Accuracy: {sc.accuracy_percent}%</span>
-                  </div>
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                    <Award className="w-3.5 h-3.5 text-[#005CE6]" />
-                    <span>Percentile: {sc.percentile || 91.8}%ile</span>
                   </div>
                 </div>
 

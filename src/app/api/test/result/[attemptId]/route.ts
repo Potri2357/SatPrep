@@ -9,8 +9,21 @@ export async function GET(
 ) {
   try {
     const { attemptId } = await params;
-    const cleanId = attemptId && attemptId !== 'undefined' ? attemptId : 'sample-attempt-1';
+    const cleanId = attemptId && attemptId !== 'undefined' ? attemptId.trim() : '';
+    if (!cleanId) {
+      return NextResponse.json(
+        { success: false, error: 'Valid attemptId is required' },
+        { status: 400 }
+      );
+    }
+
     const snapshot = globalStore.getResultSnapshot(cleanId);
+    if (!snapshot) {
+      return NextResponse.json(
+        { success: false, error: 'Test result not found' },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json(
       { success: true, snapshot },
@@ -22,18 +35,11 @@ export async function GET(
         },
       }
     );
-  } catch (err) {
+  } catch (err: any) {
     console.error('Error fetching result snapshot:', err);
-    const fallback = globalStore.generateFallbackSnapshot('sample-attempt-1');
     return NextResponse.json(
-      { success: true, snapshot: fallback },
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-store, no-cache, must-revalidate',
-        },
-      }
+      { success: false, error: err?.message || 'Failed to fetch result' },
+      { status: 500 }
     );
   }
 }

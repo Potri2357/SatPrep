@@ -593,9 +593,6 @@ class SatPrepStore {
       runtime_sec: 1.4,
       created_at: new Date(Date.now() - 7200000).toISOString(),
     });
-
-    // Seed realistic mock test attempts for the Overall Results section
-    this.seedInitialAttempts();
   }
 
   getUser(): UserProfile {
@@ -1074,7 +1071,7 @@ class SatPrepStore {
     return snapshot;
   }
 
-  getResultSnapshot(attemptId: string): ResultSnapshot {
+  getResultSnapshot(attemptId: string): ResultSnapshot | undefined {
     const existing = this.snapshots.get(attemptId);
     if (existing) return existing;
 
@@ -1086,7 +1083,7 @@ class SatPrepStore {
       }
     }
 
-    return this.generateFallbackSnapshot(attemptId);
+    return undefined;
   }
 
   generateFallbackSnapshot(attemptId: string): ResultSnapshot {
@@ -1454,8 +1451,21 @@ class SatPrepStore {
   }
 
   getAllAttemptsSummary(): OverallResultsData {
-    if (this.snapshots.size <= 1) {
-      this.seedInitialAttempts();
+    if (this.snapshots.size === 0) {
+      return {
+        total_tests_written: 0,
+        avg_score: 0,
+        max_possible_avg: 0,
+        overall_accuracy: 0,
+        total_questions_attempted: 0,
+        total_correct: 0,
+        total_wrong: 0,
+        total_skipped: 0,
+        total_time_spent_min: 0,
+        highest_score: 0,
+        tests: [],
+        topic_summary: [],
+      };
     }
 
     const testSummaries: TestAttemptSummary[] = [];
@@ -1499,9 +1509,6 @@ class SatPrepStore {
         score: sc.total_score,
         max_marks: sc.max_marks,
         accuracy: sc.accuracy_percent,
-        percentile: sc.percentile || 90.0,
-        rank: sc.rank || 150,
-        total_cohort: sc.total_cohort_attempts || 1800,
         attempted: sc.attempted,
         correct: sc.correct,
         wrong: sc.wrong,
@@ -1516,14 +1523,12 @@ class SatPrepStore {
       sumScore += sc.total_score;
       sumMaxMarks += sc.max_marks;
       sumAccuracy += sc.accuracy_percent;
-      sumPercentile += (sc.percentile || 90);
       totalAttempted += sc.attempted;
       totalCorrect += sc.correct;
       totalWrong += sc.wrong;
       totalSkipped += sc.skipped;
       totalTimeSec += sc.total_time_spent_sec;
       if (sc.total_score > highestScore) highestScore = sc.total_score;
-      if ((sc.percentile || 0) > highestPercentile) highestPercentile = sc.percentile || 0;
 
       if (snap.topic_breakdown) {
         snap.topic_breakdown.forEach((t) => {
@@ -1542,7 +1547,6 @@ class SatPrepStore {
     const avgScore = Number((sumScore / count).toFixed(2));
     const maxPossibleAvg = Number((sumMaxMarks / count).toFixed(2));
     const overallAccuracy = totalAttempted > 0 ? Math.round((totalCorrect / totalAttempted) * 100) : Math.round(sumAccuracy / count);
-    const avgPercentile = Number((sumPercentile / count).toFixed(1));
 
     const topicSummary = Object.entries(topicAgg).map(([topicId, val]) => {
       const acc = val.attempts > 0 ? Math.round((val.correct / val.attempts) * 100) : 0;
@@ -1564,14 +1568,12 @@ class SatPrepStore {
       avg_score: avgScore,
       max_possible_avg: maxPossibleAvg,
       overall_accuracy: overallAccuracy,
-      avg_percentile: avgPercentile,
       total_questions_attempted: totalAttempted,
       total_correct: totalCorrect,
       total_wrong: totalWrong,
       total_skipped: totalSkipped,
       total_time_spent_min: Math.round(totalTimeSec / 60),
       highest_score: highestScore,
-      highest_percentile: highestPercentile,
       tests: testSummaries,
       topic_summary: topicSummary,
     };
