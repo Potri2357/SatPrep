@@ -30,7 +30,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# python
-worker/__pycache__/
-worker/.venv/
-*.pyc
+

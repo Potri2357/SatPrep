@@ -124,7 +124,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>Pipeline: Active</span>
             </span>
-            <span className="text-slate-500 font-mono text-[11px]">Worker Latency: 42ms</span>
+            <span className="text-slate-500 font-mono text-[11px]">AI Latency: ~42ms</span>
           </div>
         </header>
 

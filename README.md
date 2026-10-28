@@ -32,10 +32,11 @@ Built in strict compliance with the **SatPrep Product Requirements Document (v1.
    - **Wrong-Option Explanations**: Psychometric explanation for each distractor explaining *why* an aspirant mistakenly chose it (e.g. discount applied to CP instead of MP, sign flip error in quadratics).
    - One-tap "Practise Similar" and question error reporting.
 
-4. **Python Worker & Parametric Template Engine (Section 10)**
-   - Guaranteed 100% mathematically correct variants generated via Python code for Quadratic Equations, Simplification, Number Series, and Profit & Loss.
-   - Isolated sandbox runner executing `solve()` routines to verify options before human review.
-   - Gemini API pipeline for blueprint extraction, twist generation, and blind re-solve.
+4. **Multi-Model AI Router & Parametric Pipeline**
+   - Multi-model resilient cascade with automatic failover across Google Gemini models (`gemini-2.5-flash`, `gemini-3.5-flash-lite`, `gemini-flash-lite-latest`, etc.).
+   - Instant rate-limit (429) & overload (503) recovery with in-memory health tracking and quota cooldown.
+   - Robust LaTeX & KaTeX JSON parser preventing escape-sequence malformation.
+   - Native Edge & Serverless safe REST integration without heavy SDK dependencies.
 
 5. **Comprehensive Admin Console (`/admin`)**
    - Question bank management with live KaTeX preview.
@@ -49,10 +50,10 @@ Built in strict compliance with the **SatPrep Product Requirements Document (v1.
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 15+ (App Router), TypeScript, Tailwind CSS, KaTeX, Lucide Icons
+- **Frontend & Fullstack**: Next.js 16+ (App Router), TypeScript, Tailwind CSS, KaTeX, Lucide Icons
 - **Design System**: Derived from the SatPrep brand mark (Ice disc, rounded plus sign, 135° diagonal accent, DM Sans & DM Mono)
 - **Database & Auth**: Supabase PostgreSQL with `pgvector`, Row Level Security (RLS), and secure RPC functions
-- **Worker**: Python 3.12+ (FastAPI, SymPy, Google GenAI SDK, isolated sandbox runner)
+- **AI Engine**: Google Gemini Multi-Model Cascade Router (Serverless REST integration)
 
 ---
 
@@ -67,8 +68,7 @@ cp .env.example .env
 
 Review the values in `.env`:
 - `NEXT_PUBLIC_SUPABASE_URL` & `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase project configuration (uses built-in self-contained mock store if default keys are kept).
-- `GEMINI_API_KEY`: Google Generative AI API key for LLM twist generation and PDF OCR.
-- `WORKER_URL`: Python worker service URL (`http://localhost:8000`).
+- `GEMINI_API_KEY`: Google Generative AI API key for multi-model cascade generation and KaTeX parsing.
 
 ### 2. Run the Next.js Web App
 
@@ -84,17 +84,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application:
 - **Candidate Profile**: `/profile`
 - **Admin Console**: `/admin`
 
-### 3. Run the Python Worker (Optional for Local Pipeline)
-
-```bash
-cd worker
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python3 -m uvicorn worker.main:app --reload --port 8000
-```
-
-### 4. Database Setup (Supabase)
+### 3. Database Setup (Supabase)
 
 To apply the schema to a live Supabase instance:
 ```bash
@@ -118,14 +108,6 @@ SatPrep/
 │   ├── migrations/
 │   │   └── 20261025000000_init_satprep_schema.sql # Complete DB schema, RLS & tables
 │   └── seed.sql                      # Seed exams, taxonomy and sample questions
-├── worker/
-│   ├── main.py                       # FastAPI worker service
-│   ├── requirements.txt              # Worker dependencies
-│   ├── config.py                     # Worker configuration
-│   ├── assembler.py                  # Backend test assembler (TA-01 to TA-33)
-│   ├── templates.py                  # Parametric math question generators
-│   ├── sandbox.py                    # Isolated solver verification sandbox
-│   └── pipeline.py                   # Gemini API blueprint & twist pipeline
 └── src/
     ├── app/
     │   ├── layout.tsx                # App layout with DM Sans & KaTeX
