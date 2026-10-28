@@ -13,6 +13,13 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: 'SatPrep — Bank Exam Quant & Aptitude Test Platform',
   description: 'Exam-realistic Quantitative Aptitude and Data Interpretation test platform for IBPS, SBI, RBI, and RRB aspirants.',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({
