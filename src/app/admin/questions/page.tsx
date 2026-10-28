@@ -1,17 +1,45 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ALL_PRACTICE_QUESTIONS as INITIAL_QUESTIONS, INITIAL_TOPICS, ALL_PRACTICE_KEYS as INITIAL_KEYS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
 import { Question } from '@/lib/types';
-import { Search, Filter, Plus, Edit3, Trash2, Check, Eye, X, BookOpen } from 'lucide-react';
+import { Search, Filter, Plus, Edit3, Trash2, Check, Eye, X, Loader2 } from 'lucide-react';
 
 export default function QuestionBankManagementPage() {
   const [questions, setQuestions] = useState<Question[]>(INITIAL_QUESTIONS);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>('');
   const [topicFilter, setTopicFilter] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [previewQ, setPreviewQ] = useState<Question | null>(null);
+
+  // Fetch updated questions from Supabase & API on mount
+  useEffect(() => {
+    async function loadQuestions() {
+      try {
+        const res = await fetch('/api/admin/questions');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.questions) && data.questions.length > 0) {
+          setQuestions(data.questions);
+        }
+      } catch (err) {
+        console.error('Failed to load questions:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadQuestions();
+  }, []);
+
+  const availableTopics = useMemo(() => {
+    const set = new Set<string>();
+    INITIAL_TOPICS.forEach((t) => set.add(t.id));
+    questions.forEach((q) => {
+      if (q.topic_id) set.add(q.topic_id);
+    });
+    return Array.from(set).sort();
+  }, [questions]);
 
   const filtered = questions.filter((q) => {
     if (topicFilter !== 'all' && q.topic_id !== topicFilter) return false;
@@ -36,21 +64,17 @@ export default function QuestionBankManagementPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Question Library</span>
-          </div>
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             Question Bank
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Search, filter, preview, and manage active practice questions.
+            Search, filter, preview, and manage active practice questions ({questions.length} total in question bank).
           </p>
         </div>
 
         <button
           onClick={() => alert('New Question Form modal opened')}
-          className="px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all shadow-blue-500/20 hover:scale-[1.02]"
+          className="px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all shadow-blue-500/20 hover:scale-[1.02] cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add Single Question</span>
@@ -72,11 +96,13 @@ export default function QuestionBankManagementPage() {
         <select
           value={topicFilter}
           onChange={(e) => setTopicFilter(e.target.value)}
-          className="h-10 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 text-xs font-medium focus:outline-none focus:border-blue-500"
+          className="h-10 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 text-xs font-medium focus:outline-none focus:border-blue-500 capitalize"
         >
-          <option value="all">All Topics</option>
-          {INITIAL_TOPICS.map((t) => (
-            <option key={t.id} value={t.id}>{t.name}</option>
+          <option value="all">All Topics ({questions.length})</option>
+          {availableTopics.map((tId) => (
+            <option key={tId} value={tId}>
+              {tId.replace(/-/g, ' ')}
+            </option>
           ))}
         </select>
 
@@ -94,6 +120,14 @@ export default function QuestionBankManagementPage() {
           <option value="retired">Retired</option>
         </select>
       </div>
+
+      {/* Loading state indicator */}
+      {isLoading && (
+        <div className="p-8 text-center text-xs text-blue-600 flex items-center justify-center gap-2 bg-blue-50/50 rounded-3xl border border-blue-100">
+          <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+          <span>Synchronizing live questions from database...</span>
+        </div>
+      )}
 
       {/* Question Table */}
       <div className="rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 overflow-hidden shadow-xs">
@@ -119,16 +153,16 @@ export default function QuestionBankManagementPage() {
 
               return (
                 <tr key={q.id} className="hover:bg-blue-50/40 transition-colors">
-                  <td className="p-3.5 pl-5 max-w-md">
+                  <td className="p-3.5 pl-5 max-w-lg">
                     <div className="font-semibold text-slate-900 line-clamp-2">
                       <MathRenderer content={q.stem} />
                     </div>
                     <div className="text-[10px] text-slate-400 mt-1">
-                      {q.options.length} Options · {q.type.toUpperCase()}
+                      {q.options?.length || 5} Options · {(q.type || 'mcq').toUpperCase()}
                     </div>
                   </td>
                   <td className="p-3.5 capitalize text-slate-700 font-medium">
-                    {q.topic_id.replace('-', ' ')}
+                    {q.topic_id.replace(/-/g, ' ')}
                   </td>
                   <td className="p-3.5 font-mono">
                     <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-100 text-[11px] font-bold">
@@ -155,7 +189,7 @@ export default function QuestionBankManagementPage() {
                       <button
                         onClick={() => handleApprove(q.id)}
                         className="p-1.5 rounded-xl hover:bg-emerald-50 text-emerald-600 transition-colors cursor-pointer"
-                        title="Approve to Live"
+                        title="Approve & Publish Live"
                       >
                         <Check className="w-4 h-4" />
                       </button>
@@ -180,13 +214,15 @@ export default function QuestionBankManagementPage() {
       {/* INSPECTION PREVIEW MODAL */}
       {previewQ && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-blue-100 max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-3xl border border-blue-100 max-w-3xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-blue-100 pb-3">
               <div>
                 <span className="font-mono font-bold text-xs text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
                   {previewQ.id}
                 </span>
-                <span className="ml-2.5 text-xs text-slate-500 capitalize">Topic: {previewQ.topic_id.replace('-', ' ')}</span>
+                <span className="ml-2.5 text-xs text-slate-500 capitalize">
+                  Topic: {previewQ.topic_id.replace(/-/g, ' ')}
+                </span>
               </div>
               <button onClick={() => setPreviewQ(null)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer">
                 <X className="w-4 h-4" />
@@ -194,7 +230,7 @@ export default function QuestionBankManagementPage() {
             </div>
 
             <div>
-              <div className="text-[10px] uppercase font-bold text-blue-700 tracking-wider mb-1.5">Question Text</div>
+              <div className="text-[10px] uppercase font-bold text-blue-700 tracking-wider mb-1.5">Question &amp; Data / Diagram</div>
               <div className="p-4 rounded-2xl bg-blue-50/40 border border-blue-100 text-sm text-slate-900 leading-relaxed">
                 <MathRenderer content={previewQ.stem} />
               </div>
@@ -205,7 +241,7 @@ export default function QuestionBankManagementPage() {
               <div className="space-y-2">
                 {previewQ.options.map((opt) => (
                   <div key={opt.id} className="p-3 rounded-xl border border-blue-100 bg-white flex items-center gap-2.5 text-xs text-slate-800">
-                    <span className="w-6 h-6 rounded-full bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-mono font-bold uppercase text-[10px]">
+                    <span className="w-6 h-6 rounded-full bg-blue-50 text-blue-700 border border-blue-200 flex items-center justify-center font-mono font-bold uppercase text-[10px] shrink-0">
                       {opt.id}
                     </span>
                     <MathRenderer content={opt.text} />

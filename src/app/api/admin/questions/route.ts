@@ -10,11 +10,92 @@ export const dynamic = 'force-dynamic';
 const DATA_FILE_PATH = path.join(process.cwd(), 'src/data/uploaded_questions.json');
 
 export async function GET() {
-  const allQuestions = globalStore.getQuestions();
+  const map = new Map<string, Question>();
+
+  // 1. In-memory / initial store questions
+  for (const q of globalStore.getQuestions()) {
+    map.set(q.id, q);
+  }
+
+  // 2. Persisted local file questions
+  try {
+    if (fs.existsSync(DATA_FILE_PATH)) {
+      const persisted = JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf-8'));
+      if (Array.isArray(persisted)) {
+        for (const item of persisted) {
+          if (item?.question) {
+            map.set(item.question.id, item.question);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read uploaded_questions.json:', err);
+  }
+
+  // 3. IBPS PO 2025 Extracted Quant Questions
+  const ibpsPath = path.join(process.cwd(), 'src/data/ibps_po_2025_quant.json');
+  try {
+    if (fs.existsSync(ibpsPath)) {
+      const ibpsData = JSON.parse(fs.readFileSync(ibpsPath, 'utf-8'));
+      if (Array.isArray(ibpsData)) {
+        for (const item of ibpsData) {
+          map.set(item.id, {
+            id: item.id,
+            stem: item.stem,
+            options: [
+              { id: 'a', text: item.option_a },
+              { id: 'b', text: item.option_b },
+              { id: 'c', text: item.option_c },
+              { id: 'd', text: item.option_d },
+              { id: 'e', text: item.option_e },
+            ],
+            type: 'mcq',
+            topic_id: item.topic,
+            difficulty_assigned: item.difficulty,
+            status: 'live',
+            source: 'manual',
+            version: 1,
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read ibps_po_2025_quant.json:', err);
+  }
+
+  // 4. Supabase Cloud Database Questions
+  try {
+    const { data: sbQuestions, error } = await supabase
+      .from('questions')
+      .select('*')
+      .order('id', { ascending: false });
+
+    if (!error && Array.isArray(sbQuestions)) {
+      for (const q of sbQuestions) {
+        map.set(q.id, {
+          id: q.id,
+          stem: q.stem,
+          options: q.options || [],
+          type: q.type || 'mcq',
+          topic_id: q.topic_id,
+          difficulty_assigned: q.difficulty_assigned || 2,
+          status: q.status || 'live',
+          source: q.source || 'manual',
+          version: q.version || 1,
+        });
+      }
+    }
+  } catch (sbErr) {
+    console.warn('Supabase fetch questions notice:', sbErr);
+  }
+
+  const allQuestions = Array.from(map.values());
+
   return NextResponse.json({
     success: true,
     count: allQuestions.length,
-    questions: allQuestions.slice(0, 100),
+    questions: allQuestions,
   });
 }
 
@@ -108,10 +189,26 @@ export async function POST(req: NextRequest) {
     let supabaseSaved = false;
     try {
       if (supabaseQuestionRows.length > 0) {
+        const uniqueTopics = Array.from(new Set(supabaseQuestionRows.map((r) => r.topic_id)));
+        const topicRows = uniqueTopics.map((tId) => ({
+          id: tId,
+          subject_id: 'quant',
+          name: tId.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+          group_name: 'Arithmetic',
+          is_template_eligible: true,
+          is_di: tId.includes('di') || tId.includes('interpretation'),
+          mains_only: false,
+          target_stock: 150,
+          min_stock: 50,
+        }));
+        await supabase.from('topics').upsert(topicRows, { onConflict: 'id' });
+
         const { error: qErr } = await supabase.from('questions').upsert(supabaseQuestionRows);
         const { error: kErr } = await supabase.from('question_keys').upsert(supabaseKeyRows);
         if (!qErr && !kErr) {
           supabaseSaved = true;
+        } else {
+          console.warn('Supabase upsert warning:', qErr, kErr);
         }
       }
     } catch (sbErr) {
