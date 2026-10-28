@@ -154,8 +154,8 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
             {/* Clean Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2.5 w-64 rounded-2xl bg-white/98 backdrop-blur-2xl border border-[#BCEBFC] shadow-[0_12px_40px_rgba(0,92,230,0.08)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
-                {/* Profile Header (Clean: No Verified Student badge, No green dot, No target line) */}
+              <div className="absolute right-0 mt-2.5 w-64 max-w-[calc(100vw-2rem)] rounded-2xl bg-white/98 backdrop-blur-2xl border border-[#BCEBFC] shadow-[0_12px_40px_rgba(0,92,230,0.08)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
+                {/* Profile Header */}
                 <div className="p-3 rounded-xl bg-[#F0FAFF] border border-[#BCEBFC]/60 flex items-center gap-3">
                   <CandidateAvatar size={36} />
                   <div className="min-w-0 flex-1">
@@ -236,6 +236,26 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
               </Link>
             );
           })}
+
+          <div className="h-px bg-slate-200 my-2" />
+
+          <Link
+            href="/results"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/60 transition-colors"
+          >
+            <Award className="w-4 h-4 text-slate-400" />
+            <span>Overall Exam Results</span>
+          </Link>
+
+          <Link
+            href="/admin"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/60 transition-colors"
+          >
+            <Shield className="w-4 h-4 text-slate-400" />
+            <span>Admin Console</span>
+          </Link>
         </div>
       )}
     </header>

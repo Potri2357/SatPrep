@@ -25,13 +25,13 @@ export default function AdminDashboardPage() {
       <div>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
           <Activity className="w-3.5 h-3.5" />
-          <span>Operational Health Monitor</span>
+          <span>Overview &amp; Statistics</span>
         </div>
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-          Admin Executive Dashboard
+          Admin Dashboard
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Real-time content inventory health, question generation pipeline status, and quality metrics.
+          Monitor your question library, student test participation, and topic coverage.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-medium">Verified Stock</span>
+            <span className="font-medium">Available Questions</span>
             <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <HelpCircle className="w-4 h-4" />
             </div>
@@ -47,25 +47,25 @@ export default function AdminDashboardPage() {
           <div className="text-2xl font-extrabold font-mono text-slate-900 mt-3">
             1,480 <span className="text-xs text-emerald-600 font-sans font-semibold">+45 today</span>
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Target: 2,500 active calibrated items</div>
+          <div className="text-[11px] text-slate-500 mt-1">Target: 2,500 questions total</div>
         </div>
 
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-medium">Pipeline Pass Rate</span>
+            <span className="font-medium">Question Accuracy Rate</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <Cpu className="w-4 h-4" />
+              <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-extrabold font-mono text-emerald-600 mt-3">
             94.8%
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Sandbox solver &amp; blind re-solve verified</div>
+          <div className="text-[11px] text-slate-500 mt-1">Verified answers &amp; explanations</div>
         </div>
 
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-medium">Open Question Reports</span>
+            <span className="font-medium">Student Feedback</span>
             <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
               <Flag className="w-4 h-4" />
             </div>
@@ -73,39 +73,39 @@ export default function AdminDashboardPage() {
           <div className="text-2xl font-extrabold font-mono text-amber-600 mt-3">
             1 <span className="text-xs text-slate-500 font-sans font-normal">pending review</span>
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Report rate: 0.12% (target &lt; 0.5%)</div>
+          <div className="text-[11px] text-slate-500 mt-1">Flagged question items</div>
         </div>
 
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-medium">Active Test Takers</span>
+            <span className="font-medium">Active Students</span>
             <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-              <Activity className="w-4 h-4" />
+              <Users className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-extrabold font-mono text-slate-900 mt-3">
-            342 <span className="text-xs text-slate-500 font-sans font-normal">live right now</span>
+            342 <span className="text-xs text-slate-500 font-sans font-normal">taking tests right now</span>
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Zero latency spikes reported</div>
+          <div className="text-[11px] text-slate-500 mt-1">Fast system response time</div>
         </div>
       </div>
 
-      {/* Content Health Matrix by Topic */}
+      {/* Content Health Distribution by Topic */}
       <div className="glass-panel p-6 sm:p-8 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-base font-bold text-slate-900">
-              Topic Inventory Coverage &amp; Health Matrix
+              Topic Question Coverage
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Live questions vs target stock (150 per topic). Red indicates bucket is below safety threshold.
+              Number of practice questions available for each subject topic.
             </p>
           </div>
           <Link
             href="/admin/generation"
             className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 w-fit"
           >
-            Trigger Auto Top-Up
+            Create Questions
           </Link>
         </div>
 
@@ -147,10 +147,10 @@ export default function AdminDashboardPage() {
           className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors flex items-center justify-between">
-            <span>Import PYQ Seed Questions</span>
+            <span>Upload Questions</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed">Bulk upload CSV or extract stems from previous year PDFs with Gemini.</p>
+          <p className="text-xs text-slate-500 leading-relaxed">Import questions from Excel, CSV spreadsheets, or question papers.</p>
         </Link>
 
         <Link
@@ -158,10 +158,10 @@ export default function AdminDashboardPage() {
           className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors flex items-center justify-between">
-            <span>Review Queue (14 Pending)</span>
+            <span>Review Questions (14 Pending)</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed">Side-by-side solver inspection and single-key (A/R) rapid approval.</p>
+          <p className="text-xs text-slate-500 leading-relaxed">Check and approve newly generated questions before making them live for students.</p>
         </Link>
 
         <Link
@@ -169,10 +169,10 @@ export default function AdminDashboardPage() {
           className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors flex items-center justify-between">
-            <span>Re-grade Tool &amp; Reports</span>
+            <span>Student Feedback &amp; Reports</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed">Correct contested answer keys and recompute affected attempt scores automatically.</p>
+          <p className="text-xs text-slate-500 leading-relaxed">Review questions flagged by students and update answer keys if needed.</p>
         </Link>
       </div>
     </div>

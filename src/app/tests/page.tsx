@@ -267,11 +267,11 @@ export default function MockTestsHubPage() {
 
         {/* Filter Navigation Tabs */}
         <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="inline-flex p-1.5 rounded-2xl bg-[#E0F4FD]/60 border border-[#BCEBFC]">
+          <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1.5 rounded-2xl bg-[#E0F4FD]/60 border border-[#BCEBFC]">
             <button
               onClick={() => setSelectedCategory('all')}
               className={cn(
-                "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'all'
                   ? "bg-white text-[#005CE6] shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -282,7 +282,7 @@ export default function MockTestsHubPage() {
             <button
               onClick={() => setSelectedCategory('full_mock')}
               className={cn(
-                "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'full_mock'
                   ? "bg-white text-[#005CE6] shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -293,7 +293,7 @@ export default function MockTestsHubPage() {
             <button
               onClick={() => setSelectedCategory('sectional')}
               className={cn(
-                "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'sectional'
                   ? "bg-white text-[#005CE6] shadow-xs"
                   : "text-slate-600 hover:text-slate-900"

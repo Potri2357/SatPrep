@@ -1231,38 +1231,40 @@ export default function ExamTestWindow() {
                 ) : (
                   <>
                     {/* Left Side: Mark For Review & Clear Response */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       <button
                         onClick={handleMarkForReviewAndNext}
-                        className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold border border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer shadow-2xs flex items-center gap-1.5"
+                        className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold border border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 transition-colors cursor-pointer shadow-2xs flex items-center gap-1.5"
                       >
-                        <Bookmark className="w-3.5 h-3.5" />
-                        <span>Mark for Review &amp; Next</span>
+                        <Bookmark className="w-3.5 h-3.5 shrink-0" />
+                        <span className="hidden sm:inline">Mark for Review &amp; Next</span>
+                        <span className="sm:hidden">Review</span>
                       </button>
 
                       <button
                         onClick={handleClearResponse}
                         disabled={!selectedOption}
-                        className="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+                        className="px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
                       >
-                        Clear Response
+                        <span className="hidden sm:inline">Clear Response</span>
+                        <span className="sm:hidden">Clear</span>
                       </button>
                     </div>
 
                     {/* Right Side: Previous & Save & Next */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       <button
                         onClick={() => currentIdx > 0 && setCurrentIdx((prev) => prev - 1)}
                         disabled={currentIdx === 0}
-                        className="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 text-slate-700 transition-colors cursor-pointer shadow-2xs flex items-center gap-1"
+                        className="px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-30 text-slate-700 transition-colors cursor-pointer shadow-2xs flex items-center gap-1"
                       >
                         <ChevronLeft className="w-3.5 h-3.5" />
-                        <span>Previous</span>
+                        <span className="hidden sm:inline">Previous</span>
                       </button>
 
                       <button
                         onClick={handleSaveAndNext}
-                        className="neu-chip-primary px-4 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs hover:shadow transition-all"
+                        className="neu-chip-primary px-3 sm:px-5 py-1.5 sm:py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs hover:shadow transition-all"
                       >
                         <span>Save &amp; Next</span>
                         <ArrowRight className="w-3.5 h-3.5" />

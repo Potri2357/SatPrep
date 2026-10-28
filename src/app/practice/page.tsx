@@ -352,25 +352,26 @@ export default function TopicDrillsHubPage() {
                   <button
                     onClick={() => setFeedbackMode('practice')}
                     className={cn(
-                      "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                      "px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap",
                       feedbackMode === 'practice'
                         ? "bg-emerald-600 text-white shadow-xs"
                         : "text-slate-600 hover:text-slate-900"
                     )}
                   >
-                    <Lightbulb className="w-3.5 h-3.5" />
-                    <span>Practice Mode (Instant Solutions)</span>
+                    <Lightbulb className="w-3.5 h-3.5 shrink-0" />
+                    <span>Practice Mode</span>
+                    <span className="hidden sm:inline">(Instant Solutions)</span>
                   </button>
                   <button
                     onClick={() => setFeedbackMode('exam')}
                     className={cn(
-                      "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                      "px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap",
                       feedbackMode === 'exam'
                         ? "bg-[#005CE6] text-white shadow-xs"
                         : "text-slate-600 hover:text-slate-900"
                     )}
                   >
-                    <Clock className="w-3.5 h-3.5" />
+                    <Clock className="w-3.5 h-3.5 shrink-0" />
                     <span>Timed Exam Clock</span>
                   </button>
                 </div>
@@ -481,7 +482,7 @@ export default function TopicDrillsHubPage() {
             <button
               onClick={() => handleStartDrill(toolbarTopic, questionCount, feedbackMode)}
               disabled={loadingTopicId === toolbarTopic}
-              className="py-2.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 disabled:opacity-50"
+              className="w-full lg:w-auto py-2.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 disabled:opacity-50"
             >
               {loadingTopicId === toolbarTopic ? (
                 <>

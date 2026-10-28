@@ -38,13 +38,13 @@ export default function QuestionBankManagementPage() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Calibrated Items Inventory</span>
+            <span>Question Library</span>
           </div>
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-            Question Bank Inventory
+            Question Bank
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Search, filter, audit KaTeX math rendering, and manage live questions in circulation.
+            Search, filter, preview, and manage active practice questions.
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export default function QuestionBankManagementPage() {
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="border-b border-blue-100 bg-blue-50/50 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
-              <th className="p-3.5 pl-5">Stem &amp; Details</th>
+              <th className="p-3.5 pl-5">Question &amp; Details</th>
               <th className="p-3.5">Topic</th>
               <th className="p-3.5">Difficulty</th>
               <th className="p-3.5">Status</th>
@@ -123,8 +123,8 @@ export default function QuestionBankManagementPage() {
                     <div className="font-semibold text-slate-900 line-clamp-2">
                       <MathRenderer content={q.stem} />
                     </div>
-                    <div className="text-[10px] text-slate-400 mt-1 font-mono">
-                      ID: {q.id} · Options: {q.options.length} · Version: v{q.version}
+                    <div className="text-[10px] text-slate-400 mt-1">
+                      {q.options.length} Options · {q.type.toUpperCase()}
                     </div>
                   </td>
                   <td className="p-3.5 capitalize text-slate-700 font-medium">
@@ -146,15 +146,15 @@ export default function QuestionBankManagementPage() {
                   <td className="p-3.5 pr-5 text-right space-x-1">
                     <button
                       onClick={() => setPreviewQ(q)}
-                      className="p-1.5 rounded-xl hover:bg-blue-50 text-slate-500 hover:text-blue-600 transition-colors"
-                      title="Inspect & KaTeX Preview"
+                      className="p-1.5 rounded-xl hover:bg-blue-50 text-slate-500 hover:text-blue-600 transition-colors cursor-pointer"
+                      title="Preview Question"
                     >
                       <Eye className="w-4 h-4" />
                     </button>
                     {q.status !== 'live' && (
                       <button
                         onClick={() => handleApprove(q.id)}
-                        className="p-1.5 rounded-xl hover:bg-emerald-50 text-emerald-600 transition-colors"
+                        className="p-1.5 rounded-xl hover:bg-emerald-50 text-emerald-600 transition-colors cursor-pointer"
                         title="Approve to Live"
                       >
                         <Check className="w-4 h-4" />
@@ -163,7 +163,7 @@ export default function QuestionBankManagementPage() {
                     {q.status !== 'retired' && (
                       <button
                         onClick={() => handleRetire(q.id)}
-                        className="p-1.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors"
+                        className="p-1.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors cursor-pointer"
                         title="Retire from circulation"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -186,22 +186,22 @@ export default function QuestionBankManagementPage() {
                 <span className="font-mono font-bold text-xs text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
                   {previewQ.id}
                 </span>
-                <span className="ml-2.5 text-xs text-slate-500 capitalize">Topic: {previewQ.topic_id}</span>
+                <span className="ml-2.5 text-xs text-slate-500 capitalize">Topic: {previewQ.topic_id.replace('-', ' ')}</span>
               </div>
-              <button onClick={() => setPreviewQ(null)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700">
+              <button onClick={() => setPreviewQ(null)} className="p-1.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-700 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div>
-              <div className="text-[10px] uppercase font-bold text-blue-700 tracking-wider mb-1.5">Question Stem (KaTeX Rendered)</div>
+              <div className="text-[10px] uppercase font-bold text-blue-700 tracking-wider mb-1.5">Question Text</div>
               <div className="p-4 rounded-2xl bg-blue-50/40 border border-blue-100 text-sm text-slate-900 leading-relaxed">
                 <MathRenderer content={previewQ.stem} />
               </div>
             </div>
 
             <div>
-              <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1.5">Options List</div>
+              <div className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-1.5">Options</div>
               <div className="space-y-2">
                 {previewQ.options.map((opt) => (
                   <div key={opt.id} className="p-3 rounded-xl border border-blue-100 bg-white flex items-center gap-2.5 text-xs text-slate-800">
@@ -218,7 +218,7 @@ export default function QuestionBankManagementPage() {
               <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 text-xs space-y-2">
                 <div className="font-bold text-emerald-800 flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span>Correct Key: Option {INITIAL_KEYS[previewQ.id].correct_option.toUpperCase()}</span>
+                  <span>Correct Answer: Option {INITIAL_KEYS[previewQ.id].correct_option.toUpperCase()}</span>
                 </div>
                 <div className="text-slate-700">
                   <MathRenderer content={INITIAL_KEYS[previewQ.id].solution} />

@@ -5,14 +5,11 @@ import { MathRenderer } from '@/lib/math-renderer';
 import {
   CheckCircle2,
   XCircle,
-  Code,
   ShieldCheck,
-  ChevronRight,
   ArrowLeft,
   ArrowRight,
-  Sparkles,
-  Layers,
   Check,
+  BookOpen,
 } from 'lucide-react';
 
 export default function ContentReviewQueuePage() {
@@ -30,8 +27,8 @@ export default function ContentReviewQueuePage() {
       ],
       correct_option: 'b',
       solver_output: 'Cost of 920g = 920 units. Selling price of 920g goods = 1.15 * 1000 = 1150 units. Profit = 1150 - 920 = 230 units. Net Profit % = (230 / 920) * 100 = 25.00%. Verified.',
-      second_solver_output: 'Blind re-solve verified with SymPy numeric engine: Exact root = 25.0000%. Exactly 1 correct option.',
-      flags: ['Stem Non-Negative Roots Checked', 'Distractor Plausibility Verified', 'Solution KaTeX Syntax Validated'],
+      second_solver_output: 'Calculation verified: Result = 25.00%. Exactly 1 correct option among the 5 choices.',
+      flags: ['Mathematical values validated', 'Multiple-choice options plausible', 'Formulas formatted cleanly'],
     },
     {
       id: 'gen-quad-4481',
@@ -46,8 +43,8 @@ export default function ContentReviewQueuePage() {
       ],
       correct_option: 'd',
       solver_output: 'Eq I roots: (x - 6)(x - 8) = 0 => x in {6, 8}. Eq II roots: (y - 8)(y - 9) = 0 => y in {8, 9}. Comparing: 6 < 8, 6 < 9, 8 = 8, 8 < 9 => x <= y. Verified.',
-      second_solver_output: 'Blind re-solve confirmed: root intervals overlap strictly at 8, all other x < y. Result: x <= y. Matches Option D.',
-      flags: ['All 4 Root Combinations Tested', 'No Imaginary Roots', 'KaTeX Syntax Validated'],
+      second_solver_output: 'Relationship confirmed: root intervals overlap at 8, all other x < y. Result: x <= y. Matches Option D.',
+      flags: ['All root combinations verified', 'Real numbers only', 'Formulas formatted cleanly'],
     },
   ]);
 
@@ -55,20 +52,20 @@ export default function ContentReviewQueuePage() {
   const currentItem = items[currentIndex];
 
   const handleApprove = () => {
-    alert(`Question ${currentItem.id} APPROVED and pushed to live circulation.`);
+    alert(`Question ${currentItem.id} approved and published to live questions.`);
     if (currentIndex < items.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
 
   const handleReject = () => {
-    alert(`Question ${currentItem.id} REJECTED and marked for quarantine.`);
+    alert(`Question ${currentItem.id} rejected and removed from review.`);
     if (currentIndex < items.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
   };
 
-  // Keyboard shortcut listener (AD-21: 'A' to Approve, 'R' to Reject)
+  // Keyboard shortcut listener: 'A' to Approve, 'R' to Reject
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -86,8 +83,8 @@ export default function ContentReviewQueuePage() {
     return (
       <div className="p-12 text-center space-y-3 glass-panel bg-white/95 rounded-3xl border border-blue-100 max-w-md mx-auto">
         <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-        <h2 className="text-base font-bold text-slate-900">Review Queue Clean!</h2>
-        <p className="text-xs text-slate-500">All questions in the queue have been reviewed and verified.</p>
+        <h2 className="text-base font-bold text-slate-900">Review Queue Complete!</h2>
+        <p className="text-xs text-slate-500">All questions in the queue have been reviewed and approved.</p>
       </div>
     );
   }
@@ -98,13 +95,13 @@ export default function ContentReviewQueuePage() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Dual-Blind Solver Audit</span>
+            <span>Quality Verification</span>
           </div>
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-            Unified Content Review Queue
+            Question Review Queue
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Review {currentIndex + 1} of {items.length} items. Keyboard shortcuts enabled: <kbd className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-[10px]">A</kbd> Approve, <kbd className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-[10px]">R</kbd> Reject.
+            Review {currentIndex + 1} of {items.length} pending questions. Quick keys: <kbd className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-[10px]">A</kbd> to Approve, <kbd className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono text-[10px]">R</kbd> to Reject.
           </p>
         </div>
 
@@ -112,7 +109,7 @@ export default function ContentReviewQueuePage() {
           <button
             onClick={() => currentIndex > 0 && setCurrentIndex((prev) => prev - 1)}
             disabled={currentIndex === 0}
-            className="p-2 rounded-xl border border-blue-200 bg-white disabled:opacity-40 hover:bg-blue-50 text-slate-700 transition-colors"
+            className="p-2 rounded-xl border border-blue-200 bg-white disabled:opacity-40 hover:bg-blue-50 text-slate-700 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -122,16 +119,16 @@ export default function ContentReviewQueuePage() {
           <button
             onClick={() => currentIndex < items.length - 1 && setCurrentIndex((prev) => prev + 1)}
             disabled={currentIndex === items.length - 1}
-            className="p-2 rounded-xl border border-blue-200 bg-white disabled:opacity-40 hover:bg-blue-50 text-slate-700 transition-colors"
+            className="p-2 rounded-xl border border-blue-200 bg-white disabled:opacity-40 hover:bg-blue-50 text-slate-700 transition-colors cursor-pointer"
           >
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Split Pane: Left Question & Options, Right Solver Code & Second-Opinion (PRD Section 9.4 AD-21) */}
+      {/* Split Pane: Question on Left, Solutions & Verification on Right */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Pane: Question Stem & Options */}
+        {/* Left Pane: Question & Options */}
         <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 space-y-5 shadow-xs">
           <div className="flex justify-between items-center text-xs pb-3 border-b border-blue-100">
             <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">{currentItem.id}</span>
@@ -165,7 +162,7 @@ export default function ContentReviewQueuePage() {
                   {isKey && (
                     <span className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold">
                       <Check className="w-3.5 h-3.5" />
-                      <span>Stated Key</span>
+                      <span>Correct Answer</span>
                     </span>
                   )}
                 </div>
@@ -174,12 +171,12 @@ export default function ContentReviewQueuePage() {
           </div>
         </div>
 
-        {/* Right Pane: Solver Code Output & Quality Verification Flags */}
+        {/* Right Pane: Solution & Checks */}
         <div className="space-y-6">
           <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 space-y-4 shadow-xs text-xs">
             <div className="flex items-center gap-2 font-bold text-slate-900">
-              <Code className="w-4 h-4 text-blue-600" />
-              <span>Sandbox Solver Execution Verification</span>
+              <BookOpen className="w-4 h-4 text-blue-600" />
+              <span>Step-by-Step Solution &amp; Working</span>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-blue-50/50 font-mono text-[11px] border border-blue-100 text-slate-800 leading-relaxed">
@@ -188,7 +185,7 @@ export default function ContentReviewQueuePage() {
 
             <div className="flex items-center gap-2 font-bold text-slate-900 pt-2">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Independent Blind Re-Solve Model</span>
+              <span>Answer Verification</span>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-emerald-50/70 font-mono text-[11px] border border-emerald-200 text-emerald-900 font-bold leading-relaxed">
@@ -196,7 +193,7 @@ export default function ContentReviewQueuePage() {
             </div>
 
             <div className="pt-2">
-              <span className="font-bold block mb-2 text-slate-400 text-[10px] uppercase tracking-wider">Validation Gates</span>
+              <span className="font-bold block mb-2 text-slate-400 text-[10px] uppercase tracking-wider">Quality Checks Passed</span>
               <div className="space-y-2">
                 {currentItem.flags.map((flag: string, idx: number) => (
                   <div key={idx} className="flex items-center gap-2 text-slate-700">
@@ -212,7 +209,7 @@ export default function ContentReviewQueuePage() {
           <div className="flex gap-4">
             <button
               onClick={handleReject}
-              className="flex-1 py-3.5 rounded-2xl bg-white border border-red-200 hover:bg-red-50 text-red-600 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs"
+              className="flex-1 py-3.5 rounded-2xl bg-white border border-red-200 hover:bg-red-50 text-red-600 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
             >
               <XCircle className="w-4 h-4" />
               <span>Reject (R)</span>
@@ -220,10 +217,10 @@ export default function ContentReviewQueuePage() {
 
             <button
               onClick={handleApprove}
-              className="flex-1 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-600/20"
+              className="flex-1 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-600/20 cursor-pointer"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>Approve Live (A)</span>
+              <span>Approve for Students (A)</span>
             </button>
           </div>
         </div>

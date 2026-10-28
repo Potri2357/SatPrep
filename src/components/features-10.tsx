@@ -141,7 +141,7 @@ export function Features10() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left / Center: Interactive Orbital System (7 Cols) */}
-            <div className="lg:col-span-7 flex flex-col items-center justify-center relative min-h-[420px] sm:min-h-[500px]">
+            <div className="lg:col-span-7 flex flex-col items-center justify-center relative min-h-[360px] sm:min-h-[500px] scale-[0.75] sm:scale-95 lg:scale-100 origin-center my-[-24px] sm:my-0">
               
               {/* Outer Orbit Track (Radius: 240px) */}
               <div

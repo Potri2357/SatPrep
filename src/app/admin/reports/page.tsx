@@ -1,15 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { globalStore, INITIAL_QUESTIONS, INITIAL_KEYS } from '@/lib/store';
-import { MathRenderer } from '@/lib/math-renderer';
+import { globalStore } from '@/lib/store';
 import {
   Flag,
   RotateCcw,
   CheckCircle2,
-  AlertTriangle,
-  ArrowRight,
-  ShieldAlert,
+  Check,
 } from 'lucide-react';
 
 export default function ReportsAndRegradePage() {
@@ -47,17 +44,17 @@ export default function ReportsAndRegradePage() {
       <div>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
           <Flag className="w-3.5 h-3.5" />
-          <span>Quality Triage &amp; Key Audits</span>
+          <span>Student Feedback &amp; Corrections</span>
         </div>
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-          Question Quality Inbox &amp; Re-grade Tool
+          Student Feedback &amp; Score Adjustments
         </h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Triage reported answer keys, monitor auto-flagged items, and recalculate historical attempts upon key corrections.
+          Review questions flagged by students during practice tests and update answer keys with automatic score recalculation.
         </p>
       </div>
 
-      {/* RE-GRADE TOOL CARD (AD-53) */}
+      {/* RE-GRADE TOOL CARD */}
       <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-xs space-y-4">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
@@ -65,10 +62,10 @@ export default function ReportsAndRegradePage() {
           </div>
           <div>
             <h2 className="text-sm font-bold text-slate-900">
-              Historical Attempt Re-grade Engine
+              Update Answer Key &amp; Recalculate Past Scores
             </h2>
             <p className="text-xs text-slate-500">
-              When an expert reviewer verifies a contested key, this tool recalculates scores and accuracy for all candidate attempts that contained this question.
+              If an answer key was incorrect, selecting the correct option here will automatically recalculate scores and analytics for all students who took this question.
             </p>
           </div>
         </div>
@@ -85,7 +82,7 @@ export default function ReportsAndRegradePage() {
           </div>
 
           <div>
-            <label className="font-semibold text-slate-700 block mb-1">Corrected Key</label>
+            <label className="font-semibold text-slate-700 block mb-1">Correct Answer</label>
             <select
               value={newKey}
               onChange={(e) => setNewKey(e.target.value)}
@@ -103,10 +100,10 @@ export default function ReportsAndRegradePage() {
             <button
               onClick={handleExecuteRegrade}
               disabled={isProcessing}
-              className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.01]"
+              className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all hover:scale-[1.01] cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>{isProcessing ? 'Recalculating...' : 'Execute Re-grade'}</span>
+              <span>{isProcessing ? 'Recalculating...' : 'Update Key & Recalculate Scores'}</span>
             </button>
           </div>
         </div>
@@ -115,18 +112,18 @@ export default function ReportsAndRegradePage() {
           <div className="p-4 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
             <span>
-              Re-grade Completed! Question {regradeResult.question_id} key changed to {regradeResult.new_correct_option.toUpperCase()}. Recalculated {regradeResult.affected_attempts} student test attempts.
+              Updated successfully! Question {regradeResult.question_id} correct answer changed to Option {regradeResult.new_correct_option.toUpperCase()}. Recalculated {regradeResult.affected_attempts} student test results.
             </span>
           </div>
         )}
       </div>
 
-      {/* STUDENT REPORTS INBOX (AD-50 to AD-52) */}
+      {/* STUDENT REPORTS INBOX */}
       <div className="rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 overflow-hidden shadow-xs">
         <div className="p-4 px-6 border-b border-blue-100 bg-blue-50/30 flex items-center justify-between">
-          <span className="font-bold text-xs text-slate-900">Student-Reported Questions Inbox</span>
+          <span className="font-bold text-xs text-slate-900">Student Reports &amp; Flagged Questions</span>
           <span className="text-[10px] text-amber-800 font-medium bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
-            Auto-flag rule: ≥ 3 reports moves item to flagged
+            Questions with 3 or more reports are flagged for review
           </span>
         </div>
 
@@ -150,7 +147,7 @@ export default function ReportsAndRegradePage() {
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => alert(`Report ${rep.id} dismissed.`)}
-                  className="px-3.5 py-1.5 rounded-full border border-blue-200 text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                  className="px-3.5 py-1.5 rounded-full border border-blue-200 text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
                 >
                   Dismiss
                 </button>
@@ -159,9 +156,9 @@ export default function ReportsAndRegradePage() {
                     setRegradeQid(rep.question_id);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-xs"
+                  className="px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-xs cursor-pointer"
                 >
-                  Load in Re-grade
+                  Select to Correct
                 </button>
               </div>
             </div>

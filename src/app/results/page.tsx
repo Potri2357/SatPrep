@@ -188,12 +188,12 @@ export default function OverallResultsPage() {
             {/* Filter, Search & Controls Bar */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2">
               {/* Category Filter Tabs */}
-              <div className="inline-flex p-1 rounded-2xl bg-[#E0F4FD]/60 border border-[#BCEBFC] self-start sm:self-auto">
+              <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1 rounded-2xl bg-[#E0F4FD]/60 border border-[#BCEBFC] self-start sm:self-auto shrink-0">
                 <button
                   type="button"
                   onClick={() => setSelectedCategory('all')}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                    "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                     selectedCategory === 'all'
                       ? "bg-white text-[#005CE6] shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
@@ -205,7 +205,7 @@ export default function OverallResultsPage() {
                   type="button"
                   onClick={() => setSelectedCategory('full_mock')}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                    "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                     selectedCategory === 'full_mock'
                       ? "bg-white text-[#005CE6] shadow-xs"
                       : "text-slate-600 hover:text-slate-900"
@@ -217,7 +217,7 @@ export default function OverallResultsPage() {
                   type="button"
                   onClick={() => setSelectedCategory('sectional')}
                   className={cn(
-                    "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer",
+                    "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                     selectedCategory === 'sectional'
                       ? "bg-white text-[#005CE6] shadow-xs"
                       : "text-slate-600 hover:text-slate-900"

@@ -60,6 +60,15 @@ button, input, select, textarea {
   font-family: var(--font-dm-sans);
 }
 
+/* Utility to hide scrollbars on horizontal tabs for mobile responsiveness */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .tabular-nums {
   font-variant-numeric: tabular-nums;
 }

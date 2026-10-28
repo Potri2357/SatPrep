@@ -82,7 +82,7 @@ export default function LandingPage() {
         <div className="relative z-10 max-w-3xl mx-auto px-5 sm:px-8 flex flex-col items-center text-center gap-6">
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-black tracking-[-0.025em] leading-[1.08] text-[#0A1628]">
+          <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-black tracking-[-0.025em] leading-[1.08] text-[#0A1628]">
             Master Bank Exam Quant{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#0074F0] to-[#00A8E8]">
               with Real Exam Speed.
@@ -286,15 +286,15 @@ export default function LandingPage() {
                 </div>
 
                 {/* Bottom Navigation Buttons */}
-                <div className="flex items-center justify-between pt-6 border-t border-slate-100">
-                  <span className="text-xs font-bold text-purple-700 bg-purple-50 px-3.5 py-1.5 rounded-full border border-purple-200">
+                <div className="flex flex-wrap items-center justify-between gap-2.5 pt-6 border-t border-slate-100">
+                  <span className="text-[11px] sm:text-xs font-bold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-full border border-purple-200">
                     Mark for Review &amp; Next
                   </span>
-                  <div className="flex gap-2">
-                    <span className="text-xs font-bold text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] sm:text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full">
                       Clear Response
                     </span>
-                    <span className="text-xs font-bold text-white bg-[#005CE6] px-5 py-1.5 rounded-full shadow-xs">
+                    <span className="text-[11px] sm:text-xs font-bold text-white bg-[#005CE6] px-4 sm:px-5 py-1.5 rounded-full shadow-xs">
                       Save &amp; Next
                     </span>
                   </div>
