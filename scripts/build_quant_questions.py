@@ -1,11 +1,16 @@
+import pypdf
 import re
 import json
 
-with open("quant_clean_raw.txt") as f:
-    text = f.read()
+reader = pypdf.PdfReader('/Users/potrinathanpm/Downloads/IBPS PO Prelims Memory Based Paper (Held On 23 August 2025 Shift 1).pdf')
+
+raw_text = ''
+for p in range(27, len(reader.pages)):
+    t = reader.pages[p].extract_text()
+    raw_text += '\n' + t
 
 pattern = re.compile(r"(Que\.\s*\d+)")
-splits = pattern.split(text)
+splits = pattern.split(raw_text)
 
 chunks = []
 curr_q = None
@@ -44,17 +49,46 @@ topic_map = {
 
 num_to_letter = {1: "a", 2: "b", 3: "c", 4: "d", 5: "e"}
 
-di_college_intro = "Number of lab assistants in College A is 20 less than the number of professors in the same college. The ratio of number of lab assistants and professors in College C is 4:7. The ratio of number of lab assistants in College B and A is 5:4. Number of professors in College B is 37.5% more than the number of professors in College A. Number of lab assistants in College C is 40% more than the number of lab assistants in College A. The total number of lab assistants in all three colleges together is 73."
+di_college_table = """**Staff Distribution in Colleges A, B, and C:**
 
-di_balls_table = """The table below shows the difference between the number of red and blue balls in five different bags (A, B, C, D, and E). It also provides the percentage of red balls out of the total number of balls in each bag:
-- Bag A: Difference (Red - Blue) = 240, % Red = 66.67%
-- Bag B: Difference (Red - Blue) = 150, % Red = 60%
-- Bag C: Difference (Red - Blue) = 180, % Red = 62.5%
-- Bag D: Difference (Red - Blue) = 210, % Red = 75%
-- Bag E: Difference (Red - Blue) = 160, % Red = 57.14%
-(Note: For each bag, total balls = sum of red and blue balls only)"""
+| College | Lab Assistants | Professors | Total Staff |
+| :---: | :---: | :---: | :---: |
+| **College A** | 20 | 40 | 60 |
+| **College B** | 25 | 55 | 80 |
+| **College C** | 28 | 49 | 77 |
+| **Total** | **73** | **144** | **217** |
 
-di_shops_intro = "The line graph shows the number of TVs sold and the difference between the number of TVs and Cell phones sold across five different shops [A, B, C, D, and E]. The number of TVs sold is more than the number of Cell phones in each shop."
+"""
+
+di_balls_table = """**Distribution of Red and Blue Balls in Bags A, B, C, D, and E:**
+
+| Bag | Difference (Red − Blue) | % of Red Balls | Total Balls | Red Balls | Blue Balls |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| **Bag A** | 240 | 66.67% | 720 | 480 | 240 |
+| **Bag B** | 150 | 60.00% | 750 | 450 | 300 |
+| **Bag C** | 180 | 62.50% | 720 | 450 | 270 |
+| **Bag D** | 210 | 75.00% | 420 | 315 | 105 |
+| **Bag E** | 160 | 57.14% | 1120 | 640 | 480 |
+
+*(Note: In each bag, Total Balls = Red + Blue balls only)*
+
+"""
+
+di_shops_table = """![TVs and Cell Phones Sales Line Graph](/images/exams/ibps_po_2025_di_line_graph.png)
+
+**Sales Data of TVs and Cell Phones in Shops A, B, C, D, and E:**
+
+| Shop | TVs Sold | Difference (TVs − Cell Phones) | Cell Phones Sold | Total Items |
+| :---: | :---: | :---: | :---: | :---: |
+| **Shop A** | 300 | 120 | 180 | 480 |
+| **Shop B** | 240 | 80 | 160 | 400 |
+| **Shop C** | 360 | 160 | 200 | 560 |
+| **Shop D** | 280 | 100 | 180 | 460 |
+| **Shop E** | 420 | 120 | 300 | 720 |
+
+*(Note: Selling price: each TV = ₹15,000; each Cell Phone = ₹8,000)*
+
+"""
 
 questions = []
 
@@ -89,14 +123,21 @@ for q in range(66, 101):
     raw_stem = re.sub(r"^(Directions:\s*)?(Study the following information.*?questions\.\s*)?", "", raw_stem, flags=re.I).strip()
 
     stem = raw_stem
-    if 66 <= q <= 70 and "college a" not in stem.lower() and "lab assistant" not in stem.lower():
-        stem = f"[{di_college_intro}] " + stem
-    elif 66 == q:
-        stem = f"[{di_college_intro}] What is the ratio of number of Lab Assistants in College A to Professors in College A?"
-    elif 79 <= q <= 82 and "bag" in stem.lower():
-        stem = f"[{di_balls_table}] " + stem
-    elif 94 <= q <= 97:
-        stem = f"[{di_shops_intro}] " + stem
+    if 66 <= q <= 70:
+        if q == 66:
+            stem = di_college_table + "What is the ratio of number of Lab Assistants in College A to Professors in College A?"
+        else:
+            stem = di_college_table + raw_stem
+    elif 78 <= q <= 82:
+        if q == 78:
+            stem = di_balls_table + "The total number of balls in Bag F is 14.28% less than the total number of balls in Bag A and Bag B combined. The ratio of Red to Blue balls in Bag F is 5:2. Find the difference between the number of red balls in Bag E and the number of blue balls in Bag F."
+        else:
+            stem = di_balls_table + raw_stem
+    elif 93 <= q <= 97:
+        if q == 93:
+            stem = di_shops_table + "If the selling price of each TV is ₹15,000 and each Cell phone is ₹8,000, then what is the total revenue difference between Shop C and Shop B?"
+        else:
+            stem = di_shops_table + raw_stem
 
     opt_a = options.get(1, "Option 1")
     opt_b = options.get(2, "Option 2")
@@ -132,4 +173,4 @@ for q in range(66, 101):
 with open("src/data/ibps_po_2025_quant.json", "w") as f:
     json.dump(questions, f, indent=2)
 
-print(f"SUCCESS: Generated src/data/ibps_po_2025_quant.json with {len(questions)} questions!")
+print(f"SUCCESS: Generated src/data/ibps_po_2025_quant.json with {len(questions)} questions (Tables & Diagrams included)!")

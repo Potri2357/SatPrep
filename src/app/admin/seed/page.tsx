@@ -192,6 +192,8 @@ export default function UploadQuestionBankPage() {
   const [isDraggingPdf, setIsDraggingPdf] = useState<boolean>(false);
   const [isScanningPdf, setIsScanningPdf] = useState<boolean>(false);
   const [pdfStatus, setPdfStatus] = useState<string | null>(null);
+  const [uploadedPdfInfo, setUploadedPdfInfo] = useState<{ name: string; size: number } | null>(null);
+  const [importSuccessCount, setImportSuccessCount] = useState<number | null>(null);
   const [successBanner, setSuccessBanner] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -376,6 +378,7 @@ export default function UploadQuestionBankPage() {
     setIsScanningPdf(true);
     setPdfStatus(`Scanning "${file.name}"... Isolating Quantitative Aptitude section (Que. 66 to 100).`);
     setUploadError(null);
+    setImportSuccessCount(null);
 
     try {
       const formData = new FormData();
@@ -389,6 +392,7 @@ export default function UploadQuestionBankPage() {
       const data = await res.json();
       if (data.success && Array.isArray(data.questions) && data.questions.length > 0) {
         setParsedRows(data.questions);
+        setUploadedPdfInfo({ name: file.name, size: file.size });
         setPdfStatus(`Scan complete for "${file.name}": Extracted all ${data.count} Quantitative Aptitude questions (Que. 66 to 100)! Questions are displayed below for review.`);
       } else {
         setUploadError(data.error || 'Failed to extract quantitative section from PDF');
@@ -432,7 +436,11 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
       const data = await res.json();
       if (data.success) {
         setSuccessBanner(`Successfully added ${data.added_count} questions to the live question bank!`);
-        setTimeout(() => setSuccessBanner(null), 5000);
+        setImportSuccessCount(data.added_count);
+        setParsedRows([]);
+        setUploadedPdfInfo(null);
+        setPdfStatus(null);
+        setTimeout(() => setSuccessBanner(null), 6000);
       } else {
         alert(data.error || 'Failed to import questions');
       }
@@ -1018,87 +1026,156 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
       {/* TAB 3: PDF / EXAM SCANNER */}
       {activeTab === 'pdf' && (
         <div className="space-y-6">
-          <div
-            onDragOver={handlePdfDragOver}
-            onDragEnter={handlePdfDragEnter}
-            onDragLeave={handlePdfDragLeave}
-            onDrop={handlePdfDrop}
-            onClick={() => pdfInputRef.current?.click()}
-            className={cn(
-              "p-10 sm:p-14 rounded-3xl space-y-5 text-center transition-all duration-200 border-2 border-dashed max-w-3xl mx-auto cursor-pointer select-none",
-              isDraggingPdf
-                ? "border-[#005CE6] bg-[#EAF5FE] ring-4 ring-[#005CE6]/20 scale-[1.01] shadow-lg"
-                : "bg-white border-[#BCEBFC] hover:border-[#005CE6] hover:bg-slate-50/60 shadow-2xs group"
-            )}
-          >
-            <input
-              ref={pdfInputRef}
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg"
-              onChange={handlePdfInputChange}
-              className="hidden"
-            />
-
+          {/* 1. Completion Success Card */}
+          {importSuccessCount !== null ? (
+            <div className="p-8 sm:p-12 rounded-3xl bg-white border border-emerald-200 shadow-sm text-center space-y-4 max-w-2xl mx-auto animate-in fade-in zoom-in-95 duration-200">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner border border-emerald-200">
+                <CheckCircle2 className="w-9 h-9" />
+              </div>
+              <div className="space-y-1.5">
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900">
+                  Import Completed Successfully!
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                  All {importSuccessCount} Quantitative Aptitude questions from your exam paper have been verified, categorized with diagrams &amp; tables, and added directly to the active Question Bank.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+                <a
+                  href="/admin/questions"
+                  className="px-6 py-2.5 rounded-full bg-[#005CE6] hover:bg-[#004dc2] text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  View in Question Library
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setImportSuccessCount(null)}
+                  className="px-5 py-2.5 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-bold shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  Upload Another Document
+                </button>
+              </div>
+            </div>
+          ) : uploadedPdfInfo ? (
+            /* 2. Compact Scanned Document Card (Replaces the huge empty dropzone) */
+            <div className="p-6 rounded-3xl bg-white border border-[#BCEBFC] shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in duration-200">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-2xl bg-[#E0F4FD] text-[#005CE6] flex items-center justify-center shrink-0 shadow-inner">
+                  <FileText className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className="font-extrabold text-base text-slate-900 line-clamp-1">
+                    {uploadedPdfInfo.name}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-500">
+                    <span className="font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 text-[11px]">
+                      {parsedRows.length} Questions Extracted
+                    </span>
+                    <span>•</span>
+                    <span>Quantitative Aptitude Section</span>
+                    <span>•</span>
+                    <span>{(uploadedPdfInfo.size / (1024 * 1024)).toFixed(2)} MB</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setParsedRows([]);
+                    setUploadedPdfInfo(null);
+                    setPdfStatus(null);
+                  }}
+                  className="px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all cursor-pointer"
+                >
+                  Upload Different Document
+                </button>
+              </div>
+            </div>
+          ) : (
+            /* 3. Standard Drag & Drop Box (Initial State) */
             <div
+              onDragOver={handlePdfDragOver}
+              onDragEnter={handlePdfDragEnter}
+              onDragLeave={handlePdfDragLeave}
+              onDrop={handlePdfDrop}
+              onClick={() => pdfInputRef.current?.click()}
               className={cn(
-                "w-16 h-16 rounded-3xl flex items-center justify-center mx-auto transition-all shadow-sm",
+                "p-10 sm:p-14 rounded-3xl space-y-5 text-center transition-all duration-200 border-2 border-dashed max-w-3xl mx-auto cursor-pointer select-none",
                 isDraggingPdf
-                  ? "bg-[#005CE6] text-white scale-110 animate-bounce"
-                  : "bg-[#E0F4FD] text-[#005CE6] group-hover:scale-105"
+                  ? "border-[#005CE6] bg-[#EAF5FE] ring-4 ring-[#005CE6]/20 scale-[1.01] shadow-lg"
+                  : "bg-white border-[#BCEBFC] hover:border-[#005CE6] hover:bg-slate-50/60 shadow-2xs group"
               )}
             >
-              <FileText className="w-8 h-8" />
-            </div>
+              <input
+                ref={pdfInputRef}
+                type="file"
+                accept=".pdf,.png,.jpg,.jpeg"
+                onChange={handlePdfInputChange}
+                className="hidden"
+              />
 
-            <div className="space-y-1.5">
-              <h2 className="text-xl font-black text-slate-900">
-                {isDraggingPdf ? 'Drop Exam PDF / Document Here' : 'Extract Questions from Exam Papers & PDFs'}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
-                {isDraggingPdf
-                  ? 'Release to automatically scan question stems, formulas, and multiple-choice keys.'
-                  : 'Drag and drop past question paper PDFs, sample tests, or scanned practice sheets here. Our smart AI reader automatically recognizes questions, math formulas, multiple-choice options, and solutions into ready-to-use practice items.'}
-              </p>
-            </div>
-
-            <div className="pt-2 flex justify-center">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  pdfInputRef.current?.click();
-                }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#005CE6] hover:bg-[#004dc2] text-white text-xs sm:text-sm font-bold shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+              <div
+                className={cn(
+                  "w-16 h-16 rounded-3xl flex items-center justify-center mx-auto transition-all shadow-sm",
+                  isDraggingPdf
+                    ? "bg-[#005CE6] text-white scale-110 animate-bounce"
+                    : "bg-[#E0F4FD] text-[#005CE6] group-hover:scale-105"
+                )}
               >
-                <UploadCloud className="w-4 h-4" />
-                <span>Select Exam PDF or Scanned Document</span>
-              </button>
+                <FileText className="w-8 h-8" />
+              </div>
+
+              <div className="space-y-1.5">
+                <h2 className="text-xl font-black text-slate-900">
+                  {isDraggingPdf ? 'Drop Exam PDF / Document Here' : 'Extract Questions from Exam Papers & PDFs'}
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
+                  {isDraggingPdf
+                    ? 'Release to automatically scan question stems, formulas, and multiple-choice keys.'
+                    : 'Drag and drop past question paper PDFs, sample tests, or scanned practice sheets here. Our smart AI reader automatically recognizes questions, math formulas, multiple-choice options, and solutions into ready-to-use practice items.'}
+                </p>
+              </div>
+
+              <div className="pt-2 flex justify-center">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    pdfInputRef.current?.click();
+                  }}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#005CE6] hover:bg-[#004dc2] text-white text-xs sm:text-sm font-bold shadow-md transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <UploadCloud className="w-4 h-4" />
+                  <span>Select Exam PDF or Scanned Document</span>
+                </button>
+              </div>
+
+              {isScanningPdf && (
+                <div className="pt-2 text-xs font-semibold text-blue-800 flex items-center justify-center gap-2 bg-blue-50 max-w-md mx-auto py-2.5 rounded-xl border border-blue-200 animate-pulse">
+                  <Loader2 className="w-4 h-4 animate-spin text-[#005CE6]" />
+                  <span>Scanning document and extracting questions...</span>
+                </div>
+              )}
+
+              {uploadError && (
+                <div className="pt-2 text-xs font-semibold text-rose-800 flex items-center justify-center gap-2 bg-rose-50 max-w-md mx-auto py-2.5 px-4 rounded-xl border border-rose-200">
+                  <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                  <span>{uploadError}</span>
+                </div>
+              )}
+
+              {pdfStatus && (
+                <div className="pt-2 text-xs font-semibold text-emerald-800 flex items-center justify-center gap-2 bg-emerald-50 max-w-lg mx-auto py-2.5 px-4 rounded-xl border border-emerald-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{pdfStatus}</span>
+                </div>
+              )}
             </div>
-
-            {isScanningPdf && (
-              <div className="pt-2 text-xs font-semibold text-blue-800 flex items-center justify-center gap-2 bg-blue-50 max-w-md mx-auto py-2.5 rounded-xl border border-blue-200 animate-pulse">
-                <Loader2 className="w-4 h-4 animate-spin text-[#005CE6]" />
-                <span>Scanning document and extracting questions...</span>
-              </div>
-            )}
-
-            {uploadError && (
-              <div className="pt-2 text-xs font-semibold text-rose-800 flex items-center justify-center gap-2 bg-rose-50 max-w-md mx-auto py-2.5 px-4 rounded-xl border border-rose-200">
-                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-                <span>{uploadError}</span>
-              </div>
-            )}
-
-            {pdfStatus && (
-              <div className="pt-2 text-xs font-semibold text-emerald-800 flex items-center justify-center gap-2 bg-emerald-50 max-w-lg mx-auto py-2.5 px-4 rounded-xl border border-emerald-200">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>{pdfStatus}</span>
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Validation & Live Question Preview Table for PDF Scanner */}
-          {parsedRows.length > 0 && (
+          {parsedRows.length > 0 && importSuccessCount === null && (
             <div className="p-6 rounded-3xl bg-white border border-[#BCEBFC] shadow-2xs space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
                 <div>
@@ -1106,7 +1183,7 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
                     Quantitative Aptitude Section ({parsedRows.length} Questions Extracted)
                   </span>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Extracted from your exam paper. Review questions, answer options, and math formulas before importing into the question bank.
+                    Extracted from your exam paper. Review questions, diagrams, data tables, answer options, and formulas before importing.
                   </p>
                 </div>
                 <button
@@ -1117,7 +1194,7 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
                   {isUploading ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Importing...</span>
+                      <span>Importing to Question Bank...</span>
                     </>
                   ) : (
                     <>
@@ -1146,8 +1223,8 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
                         <td className="p-3 pl-4 capitalize font-bold text-slate-900 whitespace-nowrap">
                           {r.topic.replace(/-/g, ' ')}
                         </td>
-                        <td className="p-3 max-w-md">
-                          <div className="font-medium text-slate-800 line-clamp-2">
+                        <td className="p-3 max-w-xl">
+                          <div className="font-medium text-slate-800 space-y-2">
                             <MathRenderer content={r.stem} />
                           </div>
                         </td>
