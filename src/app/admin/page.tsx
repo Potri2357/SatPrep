@@ -154,14 +154,14 @@ export default function AdminDashboardPage() {
         </Link>
 
         <Link
-          href="/admin/review"
+          href="/admin/questions"
           className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors flex items-center justify-between">
-            <span>Review Questions (14 Pending)</span>
+            <span>Question Bank</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed">Check and approve newly generated questions before making them live for students.</p>
+          <p className="text-xs text-slate-500 leading-relaxed">Search, filter, edit, and manage all verified practice questions.</p>
         </Link>
 
         <Link
