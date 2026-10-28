@@ -803,7 +803,7 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
 
             <form onSubmit={handleCreateManualQuestion} className="space-y-4 text-xs">
               {/* Topic & Difficulty */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-30">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Target Topic</label>
                   <CustomDropdown

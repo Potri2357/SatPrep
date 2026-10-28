@@ -210,7 +210,7 @@ export default function QuestionBankManagementPage() {
       )}
 
       {/* Filter and Search Bar (without Status filter) */}
-      <div className="p-4 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 flex flex-col sm:flex-row gap-3 shadow-xs">
+      <div className="p-4 rounded-3xl bg-white border border-blue-100 flex flex-col sm:flex-row gap-3 shadow-xs relative z-20">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-blue-500 absolute left-3.5 top-3" />
           <input
@@ -240,7 +240,7 @@ export default function QuestionBankManagementPage() {
       )}
 
       {/* Question Table (Status & Source columns removed, Edit button added) */}
-      <div className="rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 overflow-hidden shadow-xs">
+      <div className="rounded-3xl bg-white border border-blue-100 overflow-hidden shadow-xs relative z-10">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
             <tr className="border-b border-blue-100 bg-blue-50/50 text-slate-500 uppercase tracking-wider text-[10px] font-bold">

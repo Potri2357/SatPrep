@@ -65,7 +65,7 @@ export function CustomDropdown({
   }, [isOpen]);
 
   return (
-    <div ref={containerRef} className={cn('relative w-full text-xs', className)}>
+    <div ref={containerRef} className={cn('relative w-full text-xs', isOpen ? 'z-50' : 'z-10', className)}>
       {/* Trigger Button */}
       <button
         type="button"
@@ -97,7 +97,7 @@ export function CustomDropdown({
         <div
           className={cn(
             'absolute left-0 right-0 top-full mt-1.5 z-50',
-            'bg-white/95 backdrop-blur-xl border border-blue-100 rounded-2xl shadow-xl shadow-blue-500/10',
+            'bg-white border border-blue-100 rounded-2xl shadow-2xl shadow-slate-900/15',
             'p-1.5 max-h-64 overflow-y-auto overscroll-contain animate-in fade-in zoom-in-95 duration-150',
             menuClassName
           )}
@@ -151,3 +151,4 @@ export function CustomDropdown({
     </div>
   );
 }
+

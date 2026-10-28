@@ -56,7 +56,7 @@ export default function ReportsAndRegradePage() {
       </div>
 
       {/* RE-GRADE TOOL CARD */}
-      <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-xs space-y-4">
+      <div className="p-6 rounded-3xl bg-white border border-blue-100 shadow-xs space-y-4 relative z-20">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
             <RotateCcw className="w-5 h-5" />

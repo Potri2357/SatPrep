@@ -79,13 +79,13 @@ export default function GenerationControlCentrePage() {
       </div>
 
       {/* Create Questions Form */}
-      <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-xs space-y-5">
+      <div className="p-6 rounded-3xl bg-white border border-blue-100 shadow-xs space-y-5 relative z-20">
         <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
           <Zap className="w-4 h-4 text-blue-600" />
           <span>Generate New Practice Questions</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs relative z-30">
           <div>
             <label className="font-semibold text-slate-700 block mb-1.5">Subject Topic</label>
             <CustomDropdown
@@ -201,7 +201,7 @@ export default function GenerationControlCentrePage() {
       </div>
 
       {/* Recent Generation History */}
-      <div className="rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 overflow-hidden shadow-xs">
+      <div className="rounded-3xl bg-white border border-blue-100 overflow-hidden shadow-xs relative z-10">
         <div className="p-4 px-6 border-b border-blue-100 bg-blue-50/30 flex items-center justify-between">
           <span className="font-bold text-xs text-slate-900">Recent Generation Activity</span>
           <span className="text-[11px] text-slate-500 font-medium">
