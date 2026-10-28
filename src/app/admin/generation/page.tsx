@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { INITIAL_TOPICS, globalStore } from '@/lib/store';
 import { CustomDropdown } from '@/components/ui/custom-dropdown';
 import { MathRenderer } from '@/lib/math-renderer';
@@ -14,13 +14,19 @@ import {
 } from 'lucide-react';
 
 export default function GenerationControlCentrePage() {
-  const [jobs, setJobs] = useState<any[]>(globalStore.getJobs());
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [mounted, setMounted] = useState<boolean>(false);
   const [topicId, setTopicId] = useState<string>('quadratic-equations');
   const [difficulty, setDifficulty] = useState<number>(3);
   const [count, setCount] = useState<number>(5);
   const [method, setMethod] = useState<'template' | 'llm_twist'>('llm_twist');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([]);
+
+  useEffect(() => {
+    setMounted(true);
+    setJobs(globalStore.getJobs());
+  }, []);
 
   const topicOptions = INITIAL_TOPICS.map((t) => ({
     value: t.id,
@@ -276,21 +282,29 @@ export default function GenerationControlCentrePage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-blue-50">
-            {jobs.map((j) => (
-              <tr key={j.id} className="hover:bg-blue-50/40 transition-colors">
-                <td className="p-3.5 pl-6 font-mono font-bold text-blue-700">{j.id}</td>
-                <td className="p-3.5 font-semibold text-slate-800">{j.topic_name} (Lvl {j.difficulty})</td>
-                <td className="p-3.5 text-slate-500 capitalize">{j.method === 'llm_twist' ? 'AI Smart' : 'Exam Formula'}</td>
-                <td className="p-3.5 font-mono text-emerald-700 font-bold">
-                  {j.accepted_count} questions
-                </td>
-                <td className="p-3.5 pr-6 text-right">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase font-mono bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    {j.status === 'completed' ? 'Completed' : j.status}
-                  </span>
+            {mounted ? (
+              jobs.map((j) => (
+                <tr key={j.id} className="hover:bg-blue-50/40 transition-colors">
+                  <td className="p-3.5 pl-6 font-mono font-bold text-blue-700">{j.id}</td>
+                  <td className="p-3.5 font-semibold text-slate-800">{j.topic_name} (Lvl {j.difficulty})</td>
+                  <td className="p-3.5 text-slate-500 capitalize">{j.method === 'llm_twist' ? 'AI Smart' : 'Exam Formula'}</td>
+                  <td className="p-3.5 font-mono text-emerald-700 font-bold">
+                    {j.accepted_count} questions
+                  </td>
+                  <td className="p-3.5 pr-6 text-right">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase font-mono bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      {j.status === 'completed' ? 'Completed' : j.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="p-4 text-center text-slate-400 font-medium">
+                  Loading activity...
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

@@ -46,11 +46,8 @@ export interface ModelHealth {
 // Calibrated cascade order: fast, proven available models on Google API
 export const DEFAULT_MODEL_CASCADE = [
   'gemini-2.5-flash',
-  'gemini-3.5-flash-lite',
-  'gemini-flash-lite-latest',
+  'gemini-flash-latest',
   'gemini-3.5-flash',
-  'gemini-3-flash-preview',
-  'gemini-3.1-flash-lite',
 ];
 
 // In-memory health tracker across serverless warm invocations
@@ -250,7 +247,7 @@ Respond with strict JSON adhering to this exact schema (no markdown formatting o
       console.log(`[ModelRouter] Attempting generation via model '${model}' (Attempt ${i + 1}/${executionOrder.length})...`);
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15-second per-model timeout
+      const timeoutId = setTimeout(() => controller.abort(), 7000); // 7-second per-model fast timeout
 
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -262,6 +259,9 @@ Respond with strict JSON adhering to this exact schema (no markdown formatting o
             generationConfig: {
               temperature: 0.7,
               responseMimeType: 'application/json',
+              thinkingConfig: {
+                thinkingBudget: 0,
+              },
             },
           }),
           signal: controller.signal,
@@ -450,24 +450,19 @@ export async function generateMultipleBankingQuestionsWithCascade(
     return { questions: generateProceduralQuestions(topicId, topicName, difficulty, targetCount), telemetry: null };
   }
 
-  const prompt = `You are a Senior Quantitative Aptitude Psychometrician for Indian Bank Exams (IBPS PO, SBI PO Prelims).
-Generate ${targetCount} distinct, high-quality, calibrated questions on the topic "${topicName}".
-Target Difficulty: Level ${difficulty} out of 5 (1 = Easy, 2 = Moderate-Easy, 3 = Moderate, 4 = Hard, 5 = Mains Level).
+  const prompt = `You are a Quantitative Aptitude test author for Indian Bank Exams (IBPS PO Prelims).
+Generate ${targetCount} distinct, high-quality questions on "${topicName}" (Difficulty Level ${difficulty}/5).
 
 Rules:
-1. Provide a realistic question stem using KaTeX formatting ($...$ for math expressions, e.g. $x^2 - 15x + 56 = 0$).
-2. For multiple equations, separate them with clean double linebreaks \\n\\n (e.g. "Two equations are given:\\n\\nI. $x^2 - 11x + 30 = 0$\\n\\nII. $y^2 - 17y + 72 = 0$").
-3. Exactly 5 options (id: "a", "b", "c", "d", "e") per question.
-4. Exactly ONE option must be mathematically correct.
-5. Provide a step-by-step mathematical solution.
-6. Provide a 20-second Vedic math/speed shortcut.
-7. CRITICAL: Any LaTeX backslash MUST be properly escaped with double backslashes (e.g. \\\\sqrt, \\\\frac, \\\\times) to produce strictly valid JSON.
-8. Each of the ${targetCount} questions must be mathematically unique with different numerical values and problem scenarios.
+1. Use KaTeX ($...$ for math expressions, e.g. $x^2 - 15x + 56 = 0$). Use clean double linebreaks \\n\\n between equations.
+2. Exactly 5 options (a, b, c, d, e) per question. Exactly ONE option must be correct.
+3. Concise 2-sentence solution and 1-sentence speed shortcut.
+4. Escape backslashes as \\\\sqrt, \\\\times, \\\\ge, \\\\le.
 
 Respond with strict JSON adhering to this exact schema (an array of ${targetCount} questions):
 [
   {
-    "stem": "In the following question, two equations numbered I and II are given...\\n\\nI. $...$\\n\\nII. $...$",
+    "stem": "In the following question, two equations numbered I and II are given:\\n\\nI. $x^2 - 11x + 30 = 0$\\n\\nII. $y^2 - 17y + 72 = 0$",
     "options": [
       {"id": "a", "text": "$x > y$"},
       {"id": "b", "text": "$x < y$"},
@@ -476,35 +471,28 @@ Respond with strict JSON adhering to this exact schema (an array of ${targetCoun
       {"id": "e", "text": "$x = y$ or relationship cannot be established"}
     ],
     "correct_option": "b",
-    "solution": "Step by step calculation...",
-    "shortcut": "Fast mental shortcut..."
+    "solution": "Equation I gives roots x = 5, 6. Equation II gives roots y = 8, 9. Since all x values are strictly less than y, x < y.",
+    "shortcut": "Roots of I (5, 6) are strictly smaller than roots of II (8, 9)."
   }
 ]`;
 
-  let queue = [...DEFAULT_MODEL_CASCADE];
-  if (preferredModel && queue.includes(preferredModel)) {
-    queue = [preferredModel, ...queue.filter((m) => m !== preferredModel)];
+  let queue = ['gemini-2.5-flash'];
+  if (preferredModel) {
+    queue = [preferredModel, 'gemini-2.5-flash'];
   }
-
-  const now = Date.now();
-  const eligibleQueue = queue.filter((m) => {
-    const h = getModelHealth(m);
-    return !h.cooldownUntil || h.cooldownUntil < now;
-  });
-  const executionOrder = eligibleQueue.length > 0 ? eligibleQueue : queue;
 
   const modelsTried: string[] = [];
   const startTime = Date.now();
 
-  for (let i = 0; i < executionOrder.length; i++) {
-    const model = executionOrder[i];
+  for (let i = 0; i < queue.length; i++) {
+    const model = queue[i];
     modelsTried.push(model);
     const health = getModelHealth(model);
     const apiKey = getActiveApiKey();
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 25000);
+      const timeoutId = setTimeout(() => controller.abort(), 6500); // 6.5s strict timeout to eliminate latency
 
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
@@ -514,8 +502,11 @@ Respond with strict JSON adhering to this exact schema (an array of ${targetCoun
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: {
-              temperature: 0.7,
+              temperature: 0.6,
               responseMimeType: 'application/json',
+              thinkingConfig: {
+                thinkingBudget: 0,
+              },
             },
           }),
           signal: controller.signal,

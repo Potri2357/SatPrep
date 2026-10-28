@@ -90,31 +90,33 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Upsert into Supabase for persistence
-    try {
-      // Ensure topic exists in topics table
-      await supabase.from('topics').upsert(
-        [
-          {
-            id: topic_id,
-            subject_id: 'quant',
-            name: topicName,
-            group_name: topicObj?.group_name || 'Arithmetic',
-            target_stock: 150,
-            min_stock: 50,
-            is_template_eligible: true,
-            is_di: false,
-            mains_only: false,
-          },
-        ],
-        { onConflict: 'id' }
-      );
+    // Non-blocking async upsert into Supabase for persistent background sync
+    (async () => {
+      try {
+        // Ensure topic exists in topics table
+        await supabase.from('topics').upsert(
+          [
+            {
+              id: topic_id,
+              subject_id: 'quant',
+              name: topicName,
+              group_name: topicObj?.group_name || 'Arithmetic',
+              target_stock: 150,
+              min_stock: 50,
+              is_template_eligible: true,
+              is_di: false,
+              mains_only: false,
+            },
+          ],
+          { onConflict: 'id' }
+        );
 
-      await supabase.from('questions').upsert(questionsToUpsert);
-      await supabase.from('question_keys').upsert(keysToUpsert);
-    } catch (sbErr) {
-      console.warn('Supabase questions generation upsert notice:', sbErr);
-    }
+        await supabase.from('questions').upsert(questionsToUpsert);
+        await supabase.from('question_keys').upsert(keysToUpsert);
+      } catch (sbErr) {
+        console.warn('Supabase questions generation async upsert notice:', sbErr);
+      }
+    })();
 
     const job = globalStore.createJob({
       topic_id,
