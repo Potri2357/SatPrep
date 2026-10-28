@@ -534,10 +534,6 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-[#BCEBFC]">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#E0F4FD] text-[#005CE6] border border-[#BCEBFC] mb-2">
-            <UploadCloud className="w-3.5 h-3.5" />
-            <span>Question Bank Management</span>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
             Upload Questions
           </h1>
@@ -1106,14 +1102,9 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
             <div className="p-6 rounded-3xl bg-white border border-[#BCEBFC] shadow-2xs space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
                 <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm text-slate-900">
-                      Quantitative Aptitude Section ({parsedRows.length} Questions Extracted)
-                    </span>
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10.5px] font-bold">
-                      Quant Only • Ready to Import
-                    </span>
-                  </div>
+                  <span className="font-bold text-sm text-slate-900">
+                    Quantitative Aptitude Section ({parsedRows.length} Questions Extracted)
+                  </span>
                   <p className="text-xs text-slate-500 mt-0.5">
                     Extracted from your exam paper. Review questions, answer options, and math formulas before importing into the question bank.
                   </p>
