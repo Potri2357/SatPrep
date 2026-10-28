@@ -183,7 +183,7 @@ function parseJSONQuestions(text: string): ParsedQuestionRow[] {
 }
 
 export default function UploadQuestionBankPage() {
-  const [activeTab, setActiveTab] = useState<'csv' | 'manual' | 'pdf' | 'coverage'>('csv');
+  const [activeTab, setActiveTab] = useState<'csv' | 'manual' | 'pdf'>('csv');
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
@@ -598,15 +598,6 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
           )}
         >
           PDF / Exam Paper Scanner
-        </button>
-        <button
-          onClick={() => setActiveTab('coverage')}
-          className={cn(
-            "flex-1 py-2 px-3 font-bold rounded-xl transition-all cursor-pointer text-center",
-            activeTab === 'coverage' ? "bg-white text-[#005CE6] shadow-xs" : "text-slate-600 hover:text-slate-900"
-          )}
-        >
-          Topic Coverage &amp; Inventory
         </button>
       </div>
 
@@ -1258,47 +1249,6 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
               </div>
             </div>
           )}
-        </div>
-      )}
-
-      {/* TAB 4: TOPIC COVERAGE & INVENTORY */}
-      {activeTab === 'coverage' && (
-        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#BCEBFC] space-y-5 shadow-2xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
-            <div>
-              <h2 className="text-base sm:text-lg font-black text-slate-900">
-                Topic Question Bank Inventory &amp; Coverage
-              </h2>
-              <p className="text-xs text-slate-500">
-                Distribution of active verified questions per quantitative syllabus topic. Target: 150 questions per topic.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {INITIAL_TOPICS.map((t) => {
-              const stock = t.is_template_eligible ? 142 : 88;
-              const target = 150;
-              const pct = Math.min(100, Math.round((stock / target) * 100));
-
-              return (
-                <div key={t.id} className="p-4 rounded-2xl border border-slate-200 bg-[#F7FDFF] space-y-2.5">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-slate-900 truncate">{t.name}</span>
-                    <span className="font-mono font-bold text-[#005CE6] bg-[#E0F4FD] px-2.5 py-0.5 rounded-full border border-[#BCEBFC] text-[11px]">
-                      {stock} / {target} Qs
-                    </span>
-                  </div>
-                  <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                    <div
-                      className="bg-[#005CE6] h-full rounded-full transition-all duration-300"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
       )}
     </div>
