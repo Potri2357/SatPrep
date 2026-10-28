@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { globalStore } from '@/lib/store';
+import { CustomDropdown } from '@/components/ui/custom-dropdown';
 import {
   Flag,
   RotateCcw,
@@ -83,17 +84,18 @@ export default function ReportsAndRegradePage() {
 
           <div>
             <label className="font-semibold text-slate-700 block mb-1">Correct Answer</label>
-            <select
+            <CustomDropdown
               value={newKey}
-              onChange={(e) => setNewKey(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 uppercase font-bold text-xs focus:outline-none focus:border-blue-500"
-            >
-              <option value="a">Option A</option>
-              <option value="b">Option B</option>
-              <option value="c">Option C</option>
-              <option value="d">Option D</option>
-              <option value="e">Option E</option>
-            </select>
+              onChange={(val) => setNewKey(String(val))}
+              options={[
+                { value: 'a', label: 'Option A' },
+                { value: 'b', label: 'Option B' },
+                { value: 'c', label: 'Option C' },
+                { value: 'd', label: 'Option D' },
+                { value: 'e', label: 'Option E' },
+              ]}
+              triggerClassName="h-11"
+            />
           </div>
 
           <div className="flex items-end">

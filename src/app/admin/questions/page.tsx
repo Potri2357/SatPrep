@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ALL_PRACTICE_QUESTIONS as INITIAL_QUESTIONS, INITIAL_TOPICS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
+import { CustomDropdown } from '@/components/ui/custom-dropdown';
 import { Question } from '@/lib/types';
 import {
   Search,
@@ -73,6 +74,29 @@ export default function QuestionBankManagementPage() {
     });
     return Array.from(set).sort();
   }, [questions]);
+
+  const topicFilterOptions = useMemo(() => [
+    { value: 'all', label: `All Topics (${questions.length})` },
+    ...availableTopics.map((tId) => ({
+      value: tId,
+      label: tId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+    })),
+  ], [availableTopics, questions.length]);
+
+  const editTopicOptions = useMemo(() =>
+    availableTopics.map((tId) => ({
+      value: tId,
+      label: tId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+    })),
+  [availableTopics]);
+
+  const difficultyOptions = [
+    { value: 1, label: 'Level 1 (Easy)' },
+    { value: 2, label: 'Level 2 (Moderate)' },
+    { value: 3, label: 'Level 3 (Exam Standard)' },
+    { value: 4, label: 'Level 4 (Hard / Mains)' },
+    { value: 5, label: 'Level 5 (Advanced)' },
+  ];
 
   const filtered = questions.filter((q) => {
     if (topicFilter !== 'all' && q.topic_id !== topicFilter) return false;
@@ -197,18 +221,14 @@ export default function QuestionBankManagementPage() {
           />
         </div>
 
-        <select
-          value={topicFilter}
-          onChange={(e) => setTopicFilter(e.target.value)}
-          className="h-10 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-700 text-xs font-medium focus:outline-none focus:border-blue-500 capitalize"
-        >
-          <option value="all">All Topics ({questions.length})</option>
-          {availableTopics.map((tId) => (
-            <option key={tId} value={tId}>
-              {tId.replace(/-/g, ' ')}
-            </option>
-          ))}
-        </select>
+        <div className="w-full sm:w-64 shrink-0">
+          <CustomDropdown
+            value={topicFilter}
+            onChange={(val) => setTopicFilter(String(val))}
+            options={topicFilterOptions}
+            triggerClassName="h-10"
+          />
+        </div>
       </div>
 
       {/* Loading state indicator */}
@@ -320,32 +340,22 @@ export default function QuestionBankManagementPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Topic</label>
-                  <select
+                  <CustomDropdown
                     value={editTopic}
-                    onChange={(e) => setEditTopic(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-900 focus:outline-none focus:border-blue-500 capitalize"
-                  >
-                    {availableTopics.map((tId) => (
-                      <option key={tId} value={tId}>
-                        {tId.replace(/-/g, ' ')}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => setEditTopic(String(val))}
+                    options={editTopicOptions}
+                    triggerClassName="h-10"
+                  />
                 </div>
 
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Difficulty Level</label>
-                  <select
+                  <CustomDropdown
                     value={editDifficulty}
-                    onChange={(e) => setEditDifficulty(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-900 focus:outline-none focus:border-blue-500"
-                  >
-                    <option value={1}>Level 1 (Easy)</option>
-                    <option value={2}>Level 2 (Moderate)</option>
-                    <option value={3}>Level 3 (Exam Standard)</option>
-                    <option value={4}>Level 4 (Hard / Mains)</option>
-                    <option value={5}>Level 5 (Advanced)</option>
-                  </select>
+                    onChange={(val) => setEditDifficulty(Number(val))}
+                    options={difficultyOptions}
+                    triggerClassName="h-10"
+                  />
                 </div>
               </div>
 

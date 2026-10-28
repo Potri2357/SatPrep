@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { INITIAL_TOPICS, globalStore } from '@/lib/store';
+import { CustomDropdown } from '@/components/ui/custom-dropdown';
 import {
   Sparkles,
   CheckCircle2,
@@ -18,6 +19,24 @@ export default function GenerationControlCentrePage() {
   const [method, setMethod] = useState<'template' | 'llm_twist'>('llm_twist');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [lastGeneratedQ, setLastGeneratedQ] = useState<any | null>(null);
+
+  const topicOptions = INITIAL_TOPICS.map((t) => ({
+    value: t.id,
+    label: t.name,
+  }));
+
+  const difficultyOptions = [
+    { value: 1, label: 'Level 1 - Easy' },
+    { value: 2, label: 'Level 2 - Moderate-Easy' },
+    { value: 3, label: 'Level 3 - Moderate' },
+    { value: 4, label: 'Level 4 - Hard' },
+    { value: 5, label: 'Level 5 - Advanced (Mains)' },
+  ];
+
+  const methodOptions = [
+    { value: 'llm_twist', label: 'AI Smart Creative Twist' },
+    { value: 'template', label: 'Standard Exam Formula' },
+  ];
 
   const handleLaunchJob = async () => {
     setIsSubmitting(true);
@@ -69,42 +88,32 @@ export default function GenerationControlCentrePage() {
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs">
           <div>
             <label className="font-semibold text-slate-700 block mb-1.5">Subject Topic</label>
-            <select
+            <CustomDropdown
               value={topicId}
-              onChange={(e) => setTopicId(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
-            >
-              {INITIAL_TOPICS.map((t) => (
-                <option key={t.id} value={t.id}>{t.name}</option>
-              ))}
-            </select>
+              onChange={(val) => setTopicId(String(val))}
+              options={topicOptions}
+              placeholder="Select Topic"
+            />
           </div>
 
           <div>
             <label className="font-semibold text-slate-700 block mb-1.5">Difficulty Level</label>
-            <select
+            <CustomDropdown
               value={difficulty}
-              onChange={(e) => setDifficulty(Number(e.target.value))}
-              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
-            >
-              <option value="1">Level 1 - Easy</option>
-              <option value="2">Level 2 - Moderate-Easy</option>
-              <option value="3">Level 3 - Moderate</option>
-              <option value="4">Level 4 - Hard</option>
-              <option value="5">Level 5 - Advanced (Mains)</option>
-            </select>
+              onChange={(val) => setDifficulty(Number(val))}
+              options={difficultyOptions}
+              placeholder="Select Difficulty"
+            />
           </div>
 
           <div>
             <label className="font-semibold text-slate-700 block mb-1.5">Generation Style</label>
-            <select
+            <CustomDropdown
               value={method}
-              onChange={(e) => setMethod(e.target.value as any)}
-              className="w-full h-11 px-3.5 rounded-xl border border-blue-100 bg-white text-slate-800 text-xs font-medium focus:outline-none focus:border-blue-500"
-            >
-              <option value="llm_twist">AI Smart Creative Twist</option>
-              <option value="template">Standard Exam Formula</option>
-            </select>
+              onChange={(val) => setMethod(val as any)}
+              options={methodOptions}
+              placeholder="Select Style"
+            />
           </div>
 
           <div>

@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { INITIAL_TOPICS } from '@/lib/store';
 import { MathRenderer } from '@/lib/math-renderer';
+import { CustomDropdown } from '@/components/ui/custom-dropdown';
 import { cn } from '@/lib/utils';
 import {
   UploadCloud,
@@ -805,32 +806,28 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Target Topic</label>
-                  <select
+                  <CustomDropdown
                     value={manualTopic}
-                    onChange={(e) => setManualTopic(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-900 focus:outline-none focus:border-[#005CE6]"
-                  >
-                    {INITIAL_TOPICS.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.name}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => setManualTopic(String(val))}
+                    options={INITIAL_TOPICS.map((t) => ({ value: t.id, label: t.name }))}
+                    triggerClassName="h-10"
+                  />
                 </div>
 
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Difficulty Level (1 - 5)</label>
-                  <select
+                  <CustomDropdown
                     value={difficulty}
-                    onChange={(e) => setDifficulty(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 font-medium text-slate-900 focus:outline-none focus:border-[#005CE6]"
-                  >
-                    <option value={1}>Level 1 (Easy Prelims)</option>
-                    <option value={2}>Level 2 (Standard Prelims)</option>
-                    <option value={3}>Level 3 (Moderate Prelims/Mains)</option>
-                    <option value={4}>Level 4 (Hard Mains)</option>
-                    <option value={5}>Level 5 (Advanced PO Mains)</option>
-                  </select>
+                    onChange={(val) => setDifficulty(Number(val))}
+                    options={[
+                      { value: 1, label: 'Level 1 (Easy Prelims)' },
+                      { value: 2, label: 'Level 2 (Standard Prelims)' },
+                      { value: 3, label: 'Level 3 (Moderate Prelims/Mains)' },
+                      { value: 4, label: 'Level 4 (Hard Mains)' },
+                      { value: 5, label: 'Level 5 (Advanced PO Mains)' },
+                    ]}
+                    triggerClassName="h-10"
+                  />
                 </div>
               </div>
 
