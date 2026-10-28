@@ -18,6 +18,7 @@ import {
   Menu,
   X,
   UploadCloud,
+  ArrowLeft,
 } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -180,6 +181,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 ⌘K
               </kbd>
             </button>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/70 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-xs font-semibold shadow-xs transition-all"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
+              <span className="hidden sm:inline">Back to Home</span>
+              <span className="sm:hidden">Home</span>
+            </Link>
           </div>
         </header>
 

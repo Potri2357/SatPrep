@@ -1,42 +1,104 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { INITIAL_TOPICS, INITIAL_QUESTIONS } from '@/lib/store';
+import { INITIAL_TOPICS, ALL_PRACTICE_QUESTIONS } from '@/lib/store';
 import {
   HelpCircle,
-  Cpu,
   Flag,
-  Users,
-  CheckCircle2,
-  AlertTriangle,
   ArrowRight,
-  TrendingUp,
+  ArrowLeft,
   Activity,
   Layers,
+  BookOpen,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
-  const totalQuestions = INITIAL_QUESTIONS.length;
-  const liveCount = INITIAL_QUESTIONS.filter((q) => q.status === 'live').length;
+  const [questions, setQuestions] = useState<any[]>(ALL_PRACTICE_QUESTIONS);
+  const [reports, setReports] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function loadDashboardData() {
+      try {
+        const [qRes, rRes] = await Promise.all([
+          fetch('/api/admin/questions').catch(() => null),
+          fetch('/api/admin/report').catch(() => null),
+        ]);
+
+        if (qRes && qRes.ok) {
+          const qData = await qRes.json();
+          if (qData.success && Array.isArray(qData.questions)) {
+            setQuestions(qData.questions);
+          }
+        }
+
+        if (rRes && rRes.ok) {
+          const rData = await rRes.json();
+          if (rData.success && Array.isArray(rData.reports)) {
+            setReports(rData.reports);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching admin dashboard data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadDashboardData();
+  }, []);
+
+  // Compute live statistics
+  const totalQuestions = questions.length;
+  const liveCount = questions.filter((q) => q.status === 'live' || !q.status).length;
+
+  const topicCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const q of questions) {
+      if (q.topic_id) {
+        counts[q.topic_id] = (counts[q.topic_id] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [questions]);
+
+  const coveredTopicsCount = useMemo(() => {
+    return INITIAL_TOPICS.filter((t) => (topicCounts[t.id] || 0) > 0).length;
+  }, [topicCounts]);
+
+  const openReportsCount = useMemo(() => {
+    return reports.filter((r) => r.status === 'open' || !r.status).length;
+  }, [reports]);
 
   return (
     <div className="space-y-8">
-      <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
-          <Activity className="w-3.5 h-3.5" />
-          <span>Overview &amp; Statistics</span>
+      {/* Page Header with Back to Home Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
+            <Activity className="w-3.5 h-3.5" />
+            <span>Overview &amp; Statistics</span>
+          </div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
+            Admin Dashboard
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Monitor your question library, topic coverage, and student feedback.
+          </p>
         </div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
-          Admin Dashboard
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Monitor your question library, student test participation, and topic coverage.
-        </p>
+
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl border border-slate-200 bg-white hover:bg-blue-50/70 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-xs font-bold shadow-xs transition-all w-fit"
+        >
+          <ArrowLeft className="w-4 h-4 text-slate-500" />
+          <span>Back to Home</span>
+        </Link>
       </div>
 
-      {/* KPI Cards Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Cards Strip (3 cards - Active Students removed) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs">
             <span className="font-medium">Available Questions</span>
@@ -45,22 +107,28 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div className="text-2xl font-extrabold font-mono text-slate-900 mt-3">
-            1,480 <span className="text-xs text-emerald-600 font-sans font-semibold">+45 today</span>
+            {totalQuestions.toLocaleString()}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Target: 2,500 questions total</div>
+          <div className="text-[11px] text-slate-500 mt-1">
+            {liveCount} verified live practice questions
+          </div>
         </div>
 
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-medium">Question Accuracy Rate</span>
+            <span className="font-medium">Topic Coverage</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <CheckCircle2 className="w-4 h-4" />
+              <Layers className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-extrabold font-mono text-emerald-600 mt-3">
-            94.8%
+            {coveredTopicsCount} / {INITIAL_TOPICS.length}
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Verified answers &amp; explanations</div>
+          <div className="text-[11px] text-slate-500 mt-1">
+            {INITIAL_TOPICS.length > 0
+              ? `${Math.round((coveredTopicsCount / INITIAL_TOPICS.length) * 100)}% of quant topics active`
+              : 'Quantitative Aptitude'}
+          </div>
         </div>
 
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
@@ -71,22 +139,14 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div className="text-2xl font-extrabold font-mono text-amber-600 mt-3">
-            1 <span className="text-xs text-slate-500 font-sans font-normal">pending review</span>
+            {openReportsCount}{' '}
+            <span className="text-xs text-slate-500 font-sans font-normal">
+              {openReportsCount === 1 ? 'pending review' : 'pending review'}
+            </span>
           </div>
-          <div className="text-[11px] text-slate-500 mt-1">Flagged question items</div>
-        </div>
-
-        <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-medium">Active Students</span>
-            <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-              <Users className="w-4 h-4" />
-            </div>
+          <div className="text-[11px] text-slate-500 mt-1">
+            {reports.length} total feedback items logged
           </div>
-          <div className="text-2xl font-extrabold font-mono text-slate-900 mt-3">
-            342 <span className="text-xs text-slate-500 font-sans font-normal">taking tests right now</span>
-          </div>
-          <div className="text-[11px] text-slate-500 mt-1">Fast system response time</div>
         </div>
       </div>
 
@@ -98,7 +158,7 @@ export default function AdminDashboardPage() {
               Topic Question Coverage
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              Number of practice questions available for each subject topic.
+              Live practice questions available per syllabus topic.
             </p>
           </div>
           <Link
@@ -111,10 +171,10 @@ export default function AdminDashboardPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-3">
           {INITIAL_TOPICS.map((topic) => {
-            const stock = topic.is_template_eligible ? 142 : 88;
-            const target = 150;
+            const stock = topicCounts[topic.id] || 0;
+            const target = 25;
             const pct = Math.min(100, Math.round((stock / target) * 100));
-            const isLow = stock < 50;
+            const hasStock = stock > 0;
 
             return (
               <div
@@ -122,16 +182,26 @@ export default function AdminDashboardPage() {
                 className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-blue-300 transition-all shadow-xs space-y-2.5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-xs text-slate-800 truncate">{topic.name}</span>
-                  <span className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-full ${isLow ? 'bg-rose-50 text-rose-600' : 'bg-emerald-50 text-emerald-700'}`}>
-                    {stock} / {target}
+                  <span className="font-semibold text-xs text-slate-800 truncate" title={topic.name}>
+                    {topic.name}
+                  </span>
+                  <span
+                    className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-full ${
+                      hasStock
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/50'
+                        : 'bg-slate-50 text-slate-500 border border-slate-200'
+                    }`}
+                  >
+                    {stock} {stock === 1 ? 'question' : 'questions'}
                   </span>
                 </div>
 
                 <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${isLow ? 'bg-rose-500' : 'bg-gradient-to-r from-blue-500 to-blue-600'}`}
-                    style={{ width: `${pct}%` }}
+                    className={`h-full rounded-full transition-all ${
+                      hasStock ? 'bg-gradient-to-r from-blue-500 to-blue-600' : 'bg-slate-300'
+                    }`}
+                    style={{ width: `${Math.max(hasStock ? 15 : 0, pct)}%` }}
                   />
                 </div>
               </div>
@@ -150,7 +220,9 @@ export default function AdminDashboardPage() {
             <span>Upload Questions</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed">Import questions from Excel, CSV spreadsheets, or question papers.</p>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Import questions from Excel, CSV spreadsheets, or question papers.
+          </p>
         </Link>
 
         <Link
@@ -161,7 +233,9 @@ export default function AdminDashboardPage() {
             <span>Question Bank</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed">Search, filter, edit, and manage all verified practice questions.</p>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Search, filter, edit, and manage all verified practice questions.
+          </p>
         </Link>
 
         <Link
@@ -172,7 +246,9 @@ export default function AdminDashboardPage() {
             <span>Student Feedback &amp; Reports</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
-          <p className="text-xs text-slate-500 leading-relaxed">Review questions flagged by students and update answer keys if needed.</p>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Review questions flagged by students and update answer keys if needed.
+          </p>
         </Link>
       </div>
     </div>
