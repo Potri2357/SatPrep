@@ -9,7 +9,6 @@ import {
   HelpCircle,
   FileSpreadsheet,
   Cpu,
-  Flag,
   Settings,
   Search,
   Command,
@@ -43,7 +42,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { label: 'Question Bank', href: '/admin/questions', icon: HelpCircle },
     { label: 'Upload Questions', href: '/admin/seed', icon: UploadCloud },
     { label: 'Create with AI', href: '/admin/generation', icon: Cpu },
-    { label: 'Student Feedback', href: '/admin/reports', icon: Flag },
     { label: 'Settings & Activity', href: '/admin/settings', icon: Settings },
   ];
 
@@ -237,11 +235,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <ChevronRight className="w-3.5 h-3.5 text-blue-400" />
               </Link>
               <Link
-                href="/admin/reports"
+                href="/admin/questions"
                 onClick={() => setCmdOpen(false)}
                 className="flex items-center justify-between p-3 rounded-xl hover:bg-blue-50/70 text-slate-700 hover:text-blue-700 transition-colors"
               >
-                <span>Review Student Feedback</span>
+                <span>Manage Question Bank</span>
                 <ChevronRight className="w-3.5 h-3.5 text-blue-400" />
               </Link>
             </div>

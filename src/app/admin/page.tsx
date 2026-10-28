@@ -5,42 +5,27 @@ import Link from 'next/link';
 import { INITIAL_TOPICS, ALL_PRACTICE_QUESTIONS } from '@/lib/store';
 import {
   HelpCircle,
-  Flag,
   ArrowRight,
   ArrowLeft,
-  Activity,
   Layers,
-  BookOpen,
 } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const [questions, setQuestions] = useState<any[]>(ALL_PRACTICE_QUESTIONS);
-  const [reports, setReports] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadDashboardData() {
       try {
-        const [qRes, rRes] = await Promise.all([
-          fetch('/api/admin/questions').catch(() => null),
-          fetch('/api/admin/report').catch(() => null),
-        ]);
-
+        const qRes = await fetch('/api/admin/questions').catch(() => null);
         if (qRes && qRes.ok) {
           const qData = await qRes.json();
           if (qData.success && Array.isArray(qData.questions)) {
             setQuestions(qData.questions);
           }
         }
-
-        if (rRes && rRes.ok) {
-          const rData = await rRes.json();
-          if (rData.success && Array.isArray(rData.reports)) {
-            setReports(rData.reports);
-          }
-        }
       } catch (err) {
-        console.error('Error fetching admin dashboard data:', err);
+        console.error('Error fetching admin questions:', err);
       } finally {
         setIsLoading(false);
       }
@@ -67,24 +52,16 @@ export default function AdminDashboardPage() {
     return INITIAL_TOPICS.filter((t) => (topicCounts[t.id] || 0) > 0).length;
   }, [topicCounts]);
 
-  const openReportsCount = useMemo(() => {
-    return reports.filter((r) => r.status === 'open' || !r.status).length;
-  }, [reports]);
-
   return (
     <div className="space-y-8">
       {/* Page Header with Back to Home Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
-            <Activity className="w-3.5 h-3.5" />
-            <span>Overview &amp; Statistics</span>
-          </div>
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
             Admin Dashboard
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Monitor your question library, topic coverage, and student feedback.
+            Monitor your question library and topic coverage.
           </p>
         </div>
 
@@ -97,8 +74,8 @@ export default function AdminDashboardPage() {
         </Link>
       </div>
 
-      {/* KPI Cards Strip (3 cards - Active Students removed) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* KPI Cards Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
           <div className="flex items-center justify-between text-slate-500 text-xs">
             <span className="font-medium">Available Questions</span>
@@ -128,24 +105,6 @@ export default function AdminDashboardPage() {
             {INITIAL_TOPICS.length > 0
               ? `${Math.round((coveredTopicsCount / INITIAL_TOPICS.length) * 100)}% of quant topics active`
               : 'Quantitative Aptitude'}
-          </div>
-        </div>
-
-        <div className="glass-panel p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-blue-100 shadow-sm">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span className="font-medium">Student Feedback</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-              <Flag className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-extrabold font-mono text-amber-600 mt-3">
-            {openReportsCount}{' '}
-            <span className="text-xs text-slate-500 font-sans font-normal">
-              {openReportsCount === 1 ? 'pending review' : 'pending review'}
-            </span>
-          </div>
-          <div className="text-[11px] text-slate-500 mt-1">
-            {reports.length} total feedback items logged
           </div>
         </div>
       </div>
@@ -239,15 +198,15 @@ export default function AdminDashboardPage() {
         </Link>
 
         <Link
-          href="/admin/reports"
+          href="/admin/generation"
           className="p-6 rounded-3xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all space-y-2 group"
         >
           <div className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors flex items-center justify-between">
-            <span>Student Feedback &amp; Reports</span>
+            <span>Create with AI</span>
             <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-1 transition-transform" />
           </div>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Review questions flagged by students and update answer keys if needed.
+            Generate balanced exam questions with smart formulas and instant solutions.
           </p>
         </Link>
       </div>
