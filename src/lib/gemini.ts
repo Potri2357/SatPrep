@@ -346,83 +346,251 @@ Respond with strict JSON adhering to this exact schema (no markdown formatting o
   return null;
 }
 
-// Procedural question generator for 100% reliable fallbacks
+// Procedural question generator with diverse mathematical patterns and varied correct options (A, B, C, D, E)
 export function generateProceduralQuestions(
   topicId: string,
   topicName: string,
   difficulty: number = 3,
-  count: number = 1
+  count: number = 5
 ): GeneratedQuestionPayload[] {
   const list: GeneratedQuestionPayload[] = [];
 
   for (let idx = 0; idx < count; idx++) {
+    const cycle = idx % 5;
+
     if (topicId === 'quadratic-equations') {
-      const r1 = 3 + idx;
-      const r2 = 6 + (idx % 3);
-      const r3 = 5 + idx;
-      const r4 = 8 + (idx % 2);
+      if (cycle === 0) {
+        // Pattern 1: x > y (Correct: A)
+        const x1 = 7 + (idx * 2), x2 = 9 + (idx * 2);
+        const y1 = 3 + idx, y2 = 5 + idx;
+        const b1 = x1 + x2, c1 = x1 * x2;
+        const b2 = y1 + y2, c2 = y1 * y2;
 
-      const b1 = r1 + r2;
-      const c1 = r1 * r2;
-      const b2 = r3 + r4;
-      const c2 = r3 * r4;
+        list.push({
+          stem: `In the following question, two equations numbered I and II are given. You have to solve both the equations and establish the relation between $x$ and $y$:\n\nI. $x^2 - ${b1}x + ${c1} = 0$\n\nII. $y^2 - ${b2}y + ${c2} = 0$`,
+          options: [
+            { id: 'a', text: '$x > y$' },
+            { id: 'b', text: '$x < y$' },
+            { id: 'c', text: '$x \\ge y$' },
+            { id: 'd', text: '$x \\le y$' },
+            { id: 'e', text: '$x = y$ or relationship cannot be established' },
+          ],
+          correct_option: 'a',
+          solution: `Equation I: $x^2 - ${b1}x + ${c1} = 0 \\implies (x - ${x1})(x - ${x2}) = 0 \\implies x = ${x1}, ${x2}$.\nEquation II: $y^2 - ${b2}y + ${c2} = 0 \\implies (y - ${y1})(y - ${y2}) = 0 \\implies y = ${y1}, ${y2}$.\nComparing values: Since all $x$ values (${x1}, ${x2}$) are strictly greater than all $y$ values (${y1}, ${y2}$), $x > y$.`,
+          shortcut: `Factor inspection: Roots of I are +${x1}, +${x2} and roots of II are +${y1}, +${y2}. Both roots of I exceed both roots of II, so mark $x > y$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else if (cycle === 1) {
+        // Pattern 2: Leading coefficient, x < y (Correct: B)
+        const a1 = 2;
+        const root1 = 2.5, root2 = 3;
+        // 2x^2 - 11x + 15 = 0 -> roots 2.5, 3
+        const y1 = 4 + idx, y2 = 6 + idx;
+        const b2 = y1 + y2, c2 = y1 * y2;
 
-      const stem = `In the following question, two equations numbered I and II are given. You have to solve both the equations and establish the relation between $x$ and $y$:\n\nI. $x^2 - ${b1}x + ${c1} = 0$\n\nII. $y^2 - ${b2}y + ${c2} = 0$`;
-      const correct = 'b'; // x < y
+        list.push({
+          stem: `In the following question, solve both equations and establish the relation between $x$ and $y$:\n\nI. $2x^2 - 11x + 15 = 0$\n\nII. $y^2 - ${b2}y + ${c2} = 0$`,
+          options: [
+            { id: 'a', text: '$x > y$' },
+            { id: 'b', text: '$x < y$' },
+            { id: 'c', text: '$x \\ge y$' },
+            { id: 'd', text: '$x \\le y$' },
+            { id: 'e', text: '$x = y$ or relationship cannot be established' },
+          ],
+          correct_option: 'b',
+          solution: `Equation I: $2x^2 - 11x + 15 = 0 \\implies (2x - 5)(x - 3) = 0 \\implies x = 2.5, 3$.\nEquation II: $y^2 - ${b2}y + ${c2} = 0 \\implies (y - ${y1})(y - ${y2}) = 0 \\implies y = ${y1}, ${y2}$.\nComparing values: Both $x$ roots ($2.5, 3$) are strictly smaller than $y$ roots (${y1}, ${y2}$), so $x < y$.`,
+          shortcut: `Divide middle term by leading coeff: $x = +2.5, +3$. Compare with $y = +${y1}, +${y2}$. Clearly $x < y$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else if (cycle === 2) {
+        // Pattern 3: Semi-equality, x >= y (Correct: C)
+        // x roots: 6, 8. y roots: 4, 6. -> x >= y because 8 > 4, 8 > 6, 6 > 4, 6 = 6
+        const xShared = 6 + idx;
+        const xHigh = 8 + idx;
+        const yLow = 4 + idx;
+        const b1 = xShared + xHigh, c1 = xShared * xHigh;
+        const b2 = yLow + xShared, c2 = yLow * xShared;
 
-      list.push({
-        stem,
-        options: [
-          { id: 'a', text: '$x > y$' },
-          { id: 'b', text: '$x < y$' },
-          { id: 'c', text: '$x \\ge y$' },
-          { id: 'd', text: '$x \\le y$' },
-          { id: 'e', text: '$x = y$ or relationship cannot be established' },
-        ],
-        correct_option: correct,
-        solution: `Equation I: $x^2 - ${b1}x + ${c1} = 0 \\implies (x - ${r1})(x - ${r2}) = 0 \\implies x = ${r1}, ${r2}$.\nEquation II: $y^2 - ${b2}y + ${c2} = 0 \\implies (y - ${r3})(y - ${r4}) = 0 \\implies y = ${r3}, ${r4}$.\nComparing values: ${r1} < ${r3}, ${r1} < ${r4}, ${r2} < ${r3}, ${r2} < ${r4}. Thus, $x < y$.`,
-        shortcut: `Direct factor split: Roots of I are ${r1}, ${r2} and roots of II are ${r3}, ${r4}. Since all roots of I are strictly smaller than roots of II, $x < y$.`,
-        difficulty,
-        topic_id: topicId,
-      });
+        list.push({
+          stem: `In the following question, two quadratic equations are provided:\n\nI. $x^2 - ${b1}x + ${c1} = 0$\n\nII. $y^2 - ${b2}y + ${c2} = 0$\n\nEstablish the quantitative relation between $x$ and $y$.`,
+          options: [
+            { id: 'a', text: '$x > y$' },
+            { id: 'b', text: '$x < y$' },
+            { id: 'c', text: '$x \\ge y$' },
+            { id: 'd', text: '$x \\le y$' },
+            { id: 'e', text: '$x = y$ or relationship cannot be established' },
+          ],
+          correct_option: 'c',
+          solution: `Equation I: $(x - ${xShared})(x - ${xHigh}) = 0 \\implies x = ${xShared}, ${xHigh}$.\nEquation II: $(y - ${yLow})(y - ${xShared}) = 0 \\implies y = ${yLow}, ${xShared}$.\nComparing: ${xHigh} > ${yLow}, ${xHigh} > ${xShared}, ${xShared} > ${yLow}, and ${xShared} = ${xShared}$. Therefore, $x \\ge y$.`,
+          shortcut: `Roots: $x \\in \\{${xShared}, ${xHigh}\\}$, $y \\in \\{${yLow}, ${xShared}\\}$. Equal at ${xShared}$ and $x$ is larger elsewhere, hence $x \\ge y$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else if (cycle === 3) {
+        // Pattern 4: Pure square with negative roots, x <= y (Correct: D)
+        const sq = 49 + idx * 15;
+        const sqRoot = 7;
+        const yVal = 7;
+
+        list.push({
+          stem: `In the following question, two equations numbered I and II are given:\n\nI. $x^2 = 49$\n\nII. $y^2 - 14y + 49 = 0$\n\nEstablish the quantitative relation between $x$ and $y$.`,
+          options: [
+            { id: 'a', text: '$x > y$' },
+            { id: 'b', text: '$x < y$' },
+            { id: 'c', text: '$x \\ge y$' },
+            { id: 'd', text: '$x \\le y$' },
+            { id: 'e', text: '$x = y$ or relationship cannot be established' },
+          ],
+          correct_option: 'd',
+          solution: `Equation I: $x^2 = 49 \\implies x = +7, -7$.\nEquation II: $y^2 - 14y + 49 = 0 \\implies (y - 7)^2 = 0 \\implies y = 7$.\nComparing: When $x = 7, y = 7 \\implies x = y$. When $x = -7, y = 7 \\implies x < y$. Thus, $x \\le y$.`,
+          shortcut: `Pure square generates $\\pm 7$. Perfect square equation gives $+7$. Since $+7 = 7$ and $-7 < 7$, result is $x \\le y$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else {
+        // Pattern 5: Overlapping intervals, Relationship cannot be established (Correct: E)
+        // x in {5, 9}, y in {6, 8} -> 5 < 6, 8, but 9 > 6, 8 -> cannot establish
+        list.push({
+          stem: `In the following question, solve both equations and establish the relation between $x$ and $y$:\n\nI. $x^2 - 14x + 45 = 0$\n\nII. $y^2 - 15y + 54 = 0$`,
+          options: [
+            { id: 'a', text: '$x > y$' },
+            { id: 'b', text: '$x < y$' },
+            { id: 'c', text: '$x \\ge y$' },
+            { id: 'd', text: '$x \\le y$' },
+            { id: 'e', text: '$x = y$ or relationship cannot be established' },
+          ],
+          correct_option: 'e',
+          solution: `Equation I: $(x - 5)(x - 9) = 0 \\implies x = 5, 9$.\nEquation II: $(y - 6)(y - 9) = 0 \\implies y = 6, 9$ (or $y = 6, 8$).\nComparing values: $5 < 6$ and $5 < 9$, but $9 > 6$ and $9 = 9$. Since the relation flips between '<' and '>', relationship cannot be established.`,
+          shortcut: `Interval overlap trap: $x = 5$ is smaller than all $y$, but $x = 9$ is greater than or equal to $y$. Contradiction $\\implies$ Option E.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      }
     } else if (topicId === 'simplification') {
-      const val1 = (idx + 2) * 15;
-      const val2 = 25 * (idx + 1);
-      const sqrtVal = (idx + 4) * (idx + 4);
-      const ans = val1 * 4 + Math.sqrt(sqrtVal) - val2;
-
-      list.push({
-        stem: `What approximate value should come in place of the question mark ($?$) in the following mathematical equation?\n\n$$${val1}\\% \\text{ of } 400 + \\sqrt{${sqrtVal}} - ${val2} = ?$$`,
-        options: [
-          { id: 'a', text: `${ans}` },
-          { id: 'b', text: `${ans + 12}` },
-          { id: 'c', text: `${ans - 15}` },
-          { id: 'd', text: `${ans + 25}` },
-          { id: 'e', text: 'None of these' },
-        ],
-        correct_option: 'a',
-        solution: `${val1}% of 400 = ${val1 * 4}. $\\sqrt{${sqrtVal}} = ${idx + 4}$. Expression = ${val1 * 4} + ${idx + 4} - ${val2} = ${ans}.`,
-        shortcut: `Direct percentage breakdown: Split ${val1}% into mental components and simplify linearly.`,
-        difficulty,
-        topic_id: topicId,
-      });
+      if (cycle === 0) {
+        list.push({
+          stem: `What approximate value should come in place of the question mark ($?$) in the given expression?\n\n$$45\\% \\text{ of } 600 + \\sqrt{576} - 120 = ?$$`,
+          options: [
+            { id: 'a', text: '174' },
+            { id: 'b', text: '186' },
+            { id: 'c', text: '162' },
+            { id: 'd', text: '194' },
+            { id: 'e', text: 'None of these' },
+          ],
+          correct_option: 'a',
+          solution: `$45\\% \\text{ of } 600 = 270$. $\\sqrt{576} = 24$. Sum = $270 + 24 - 120 = 174$.`,
+          shortcut: `Mental math: $50\\% \\text{ of } 600 = 300$, minus $5\\% (30) = 270$. $270 + 24 - 120 = 174$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else if (cycle === 1) {
+        list.push({
+          stem: `Find the value of ($?$) in the following question:\n\n$$(\\frac{3}{7} \\times 490) + \\sqrt[3]{1728} - ? = 112$$`,
+          options: [
+            { id: 'a', text: '98' },
+            { id: 'b', text: '110' },
+            { id: 'c', text: '122' },
+            { id: 'd', text: '104' },
+            { id: 'e', text: 'None of these' },
+          ],
+          correct_option: 'b',
+          solution: `$\\frac{3}{7} \\times 490 = 3 \\times 70 = 210$. $\\sqrt[3]{1728} = 12$. $210 + 12 - ? = 112 \\implies 222 - ? = 112 \\implies ? = 110$.`,
+          shortcut: `Unit digit check: $0 + 2 - ? = 2 \\implies ? = 0$ or $10$. Matches 110.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else if (cycle === 2) {
+        list.push({
+          stem: `What value should replace the question mark ($?$) in the following equation?\n\n$$2^? \\times 16 = 4^4 \\times 8$$`,
+          options: [
+            { id: 'a', text: '5' },
+            { id: 'b', text: '6' },
+            { id: 'c', text: '7' },
+            { id: 'd', text: '8' },
+            { id: 'e', text: '9' },
+          ],
+          correct_option: 'c',
+          solution: `Convert all numbers to base 2: $2^? \\times 2^4 = (2^2)^4 \\times 2^3 = 2^8 \\times 2^3 = 2^{11}$. Therefore $2^{? + 4} = 2^{11} \\implies ? = 11 - 4 = 7$.`,
+          shortcut: `Power subtraction: RHS powers of two = $8 + 3 = 11$. LHS already has $4$. Result $= 11 - 4 = 7$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else if (cycle === 3) {
+        list.push({
+          stem: `Calculate the approximate value of ($?$) in:\n\n$$24.8 \\times 12.1 + 195.9 \\div 13.9 = ?$$`,
+          options: [
+            { id: 'a', text: '298' },
+            { id: 'b', text: '328' },
+            { id: 'c', text: '344' },
+            { id: 'd', text: '314' },
+            { id: 'e', text: 'None of these' },
+          ],
+          correct_option: 'd',
+          solution: `Approximate: $25 \\times 12 + 196 \\div 14 = 300 + 14 = 314$.`,
+          shortcut: `Round to standard numbers: $25 \\times 12 = 300$. $196/14 = 14$. $300 + 14 = 314$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      } else {
+        list.push({
+          stem: `Solve the following arithmetic expression:\n\n$$18\\% \\text{ of } 250 + 64\\% \\text{ of } 125 = ?$$`,
+          options: [
+            { id: 'a', text: '115' },
+            { id: 'b', text: '120' },
+            { id: 'c', text: '130' },
+            { id: 'd', text: '118' },
+            { id: 'e', text: '125' },
+          ],
+          correct_option: 'e',
+          solution: `$18\\% \\text{ of } 250 = 250\\% \\text{ of } 18 = 2.5 \\times 18 = 45$. $64\\% \\text{ of } 125 = 125\\% \\text{ of } 64 = 1.25 \\times 64 = 80$. Sum = $45 + 80 = 125$.`,
+          shortcut: `Swap percentages: $a\\% \\text{ of } b = b\\% \\text{ of } a$. $2.5(18) = 45$, $1.25(64) = 80$. Sum $= 125$.`,
+          difficulty,
+          topic_id: topicId,
+        });
+      }
     } else {
-      const baseVal = 200 + idx * 50;
-      const profitPct = 10 + (idx % 4) * 5;
-      const sp = Math.round(baseVal * (1 + profitPct / 100));
+      // General arithmetic topics with varied answer choices
+      const answers = ['a', 'b', 'c', 'd', 'e'] as const;
+      const targetAns = answers[cycle];
+      const base = 250 + (idx * 60);
+      const rate = 12 + (idx * 3);
+      const total = Math.round(base * (1 + rate / 100));
+
+      const optMap: Record<string, string> = {
+        a: `₹${total}`,
+        b: `₹${total + 18}`,
+        c: `₹${total - 24}`,
+        d: `₹${total + 36}`,
+        e: `None of these`,
+      };
+      if (targetAns === 'b') {
+        optMap.a = `₹${total - 18}`;
+        optMap.b = `₹${total}`;
+      } else if (targetAns === 'c') {
+        optMap.a = `₹${total - 30}`;
+        optMap.c = `₹${total}`;
+      } else if (targetAns === 'd') {
+        optMap.a = `₹${total - 40}`;
+        optMap.d = `₹${total}`;
+      } else if (targetAns === 'e') {
+        optMap.e = `₹${total}`;
+        optMap.a = `₹${total + 10}`;
+      }
 
       list.push({
-        stem: `A trader purchases an article for ₹$${baseVal}$ and marks it for sale to make a profit of $${profitPct}\\%$. What is the final selling price of the article?`,
+        stem: `An article is marked at ₹$${base}$ and sold at a profit margin of $${rate}\\%$. What is the final selling price of the article?`,
         options: [
-          { id: 'a', text: `₹$${sp - 10}$` },
-          { id: 'b', text: `₹$${sp}$` },
-          { id: 'c', text: `₹$${sp + 15}$` },
-          { id: 'd', text: `₹$${sp + 25}$` },
-          { id: 'e', text: 'None of these' },
+          { id: 'a', text: optMap.a },
+          { id: 'b', text: optMap.b },
+          { id: 'c', text: optMap.c },
+          { id: 'd', text: optMap.d },
+          { id: 'e', text: optMap.e },
         ],
-        correct_option: 'b',
-        solution: `Cost Price (CP) = ₹$${baseVal}$. Profit % = $${profitPct}\\%$. Selling Price (SP) = $${baseVal} \\times (1 + \\frac{${profitPct}}{100}) = ₹${sp}$.`,
-        shortcut: `Multiply directly by the multiplier factor $1.${profitPct < 10 ? '0' + profitPct : profitPct}$.`,
+        correct_option: targetAns,
+        solution: `Cost Price = ₹$${base}$. Profit percentage = $${rate}\\%$. Final Selling Price $= ${base} \\times (1 + \\frac{${rate}}{100}) = ₹${total}$.`,
+        shortcut: `Direct multiplier multiplication: $${base} \\times 1.${rate} = ₹${total}$.`,
         difficulty,
         topic_id: topicId,
       });

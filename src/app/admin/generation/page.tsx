@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { INITIAL_TOPICS, globalStore } from '@/lib/store';
 import { CustomDropdown } from '@/components/ui/custom-dropdown';
 import { MathRenderer } from '@/lib/math-renderer';
+import { cn } from '@/lib/utils';
 import {
   Sparkles,
   CheckCircle2,
@@ -11,6 +12,10 @@ import {
   Loader2,
   Lightbulb,
   BookOpen,
+  ArrowLeft,
+  ArrowRight,
+  LayoutGrid,
+  Eye,
 } from 'lucide-react';
 
 export default function GenerationControlCentrePage() {
@@ -22,6 +27,8 @@ export default function GenerationControlCentrePage() {
   const [method, setMethod] = useState<'template' | 'llm_twist'>('llm_twist');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([]);
+  const [activeQIndex, setActiveQIndex] = useState<number>(0);
+  const [viewMode, setViewMode] = useState<'focused' | 'grid'>('focused');
 
   useEffect(() => {
     setMounted(true);
@@ -65,8 +72,10 @@ export default function GenerationControlCentrePage() {
         setJobs([data.job, ...jobs]);
         if (data.generated_questions && Array.isArray(data.generated_questions)) {
           setGeneratedQuestions(data.generated_questions);
+          setActiveQIndex(0);
         } else if (data.generated_question) {
           setGeneratedQuestions([data.generated_question]);
+          setActiveQIndex(0);
         }
       }
     } catch {
@@ -162,6 +171,7 @@ export default function GenerationControlCentrePage() {
         {/* Live Generated Questions Preview */}
         {generatedQuestions.length > 0 && (
           <div className="space-y-4 pt-2 animate-in fade-in duration-300">
+            {/* Success Banner */}
             <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
               <div className="flex items-center gap-2 text-xs font-bold text-emerald-950">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -174,50 +184,137 @@ export default function GenerationControlCentrePage() {
               </span>
             </div>
 
-            <div className="space-y-4">
-              {generatedQuestions.map((q: any, qIdx: number) => (
-                <div
-                  key={q.id || `gen-${qIdx}`}
-                  className="p-5 bg-white rounded-2xl border border-emerald-200 text-xs text-slate-800 shadow-xs space-y-3.5"
-                >
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 text-xs">
-                        Question {qIdx + 1} of {generatedQuestions.length}
+            {/* Question Navigator Toolbar & Layout Switcher */}
+            <div className="p-3 bg-white rounded-2xl border border-blue-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+              {/* Stepper Tabs */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {generatedQuestions.map((q: any, idx: number) => {
+                  const isSelected = viewMode === 'focused' && activeQIndex === idx;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setActiveQIndex(idx);
+                        setViewMode('focused');
+                      }}
+                      className={cn(
+                        "px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer flex items-center gap-1.5",
+                        isSelected
+                          ? "bg-blue-600 text-white shadow-xs"
+                          : "bg-slate-50 text-slate-700 hover:bg-blue-50 hover:text-blue-700 border border-slate-200"
+                      )}
+                    >
+                      <span>Question {idx + 1}</span>
+                      <span
+                        className={cn(
+                          "text-[10px] px-1.5 py-0.2 rounded font-mono font-bold uppercase",
+                          isSelected
+                            ? "bg-white/20 text-white"
+                            : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                        )}
+                      >
+                        {q.correct_option?.toUpperCase()}
                       </span>
-                      <span className="font-mono text-[10px] text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200">
-                        {q.id}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* View Mode Toggle: Focus vs 2-Column Grid */}
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl shrink-0 self-end sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('focused')}
+                  className={cn(
+                    "px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
+                    viewMode === 'focused' ? "bg-white text-blue-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"
+                  )}
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Inspect View</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('grid')}
+                  className={cn(
+                    "px-3 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer",
+                    viewMode === 'grid' ? "bg-white text-blue-700 shadow-2xs" : "text-slate-600 hover:text-slate-900"
+                  )}
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span>2-Col Grid</span>
+                </button>
+              </div>
+            </div>
+
+            {/* VIEW 1: SINGLE QUESTION INSPECT VIEW */}
+            {viewMode === 'focused' && generatedQuestions[activeQIndex] && (() => {
+              const q = generatedQuestions[activeQIndex];
+              return (
+                <div className="p-6 bg-white rounded-3xl border border-blue-100 shadow-sm space-y-4">
+                  {/* Card Header with Question Counter & Next/Prev Controls */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-extrabold text-slate-900 text-sm">
+                        Question {activeQIndex + 1} of {generatedQuestions.length}
+                      </span>
+                      <span className="text-[11px] font-semibold text-slate-500 capitalize bg-slate-50 px-2.5 py-0.5 rounded-full border border-slate-200">
+                        {q.topic_id?.replace(/-/g, ' ')}
                       </span>
                     </div>
-                    <span className="text-[10px] font-semibold text-slate-500 capitalize bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200">
-                      {q.topic_id?.replace(/-/g, ' ')}
-                    </span>
+
+                    <div className="flex items-center gap-2">
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        Correct Answer: Option {q.correct_option?.toUpperCase()}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setActiveQIndex((prev) => Math.max(0, prev - 1))}
+                        disabled={activeQIndex === 0}
+                        className="p-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 cursor-pointer"
+                        title="Previous Question"
+                      >
+                        <ArrowLeft className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setActiveQIndex((prev) => Math.min(generatedQuestions.length - 1, prev + 1))}
+                        disabled={activeQIndex === generatedQuestions.length - 1}
+                        className="p-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 text-slate-700 cursor-pointer"
+                        title="Next Question"
+                      >
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Question Stem with MathRenderer */}
-                  <div className="p-3.5 bg-slate-50/70 rounded-xl border border-slate-200 font-medium text-slate-900 leading-relaxed">
+                  <div className="p-4 bg-[#F8FAFC] rounded-2xl border border-slate-200 text-sm font-semibold text-slate-900 leading-relaxed">
                     <MathRenderer content={q.stem} />
                   </div>
 
                   {/* 5 Options Grid with MathRenderer */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                     {q.options?.map((opt: any) => {
                       const isCorrect = String(opt.id).toLowerCase() === String(q.correct_option).toLowerCase();
                       return (
                         <div
                           key={opt.id}
-                          className={`p-2.5 rounded-xl border text-xs flex items-center gap-2.5 transition-colors ${
+                          className={cn(
+                            "p-3 rounded-2xl border text-xs flex items-center gap-3 transition-colors",
                             isCorrect
-                              ? 'bg-emerald-50 border-emerald-400 font-bold text-emerald-950 shadow-2xs'
-                              : 'bg-white border-slate-200 text-slate-700'
-                          }`}
+                              ? "bg-emerald-50/80 border-emerald-400 font-bold text-emerald-950 shadow-2xs"
+                              : "bg-white border-slate-200 text-slate-700"
+                          )}
                         >
                           <span
-                            className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[10px] uppercase font-bold shrink-0 ${
+                            className={cn(
+                              "w-6 h-6 rounded-full flex items-center justify-center font-mono text-xs uppercase font-bold shrink-0",
                               isCorrect
-                                ? 'bg-emerald-600 text-white'
-                                : 'bg-slate-100 border border-slate-300 text-slate-700'
-                            }`}
+                                ? "bg-emerald-600 text-white"
+                                : "bg-slate-100 border border-slate-300 text-slate-700"
+                            )}
                           >
                             {opt.id}
                           </span>
@@ -225,8 +322,8 @@ export default function GenerationControlCentrePage() {
                             <MathRenderer content={opt.text} />
                           </div>
                           {isCorrect && (
-                            <span className="ml-auto text-[9px] uppercase tracking-wider bg-emerald-600 text-white px-1.5 py-0.5 rounded font-bold shrink-0">
-                              Correct
+                            <span className="ml-auto text-[10px] uppercase tracking-wider bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold shrink-0">
+                              Correct Key
                             </span>
                           )}
                         </div>
@@ -234,30 +331,105 @@ export default function GenerationControlCentrePage() {
                     })}
                   </div>
 
-                  {/* Step-by-Step Solution with MathRenderer */}
-                  {q.solution && (
-                    <div className="p-3 rounded-xl bg-blue-50/50 border border-blue-100 text-[11.5px] leading-relaxed text-slate-800 space-y-1">
-                      <div className="font-bold text-blue-900 flex items-center gap-1.5">
-                        <BookOpen className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                        <span>Step-by-Step Solution:</span>
+                  {/* Step-by-Step Solution & Speed Shortcut */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                    {q.solution && (
+                      <div className="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-100 text-xs text-slate-800 space-y-1.5 leading-relaxed">
+                        <div className="font-bold text-blue-900 flex items-center gap-1.5">
+                          <BookOpen className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                          <span>Step-by-Step Solution:</span>
+                        </div>
+                        <MathRenderer content={q.solution} />
                       </div>
-                      <MathRenderer content={q.solution} />
-                    </div>
-                  )}
+                    )}
 
-                  {/* Speed Shortcut with MathRenderer */}
-                  {q.shortcut && (
-                    <div className="text-[11px] text-emerald-900 bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-200 leading-relaxed flex items-center gap-2">
-                      <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
-                      <div className="flex-1">
-                        <strong className="mr-1 text-emerald-950">Speed Shortcut:</strong>
+                    {q.shortcut && (
+                      <div className="p-3.5 rounded-2xl bg-amber-50/60 border border-amber-200 text-xs text-amber-950 space-y-1.5 leading-relaxed">
+                        <div className="font-bold text-amber-900 flex items-center gap-1.5">
+                          <Lightbulb className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          <span>Speed Shortcut / Trick:</span>
+                        </div>
                         <MathRenderer content={q.shortcut} />
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              ))}
-            </div>
+              );
+            })()}
+
+            {/* VIEW 2: 2-COLUMN BALANCED GRID VIEW */}
+            {viewMode === 'grid' && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {generatedQuestions.map((q: any, qIdx: number) => (
+                  <div
+                    key={qIdx}
+                    className="p-5 bg-white rounded-3xl border border-blue-100 text-xs text-slate-800 shadow-xs space-y-3.5 flex flex-col justify-between"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                        <span className="font-bold text-slate-900 text-xs">
+                          Question {qIdx + 1}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          Option {q.correct_option?.toUpperCase()} Correct
+                        </span>
+                      </div>
+
+                      {/* Question Stem */}
+                      <div className="p-3 bg-slate-50/70 rounded-xl border border-slate-200 font-semibold text-slate-900 leading-relaxed text-xs">
+                        <MathRenderer content={q.stem} />
+                      </div>
+
+                      {/* Options */}
+                      <div className="space-y-1.5">
+                        {q.options?.map((opt: any) => {
+                          const isCorrect = String(opt.id).toLowerCase() === String(q.correct_option).toLowerCase();
+                          return (
+                            <div
+                              key={opt.id}
+                              className={cn(
+                                "p-2 rounded-xl border text-xs flex items-center gap-2",
+                                isCorrect
+                                  ? "bg-emerald-50 border-emerald-400 font-bold text-emerald-950"
+                                  : "bg-white border-slate-200 text-slate-700"
+                              )}
+                            >
+                              <span
+                                className={cn(
+                                  "w-4.5 h-4.5 rounded-full flex items-center justify-center font-mono text-[10px] uppercase font-bold shrink-0",
+                                  isCorrect ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-600 border border-slate-300"
+                                )}
+                              >
+                                {opt.id}
+                              </span>
+                              <div className="flex-1">
+                                <MathRenderer content={opt.text} />
+                              </div>
+                              {isCorrect && (
+                                <span className="ml-auto text-[9px] uppercase tracking-wider bg-emerald-600 text-white px-1.5 py-0.5 rounded font-bold shrink-0">
+                                  Correct
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Shortcut */}
+                    {q.shortcut && (
+                      <div className="text-[11px] text-emerald-900 bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-200 leading-relaxed flex items-center gap-2 mt-2">
+                        <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                        <div className="flex-1 truncate">
+                          <strong className="mr-1 text-emerald-950">Shortcut:</strong>
+                          <MathRenderer content={q.shortcut} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
