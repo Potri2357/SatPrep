@@ -27,10 +27,6 @@ export default async function TodosPage() {
 
       <main className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-10 flex-1 space-y-6">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
-            <Database className="w-3.5 h-3.5 text-blue-600" />
-            <span>Supabase Database Connection</span>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             Supabase Live Test &amp; Data Integration
           </h1>

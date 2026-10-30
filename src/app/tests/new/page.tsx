@@ -429,19 +429,6 @@ function TestBuilderForm() {
         <div className="lg:col-span-2 space-y-7">
           {/* Title Area */}
           <div>
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="px-3 py-0.5 rounded-full bg-[#EBF5FF] text-[#005CE6] dark:bg-blue-950/60 dark:text-blue-400 font-bold text-xs border border-[#BCEBFC] dark:border-blue-900">
-                {mode === 'topic_test' ? 'Topic Practice & Drills' : 'Calibrated Banking Exam Matrix'}
-              </span>
-              <span className={`px-2.5 py-0.5 rounded-full font-bold text-xs border ${currentTierMatrix.badgeClass}`}>
-                {currentTierMatrix.tierName}
-              </span>
-              {feedbackMode === 'practice' && (
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 font-bold text-xs border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> Instant Solutions Active
-                </span>
-              )}
-            </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A] dark:text-white">
               {mode === 'topic_test' ? 'Configure Topic Drill' : 'Create Bank Quant Practice Test'}
             </h1>
@@ -456,9 +443,6 @@ function TestBuilderForm() {
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-[#005CE6] text-white flex items-center justify-center text-[10px] font-bold">1</span>
                 <span>The Bank-Only Quant Difficulty Matrix</span>
-              </span>
-              <span className="text-xs font-bold text-[#005CE6] dark:text-blue-400 bg-[#F0FAFF] dark:bg-blue-950/50 px-2.5 py-0.5 rounded-full border border-[#BCEBFC] dark:border-blue-800 w-fit">
-                {currentExam.shortName} Selected
               </span>
             </div>
 

@@ -181,10 +181,6 @@ export default function ExamInstructionsPage() {
           {/* Exam Summary Banner */}
           <div className="p-6 sm:p-7 rounded-3xl neu-glass-card flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF] dark:text-blue-400">
-                <Award className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400" />
-                <span>{isPracticeMode ? 'Topic Practice & Instant Solutions Drill' : 'Official Examination Pattern'}</span>
-              </div>
               <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white tracking-tight">
                 {examName}
               </h1>
@@ -291,9 +287,6 @@ export default function ExamInstructionsPage() {
               <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 Question Status Legend
               </h2>
-              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] dark:bg-blue-950/80 text-[#005CE6] dark:text-blue-400 border border-[#BFDBFE] dark:border-blue-900">
-                Status Reference
-              </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">

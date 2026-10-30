@@ -246,15 +246,10 @@ export default function QuestionBankManagementPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-              Question Bank
-            </h1>
-            <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
-              {questions.length} Questions Verified
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Question Bank
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
             Search, filter, inspect, and manage verified quantitative aptitude practice questions.
           </p>
         </div>

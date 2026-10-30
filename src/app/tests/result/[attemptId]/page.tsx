@@ -224,10 +224,6 @@ export default function ResultAnalysisPage() {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF] dark:text-blue-400 mb-1.5">
-                <Award className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400" />
-                <span>{snapshot.test_name || 'Exam Performance Scorecard'}</span>
-              </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A] dark:text-white">
                 Test Result &amp; Diagnostic Dashboard
               </h1>
@@ -405,9 +401,6 @@ export default function ResultAnalysisPage() {
               <h2 className="text-base font-bold text-slate-900 dark:text-white">Topic Mastery &amp; Accuracy Breakdown</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Target accuracy for bank mains: 80%+</p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
-              {snapshot.topic_breakdown.length} Topics Tested
-            </span>
           </div>
 
           <div className="overflow-x-auto">

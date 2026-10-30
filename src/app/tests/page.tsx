@@ -235,10 +235,6 @@ export default function MockTestsHubPage() {
         {/* Header Hero */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC] dark:border-slate-800">
           <div className="space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E0F4FD] dark:bg-blue-950/80 border border-[#BCEBFC] dark:border-blue-900 text-[#005CE6] dark:text-blue-400 text-xs font-bold">
-              <Award className="w-3.5 h-3.5" />
-              <span>Real IBPS Exam Simulator 2026</span>
-            </div>
             <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               Mock Tests Series
             </h1>

@@ -122,11 +122,6 @@ export function Features10() {
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E0F4FD] dark:bg-blue-950/80 border border-[#BCEBFC] dark:border-blue-900 text-[#005CE6] dark:text-blue-400 text-xs font-bold tracking-wide shadow-xs">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>INTERCONNECTED EXAM ECOSYSTEM</span>
-          </div>
-
           <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A] dark:text-white">
             The Live Banking Quant Engine Map
           </h2>

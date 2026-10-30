@@ -43,10 +43,6 @@ export default function ReportsAndRegradePage() {
   return (
     <div className="space-y-8">
       <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
-          <Flag className="w-3.5 h-3.5" />
-          <span>Student Feedback &amp; Corrections</span>
-        </div>
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">
           Student Feedback &amp; Score Adjustments
         </h1>

@@ -255,11 +255,8 @@ export default function OverallResultsPage() {
             {/* Core Section: All Tests Written & Their Results */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <span>Tests Written &amp; Performance Breakdown</span>
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#E0F4FD] dark:bg-blue-950/80 text-[#005CE6] dark:text-blue-400 border border-[#BCEBFC] dark:border-blue-900">
-                    {filteredTests.length} Tests
-                  </span>
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
+                  Tests Written &amp; Performance Breakdown
                 </h2>
               </div>
 
