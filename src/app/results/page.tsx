@@ -188,14 +188,14 @@ export default function OverallResultsPage() {
             {/* Filter, Search & Controls Bar */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2">
               {/* Category Filter Tabs */}
-              <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1 rounded-2xl bg-[#E0F4FD]/60 dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-slate-800 self-start sm:self-auto shrink-0">
+              <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1 rounded-2xl bg-[#E0F4FD]/60 dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-[#2C2C2C] self-start sm:self-auto shrink-0">
                 <button
                   type="button"
                   onClick={() => setSelectedCategory('all')}
                   className={cn(
                     "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                     selectedCategory === 'all'
-                      ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                      ? "bg-white dark:bg-[#333333] text-[#005CE6] dark:text-white shadow-xs"
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   )}
                 >
@@ -207,7 +207,7 @@ export default function OverallResultsPage() {
                   className={cn(
                     "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                     selectedCategory === 'full_mock'
-                      ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                      ? "bg-white dark:bg-[#333333] text-[#005CE6] dark:text-white shadow-xs"
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   )}
                 >
@@ -219,7 +219,7 @@ export default function OverallResultsPage() {
                   className={cn(
                     "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                     selectedCategory === 'sectional'
-                      ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                      ? "bg-white dark:bg-[#333333] text-[#005CE6] dark:text-white shadow-xs"
                       : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                   )}
                 >

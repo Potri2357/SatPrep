@@ -29,10 +29,10 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col justify-between p-6 sm:p-12 text-slate-800 relative overflow-hidden">
-      {/* Ambient background glow */}
-      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#121212] flex flex-col justify-between p-6 sm:p-12 text-slate-800 dark:text-slate-100 relative overflow-hidden transition-colors">
+      {/* Ambient background glow (Light mode only) */}
+      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none dark:hidden" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-300/15 rounded-full blur-3xl pointer-events-none dark:hidden" />
 
       <header className="max-w-2xl mx-auto w-full flex items-center justify-between z-10">
         <Link href="/" className="transition-transform hover:scale-[1.02]">

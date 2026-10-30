@@ -269,7 +269,7 @@ export default function MockTestsHubPage() {
               className={cn(
                 "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'all'
-                  ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                  ? "bg-white dark:bg-[#333333] text-[#005CE6] dark:text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
@@ -280,7 +280,7 @@ export default function MockTestsHubPage() {
               className={cn(
                 "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'full_mock'
-                  ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                  ? "bg-white dark:bg-[#333333] text-[#005CE6] dark:text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
@@ -291,7 +291,7 @@ export default function MockTestsHubPage() {
               className={cn(
                 "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'sectional'
-                  ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                  ? "bg-white dark:bg-[#333333] text-[#005CE6] dark:text-white shadow-xs"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
@@ -638,21 +638,21 @@ export default function MockTestsHubPage() {
         )}
 
         {/* Custom Test Callout Banner */}
-        <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] dark:from-[#212121] dark:via-[#262626] dark:to-[#212121] dark:border dark:border-[#333333] text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
-            <span className="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold inline-block">
+            <span className="px-3 py-1 rounded-full bg-white/20 dark:bg-[#333333] dark:text-slate-300 text-white text-xs font-bold inline-block">
               Customized Test Blueprint
             </span>
             <h2 className="text-xl sm:text-2xl font-black tracking-tight">
               Want a custom duration, question set, or specific topics?
             </h2>
-            <p className="text-white/80 text-xs sm:text-sm max-w-xl">
+            <p className="text-white/80 dark:text-slate-300 text-xs sm:text-sm max-w-xl">
               Use our interactive Test Builder to handpick exact subtopics, adjust question counts, select difficulty tiers, and simulate unique test conditions.
             </p>
           </div>
           <Link
             href="/tests/new"
-            className="px-6 py-3.5 rounded-2xl bg-white text-[#005CE6] hover:bg-blue-50 font-extrabold text-sm shadow-md transition-all flex items-center gap-2 shrink-0"
+            className="px-6 py-3.5 rounded-2xl bg-white dark:bg-[#303030] dark:border dark:border-[#404040] text-[#005CE6] dark:text-white hover:bg-blue-50 dark:hover:bg-[#383838] font-extrabold text-sm shadow-md transition-all flex items-center gap-2 shrink-0"
           >
             <SlidersHorizontal className="w-4 h-4" />
             <span>Open Custom Test Builder</span>

@@ -46,18 +46,18 @@ export default function LandingPage() {
         {/* Background base */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#EEF6FF] via-[#F7FDFF] to-white dark:from-[#121212] dark:via-[#181818] dark:to-[#121212] transition-colors" />
 
-        {/* Top-centre radial aurora */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[380px] pointer-events-none"
+        {/* Top-centre radial aurora (Light mode only - hidden in dark mode to preserve pure neutral charcoal) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[380px] pointer-events-none dark:hidden"
           style={{background:"radial-gradient(ellipse 80% 70% at 50% 0%, rgba(0,92,230,0.20) 0%, rgba(0,150,214,0.08) 50%, transparent 78%)"}} />
 
-        {/* Corner glows */}
-        <div className="absolute bottom-0 left-0 w-[400px] h-[260px] pointer-events-none"
+        {/* Corner glows (Light mode only) */}
+        <div className="absolute bottom-0 left-0 w-[400px] h-[260px] pointer-events-none dark:hidden"
           style={{background:"radial-gradient(ellipse 80% 70% at 0% 100%, rgba(96,206,248,0.14) 0%, transparent 70%)"}} />
-        <div className="absolute bottom-0 right-0 w-[360px] h-[240px] pointer-events-none"
+        <div className="absolute bottom-0 right-0 w-[360px] h-[240px] pointer-events-none dark:hidden"
           style={{background:"radial-gradient(ellipse 80% 70% at 100% 100%, rgba(0,92,230,0.12) 0%, transparent 70%)"}} />
 
-        {/* Dot grid with radial fade */}
-        <div className="absolute inset-0 pointer-events-none"
+        {/* Dot grid with radial fade (Ice blue on light, clean neutral monochrome on dark) */}
+        <div className="absolute inset-0 pointer-events-none dark:opacity-20"
           style={{
             backgroundImage:"radial-gradient(rgba(0,92,230,0.15) 1px, transparent 1px)",
             backgroundSize:"26px 26px",
@@ -67,15 +67,15 @@ export default function LandingPage() {
 
         {/* Ambient Mathematical Symbols Etched into Background Canvas */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-          {/* Subtle Math Typographic Watermarks */}
-          <span className="absolute top-[8%] left-[6%] font-serif text-[6.5rem] font-bold leading-none text-[#005CE6]/[0.08] dark:text-blue-400/[0.12] hidden lg:block">∑</span>
-          <span className="absolute top-[6%] right-[7%] font-serif text-[6.5rem] font-bold leading-none text-[#005CE6]/[0.08] dark:text-blue-400/[0.12] hidden lg:block">π</span>
-          <span className="absolute top-[48%] left-[4%] font-serif text-[4rem] font-bold leading-none text-[#0096D6]/[0.09] dark:text-cyan-400/[0.12] hidden xl:block">√x</span>
-          <span className="absolute top-[44%] right-[5%] font-serif text-[4.5rem] font-bold leading-none text-[#005CE6]/[0.09] dark:text-blue-400/[0.12] hidden xl:block">%</span>
-          <span className="absolute bottom-[8%] left-[10%] font-mono text-[13px] font-bold tracking-widest text-[#005CE6]/[0.12] dark:text-blue-400/[0.15] hidden md:block">P(1+r/n)ⁿ</span>
-          <span className="absolute bottom-[8%] right-[10%] font-mono text-[13px] font-bold tracking-widest text-[#0096D6]/[0.12] dark:text-cyan-400/[0.15] hidden md:block">ax²+bx+c=0</span>
-          <span className="absolute top-[28%] left-[22%] font-serif text-[2.5rem] font-bold text-[#60CEF8]/[0.14] dark:text-cyan-400/[0.14] hidden 2xl:block">÷</span>
-          <span className="absolute top-[26%] right-[22%] font-serif text-[2.5rem] font-bold text-[#005CE6]/[0.12] dark:text-blue-400/[0.14] hidden 2xl:block">≈</span>
+          {/* Subtle Math Typographic Watermarks (Neutral low-contrast in dark mode) */}
+          <span className="absolute top-[8%] left-[6%] font-serif text-[6.5rem] font-bold leading-none text-[#005CE6]/[0.08] dark:text-white/[0.04] hidden lg:block">∑</span>
+          <span className="absolute top-[6%] right-[7%] font-serif text-[6.5rem] font-bold leading-none text-[#005CE6]/[0.08] dark:text-white/[0.04] hidden lg:block">π</span>
+          <span className="absolute top-[48%] left-[4%] font-serif text-[4rem] font-bold leading-none text-[#0096D6]/[0.09] dark:text-white/[0.04] hidden xl:block">√x</span>
+          <span className="absolute top-[44%] right-[5%] font-serif text-[4.5rem] font-bold leading-none text-[#005CE6]/[0.09] dark:text-white/[0.04] hidden xl:block">%</span>
+          <span className="absolute bottom-[8%] left-[10%] font-mono text-[13px] font-bold tracking-widest text-[#005CE6]/[0.12] dark:text-white/[0.05] hidden md:block">P(1+r/n)ⁿ</span>
+          <span className="absolute bottom-[8%] right-[10%] font-mono text-[13px] font-bold tracking-widest text-[#0096D6]/[0.12] dark:text-white/[0.05] hidden md:block">ax²+bx+c=0</span>
+          <span className="absolute top-[28%] left-[22%] font-serif text-[2.5rem] font-bold text-[#60CEF8]/[0.14] dark:text-white/[0.04] hidden 2xl:block">÷</span>
+          <span className="absolute top-[26%] right-[22%] font-serif text-[2.5rem] font-bold text-[#005CE6]/[0.12] dark:text-white/[0.04] hidden 2xl:block">≈</span>
         </div>
 
         {/* ── Content ── */}
@@ -428,22 +428,22 @@ export default function LandingPage() {
 
 
       {/* High-Impact Bottom Call to Action Section */}
-      <section className="py-20 bg-gradient-to-r from-[#061226] via-[#0B234F] to-[#005CE6] text-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#60CEF8]/15 rounded-full blur-3xl pointer-events-none" />
+      <section className="py-20 bg-gradient-to-r from-[#061226] via-[#0B234F] to-[#005CE6] dark:from-[#181818] dark:via-[#1E1E1E] dark:to-[#181818] dark:border-t dark:border-[#2C2C2C] text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#60CEF8]/15 rounded-full blur-3xl pointer-events-none dark:hidden" />
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10 space-y-6">
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
             Ready to Benchmark Your Exam Readiness?
           </h2>
-          <p className="text-blue-100/90 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="text-blue-100/90 dark:text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
             Experience authentic banking interface simulations with real-time analytics, percentile benchmarking, and detailed step-by-step explanations.
           </p>
           <div className="pt-4 flex justify-center">
             <Link
               href="/tests"
-              className="px-10 py-5 rounded-2xl text-base sm:text-lg font-extrabold text-[#005CE6] bg-white hover:bg-[#F0FAFF] shadow-[0_12px_40px_rgba(0,0,0,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group cursor-pointer"
+              className="px-10 py-5 rounded-2xl text-base sm:text-lg font-extrabold text-[#005CE6] dark:text-white bg-white dark:bg-[#282828] dark:border dark:border-[#383838] hover:bg-[#F0FAFF] dark:hover:bg-[#333333] shadow-[0_12px_40px_rgba(0,0,0,0.35)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group cursor-pointer"
             >
               <span>Explore Mock Tests Series</span>
-              <ArrowRight className="w-5 h-5 text-[#005CE6] group-hover:translate-x-1.5 transition-transform" />
+              <ArrowRight className="w-5 h-5 text-[#005CE6] dark:text-white group-hover:translate-x-1.5 transition-transform" />
             </Link>
           </div>
         </div>

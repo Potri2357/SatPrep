@@ -115,8 +115,8 @@ export function Features10() {
     <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-white via-[#F7FDFF] to-white dark:from-[#121212] dark:via-[#181818] dark:to-[#121212] border-t border-slate-200/80 dark:border-[#2C2C2C] transition-colors">
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-[#005CE6]/6 via-[#60CEF8]/10 to-transparent rounded-full blur-3xl" />
-        <div className="absolute inset-0 hero-dot-pattern opacity-40" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-[#005CE6]/6 via-[#60CEF8]/10 to-transparent rounded-full blur-3xl dark:hidden" />
+        <div className="absolute inset-0 hero-dot-pattern opacity-40 dark:opacity-20" />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">

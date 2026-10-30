@@ -697,20 +697,20 @@ export default function TopicDrillsHubPage() {
         {/* Dedicated Topic Drill Customizer Modal */}
         {customizingTopic && (
           <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-150">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="w-full max-w-lg bg-white dark:bg-[#1E1E1E] rounded-3xl shadow-2xl border border-slate-200 dark:border-[#2C2C2C] p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-150 text-slate-800 dark:text-slate-100">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#2C2C2C] pb-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40">
                     <SlidersHorizontal className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">Customize Drill Settings</h3>
-                    <p className="text-xs text-slate-500">{customizingTopic.name}</p>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Customize Drill Settings</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{customizingTopic.name}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setCustomizingTopic(null)}
-                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#282828] transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -718,7 +718,7 @@ export default function TopicDrillsHubPage() {
 
               {/* Mode Setting */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                   Learning Mode
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -728,15 +728,15 @@ export default function TopicDrillsHubPage() {
                     className={cn(
                       "p-3.5 rounded-2xl border text-left transition-all cursor-pointer",
                       customFeedbackMode === 'practice'
-                        ? "bg-emerald-50 border-emerald-400 text-emerald-900 ring-2 ring-emerald-400/20 shadow-xs"
-                        : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                        ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-400 dark:border-emerald-600/50 text-emerald-900 dark:text-emerald-300 ring-2 ring-emerald-400/20 shadow-xs"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#333333] text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-[#444444]"
                     )}
                   >
                     <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
-                      <Lightbulb className="w-3.5 h-3.5 text-emerald-600" />
+                      <Lightbulb className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span>Practice Mode</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 leading-tight">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
                       Instant solutions, shortcuts &amp; 0 negative marking penalty.
                     </p>
                   </button>
@@ -747,15 +747,15 @@ export default function TopicDrillsHubPage() {
                     className={cn(
                       "p-3.5 rounded-2xl border text-left transition-all cursor-pointer",
                       customFeedbackMode === 'exam'
-                        ? "bg-blue-50 border-blue-400 text-blue-900 ring-2 ring-blue-400/20 shadow-xs"
-                        : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
+                        ? "bg-blue-50 dark:bg-[#282828] border-blue-400 dark:border-[#404040] text-blue-900 dark:text-white ring-2 ring-blue-400/20 dark:ring-white/10 shadow-xs"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#333333] text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-[#444444]"
                     )}
                   >
                     <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
-                      <Clock className="w-3.5 h-3.5 text-[#005CE6]" />
+                      <Clock className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" />
                       <span>Timed Exam</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 leading-tight">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
                       Countdown timer with -0.25 negative marks &amp; final score report.
                     </p>
                   </button>
@@ -764,7 +764,7 @@ export default function TopicDrillsHubPage() {
 
               {/* Question Count Setting */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                   Number of Questions
                 </label>
                 <div className="grid grid-cols-4 gap-2">
@@ -776,8 +776,8 @@ export default function TopicDrillsHubPage() {
                       className={cn(
                         "py-2.5 rounded-xl text-xs font-bold border transition-all cursor-pointer",
                         customQuestionCount === num
-                          ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                          : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                          ? "bg-[#005CE6] dark:bg-[#333333] text-white border-[#005CE6] dark:border-[#444444] shadow-xs"
+                          : "bg-white dark:bg-[#252525] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-[#333333] hover:bg-slate-50 dark:hover:bg-[#2c2c2c]"
                       )}
                     >
                       {num} Qs
@@ -790,10 +790,10 @@ export default function TopicDrillsHubPage() {
               {customFeedbackMode === 'exam' && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                       Countdown Duration
                     </label>
-                    <span className="text-xs font-mono font-bold text-[#005CE6]">{customDurationMin} Minutes</span>
+                    <span className="text-xs font-mono font-bold text-[#005CE6] dark:text-blue-400">{customDurationMin} Minutes</span>
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                     {[5, 8, 12, 15].map((mins) => (
@@ -804,8 +804,8 @@ export default function TopicDrillsHubPage() {
                         className={cn(
                           "py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer",
                           customDurationMin === mins
-                            ? "bg-slate-900 text-white border-slate-900 shadow-xs"
-                            : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                            ? "bg-slate-900 dark:bg-[#333333] text-white border-slate-900 dark:border-[#444444] shadow-xs"
+                            : "bg-white dark:bg-[#252525] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-[#333333] hover:bg-slate-50 dark:hover:bg-[#2c2c2c]"
                         )}
                       >
                         {mins} Mins
@@ -820,7 +820,7 @@ export default function TopicDrillsHubPage() {
                 <button
                   type="button"
                   onClick={() => setCustomizingTopic(null)}
-                  className="w-1/3 py-3 rounded-2xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs transition-colors cursor-pointer"
+                  className="w-1/3 py-3 rounded-2xl border border-slate-200 dark:border-[#333333] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#282828] font-bold text-xs transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>

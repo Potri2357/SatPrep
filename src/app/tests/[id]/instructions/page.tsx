@@ -167,9 +167,9 @@ export default function ExamInstructionsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F0F6FF] via-[#F8FAFC] to-[#EFF6FF] dark:from-[#121212] dark:via-[#181818] dark:to-[#121212] flex flex-col justify-between text-[#0F172A] dark:text-[#FFFFFF] relative selection:bg-[#2563EB] selection:text-white transition-colors">
-      {/* Decorative ambient background glows */}
-      <div className="absolute top-10 right-1/4 w-[500px] h-[500px] bg-blue-300/15 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Decorative ambient background glows (Light mode only) */}
+      <div className="absolute top-10 right-1/4 w-[500px] h-[500px] bg-blue-300/15 rounded-full blur-3xl pointer-events-none dark:hidden" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none dark:hidden" />
 
       {/* Consistent Unified Navbar */}
       <Navbar />

@@ -112,7 +112,7 @@ button, input, select, textarea {
   box-shadow: 
     0 2px 6px rgba(0, 0, 0, 0.6),
     0 14px 32px -4px rgba(0, 0, 0, 0.75),
-    0 0 0 1px rgba(96, 165, 250, 0.35) !important;
+    0 0 0 1px rgba(255, 255, 255, 0.12) !important;
 }
 
 .dark .glass-pill,
@@ -149,9 +149,9 @@ button, input, select, textarea {
 .dark .chip-btn-primary,
 .dark .neu-chip-primary {
   background: linear-gradient(135deg, #005CE6 0%, #007AE6 100%) !important;
-  border: 1px solid rgba(96, 165, 250, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-shadow: 
-    0 4px 14px rgba(0, 92, 230, 0.4),
+    0 4px 14px rgba(0, 0, 0, 0.6),
     inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
   color: #FFFFFF !important;
 }
@@ -179,13 +179,13 @@ button, input, select, textarea {
 }
 .dark .bg-blue-50,
 .dark .bg-blue-100 {
-  background-color: rgba(96, 165, 250, 0.12) !important;
-  border-color: rgba(96, 165, 250, 0.28) !important;
+  background-color: #232323 !important;
+  border-color: #2C2C2C !important;
 }
 .dark .border-blue-100,
 .dark .border-blue-200,
 .dark .border-blue-300 {
-  border-color: rgba(96, 165, 250, 0.28) !important;
+  border-color: #2C2C2C !important;
 }
 
 /* 2. GREEN / EMERALD (Success / Answered / Accuracy) */
@@ -551,6 +551,22 @@ button, input, select, textarea {
     linear-gradient(to bottom, rgba(0, 92, 230, 0.06) 1px, transparent 1px);
   mask-image: radial-gradient(ellipse 75% 65% at 50% 25%, #000 30%, transparent 82%);
   -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 25%, #000 30%, transparent 82%);
+}
+
+.dark .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+.dark .hero-dot-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1.2px, transparent 1.2px);
+}
+
+.dark .hero-mesh-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 /* ==============================================================================

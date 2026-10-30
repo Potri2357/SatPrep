@@ -202,9 +202,9 @@ export default function ResultAnalysisPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#121212] flex flex-col text-slate-800 dark:text-slate-100 relative overflow-hidden transition-colors">
-      {/* Ambient background glow */}
-      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-200/20 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-300/10 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Ambient background glow (Light mode only) */}
+      <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-200/20 rounded-full blur-3xl pointer-events-none dark:hidden" />
+      <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl pointer-events-none dark:hidden" />
 
       {/* Consistent Unified Navbar */}
       <Navbar />
@@ -647,7 +647,7 @@ export default function ResultAnalysisPage() {
                         className={cn(
                           "px-3 py-1 rounded-lg transition-all text-xs cursor-pointer",
                           explanationTab === 'solution'
-                            ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white font-bold shadow-2xs"
+                            ? "bg-white dark:bg-[#333333] text-[#005CE6] dark:text-white font-bold shadow-2xs"
                             : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                         )}
                       >
@@ -660,7 +660,7 @@ export default function ResultAnalysisPage() {
                           className={cn(
                             "px-3 py-1 rounded-lg transition-all text-xs flex items-center gap-1 cursor-pointer",
                             explanationTab === 'shortcut'
-                              ? "bg-white dark:bg-blue-600 text-amber-700 dark:text-white font-bold shadow-2xs"
+                              ? "bg-white dark:bg-[#333333] text-amber-700 dark:text-white font-bold shadow-2xs"
                               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                           )}
                         >
@@ -675,7 +675,7 @@ export default function ResultAnalysisPage() {
                           className={cn(
                             "px-3 py-1 rounded-lg transition-all text-xs cursor-pointer",
                             explanationTab === 'traps'
-                              ? "bg-white dark:bg-blue-600 text-purple-700 dark:text-white font-bold shadow-2xs"
+                              ? "bg-white dark:bg-[#333333] text-purple-700 dark:text-white font-bold shadow-2xs"
                               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                           )}
                         >

@@ -269,7 +269,7 @@ export function ScratchpadModal({
           : "bottom-4 right-4 w-[92vw] sm:w-[480px] lg:w-[540px] h-[520px] rounded-3xl"
       )}
     >
-      <div className="flex flex-col h-full bg-white/98 backdrop-blur-2xl rounded-3xl border border-[#BCEBFC] shadow-[0_16px_50px_rgba(0,92,230,0.18)] overflow-hidden">
+      <div className="flex flex-col h-full bg-white/98 dark:bg-[#1E1E1E] backdrop-blur-2xl rounded-3xl border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[0_16px_50px_rgba(0,92,230,0.18)] dark:shadow-[0_16px_50px_rgba(0,0,0,0.8)] overflow-hidden">
         {/* Header Bar */}
         <div className="px-4 py-2.5 bg-gradient-to-r from-[#005CE6] via-[#0076F5] to-[#0096D6] text-white flex items-center justify-between select-none shrink-0">
           <div className="flex items-center gap-2">
