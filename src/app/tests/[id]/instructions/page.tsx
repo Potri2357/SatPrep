@@ -166,10 +166,10 @@ export default function ExamInstructionsPage() {
   const isPracticeMode = testData?.bundle?.feedback_mode === 'practice' || testData?.config?.feedback_mode === 'practice';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F0F6FF] via-[#F8FAFC] to-[#EFF6FF] flex flex-col justify-between text-[#0F172A] relative selection:bg-[#2563EB] selection:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#F0F6FF] via-[#F8FAFC] to-[#EFF6FF] dark:from-[#090E17] dark:via-[#0D1524] dark:to-[#090E17] flex flex-col justify-between text-[#0F172A] dark:text-[#F8FAFC] relative selection:bg-[#2563EB] selection:text-white transition-colors">
       {/* Decorative ambient background glows */}
-      <div className="absolute top-10 right-1/4 w-[500px] h-[500px] bg-blue-300/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-10 right-1/4 w-[500px] h-[500px] bg-blue-300/15 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-indigo-300/15 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Consistent Unified Navbar */}
       <Navbar />
@@ -181,32 +181,32 @@ export default function ExamInstructionsPage() {
           {/* Exam Summary Banner */}
           <div className="p-6 sm:p-7 rounded-3xl neu-glass-card flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="space-y-1.5">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF]">
-                <Award className="w-3.5 h-3.5 text-[#2563EB]" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold neu-pill text-[#1E40AF] dark:text-blue-400">
+                <Award className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400" />
                 <span>{isPracticeMode ? 'Topic Practice & Instant Solutions Drill' : 'Official Examination Pattern'}</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white tracking-tight">
                 {examName}
               </h1>
-              <p className="text-xs text-slate-500 font-medium">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 {isPracticeMode ? 'Instant Step-by-Step Derivations & Speed Shortcuts' : 'Quantitative Aptitude & Data Interpretation Paper'}
               </p>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
               <div className="px-4 py-3 rounded-2xl neu-pill text-center">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Mode</span>
-                <span className="text-base font-extrabold font-mono text-[#2563EB]">
+                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Mode</span>
+                <span className="text-base font-extrabold font-mono text-[#2563EB] dark:text-blue-400">
                   {isPracticeMode ? 'Practice' : `${durationMin} Mins`}
                 </span>
               </div>
               <div className="px-4 py-3 rounded-2xl neu-pill text-center">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Questions</span>
-                <span className="text-base font-extrabold font-mono text-slate-900">{questionCount} Qs</span>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Questions</span>
+                <span className="text-base font-extrabold font-mono text-slate-900 dark:text-slate-100">{questionCount} Qs</span>
               </div>
               <div className="px-4 py-3 rounded-2xl neu-pill text-center">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Neg. Penalty</span>
-                <span className={cn("text-base font-extrabold font-mono", isPracticeMode ? "text-emerald-700" : "text-slate-900")}>
+                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Neg. Penalty</span>
+                <span className={cn("text-base font-extrabold font-mono", isPracticeMode ? "text-emerald-700 dark:text-emerald-400" : "text-slate-900 dark:text-slate-100")}>
                   {isPracticeMode ? '0.00' : '-0.25'}
                 </span>
               </div>
@@ -214,70 +214,70 @@ export default function ExamInstructionsPage() {
           </div>
 
           {/* General Instructions */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
-            <h2 className="text-base font-bold text-[#0F172A] flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#2563EB]" />
+          <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-[#111A2E]/90 backdrop-blur-xl border border-blue-100 dark:border-slate-800 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
+            <h2 className="text-base font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#2563EB] dark:text-blue-400" />
               <span>{isPracticeMode ? 'Practice Drill Learning Guidelines' : 'General Examination Guidelines'}</span>
             </h2>
 
-            <div className="text-xs space-y-3 leading-relaxed text-slate-600">
+            <div className="text-xs space-y-3 leading-relaxed text-slate-600 dark:text-slate-300">
               {isPracticeMode ? (
                 <>
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
                     <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">1. Instant Derivations &amp; Shortcuts:</strong> As soon as you select an option, the system verifies your answer and immediately reveals full step-by-step mathematical solutions, speed derivation shortcuts, and distractor trap analysis.
+                      <strong className="text-slate-900 dark:text-white">1. Instant Derivations &amp; Shortcuts:</strong> As soon as you select an option, the system verifies your answer and immediately reveals full step-by-step mathematical solutions, speed derivation shortcuts, and distractor trap analysis.
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                    <Clock className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
+                    <Clock className="w-4 h-4 text-[#2563EB] dark:text-blue-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">2. Untimed &amp; Self-Paced:</strong> No countdown timer stress. An ambient per-question stopwatch lets you track your natural solving speed while you master formulas and arithmetic shortcuts.
+                      <strong className="text-slate-900 dark:text-white">2. Untimed &amp; Self-Paced:</strong> No countdown timer stress. An ambient per-question stopwatch lets you track your natural solving speed while you master formulas and arithmetic shortcuts.
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                    <Award className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
+                    <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">3. Zero Negative Penalties:</strong> Wrong answers incur 0 negative marks. Practice is meant for learning and exploring options without fear of penalty deductions.
+                      <strong className="text-slate-900 dark:text-white">3. Zero Negative Penalties:</strong> Wrong answers incur 0 negative marks. Practice is meant for learning and exploring options without fear of penalty deductions.
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                    <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
+                    <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">4. Built-in Scratchpad &amp; Bookmarks:</strong> Use the interactive rough scratchpad for calculations and star tricky questions for automated spaced repetition review.
+                      <strong className="text-slate-900 dark:text-white">4. Built-in Scratchpad &amp; Bookmarks:</strong> Use the interactive rough scratchpad for calculations and star tricky questions for automated spaced repetition review.
                     </div>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                    <Clock className="w-4 h-4 text-[#2563EB] shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
+                    <Clock className="w-4 h-4 text-[#2563EB] dark:text-blue-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">1. Server Clock:</strong> The countdown timer displayed at the top of the exam screen reflects the authoritative server clock. When the timer hits 00:00, your exam will be automatically submitted without manual intervention.
+                      <strong className="text-slate-900 dark:text-white">1. Server Clock:</strong> The countdown timer displayed at the top of the exam screen reflects the authoritative server clock. When the timer hits 00:00, your exam will be automatically submitted without manual intervention.
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                    <Award className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
+                    <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">2. Marking Scheme:</strong> You will be awarded <strong className="text-emerald-700 font-bold">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700 font-bold">-0.25 marks</strong>. Unattempted questions carry zero penalties.
+                      <strong className="text-slate-900 dark:text-white">2. Marking Scheme:</strong> You will be awarded <strong className="text-emerald-700 dark:text-emerald-400 font-bold">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700 dark:text-rose-400 font-bold">-0.25 marks</strong>. Unattempted questions carry zero penalties.
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                    <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
+                    <ShieldCheck className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">3. Continuous Autosave:</strong> Every question response is transmitted and verified against the server. An active sync beacon confirms persistence on every selection.
+                      <strong className="text-slate-900 dark:text-white">3. Continuous Autosave:</strong> Every question response is transmitted and verified against the server. An active sync beacon confirms persistence on every selection.
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] border border-slate-100">
-                    <HelpCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#0D1524] border border-slate-100 dark:border-slate-800">
+                    <HelpCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900">4. Saving Responses:</strong> To lock in your answer, you must click <strong className="text-[#2563EB]">&quot;Save &amp; Next&quot;</strong>. Simply tapping on an option without proceeding does not save your choice.
+                      <strong className="text-slate-900 dark:text-white">4. Saving Responses:</strong> To lock in your answer, you must click <strong className="text-[#2563EB] dark:text-blue-400">&quot;Save &amp; Next&quot;</strong>. Simply tapping on an option without proceeding does not save your choice.
                     </div>
                   </div>
                 </>
@@ -286,64 +286,64 @@ export default function ExamInstructionsPage() {
           </div>
 
           {/* Question Status Legend */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border border-blue-100 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-[#111A2E]/90 backdrop-blur-xl border border-blue-100 dark:border-slate-800 shadow-[0_4px_20px_rgb(37,99,235,0.04)] space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 Question Status Legend
               </h2>
-              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#005CE6] border border-[#BFDBFE]">
+              <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#EFF6FF] dark:bg-blue-950/80 text-[#005CE6] dark:text-blue-400 border border-[#BFDBFE] dark:border-blue-900">
                 Status Reference
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-slate-200 bg-white shadow-xs">
-                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 shrink-0">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162036] shadow-xs">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center font-bold text-slate-700 dark:text-slate-300 shrink-0">
                   1
                 </div>
                 <div>
-                  <div className="font-bold text-slate-800">Not Visited</div>
-                  <div className="text-slate-500 text-[11px]">You have not visited this question yet.</div>
+                  <div className="font-bold text-slate-800 dark:text-slate-200">Not Visited</div>
+                  <div className="text-slate-500 dark:text-slate-400 text-[11px]">You have not visited this question yet.</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-rose-200 bg-rose-50/50 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-rose-200 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/30 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   2
                 </div>
                 <div>
-                  <div className="font-bold text-rose-900">Not Answered</div>
-                  <div className="text-slate-600 text-[11px]">You have not answered this question.</div>
+                  <div className="font-bold text-rose-900 dark:text-rose-300">Not Answered</div>
+                  <div className="text-slate-600 dark:text-slate-400 text-[11px]">You have not answered this question.</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/30 shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   3
                 </div>
                 <div>
-                  <div className="font-bold text-emerald-900">Answered</div>
-                  <div className="text-slate-600 text-[11px]">You have answered this question.</div>
+                  <div className="font-bold text-emerald-900 dark:text-emerald-300">Answered</div>
+                  <div className="text-slate-600 dark:text-slate-400 text-[11px]">You have answered this question.</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/50 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/30 shadow-xs">
                 <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   4
                 </div>
                 <div>
-                  <div className="font-bold text-purple-900">Marked for Review</div>
-                  <div className="text-slate-600 text-[11px]">Marked for review without answering.</div>
+                  <div className="font-bold text-purple-900 dark:text-purple-300">Marked for Review</div>
+                  <div className="text-slate-600 dark:text-slate-400 text-[11px]">Marked for review without answering.</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 bg-purple-50/50 shadow-xs sm:col-span-2">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/30 shadow-xs sm:col-span-2">
                 <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 ring-2 ring-emerald-400 shadow-sm">
                   5
                 </div>
                 <div>
-                  <div className="font-bold text-purple-900">Answered &amp; Marked for Review</div>
-                  <div className="text-slate-600 text-[11px]">Answered and marked for review (will be evaluated).</div>
+                  <div className="font-bold text-purple-900 dark:text-purple-300">Answered &amp; Marked for Review</div>
+                  <div className="text-slate-600 dark:text-slate-400 text-[11px]">Answered and marked for review (will be evaluated).</div>
                 </div>
               </div>
             </div>
@@ -354,15 +354,15 @@ export default function ExamInstructionsPage() {
         <div className="space-y-6 lg:sticky lg:top-24 h-fit">
           {/* Candidate Card */}
           <div className="p-6 rounded-3xl neu-glass-card space-y-4">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Candidate Information
             </h2>
 
             <div className="flex items-center gap-3.5 p-3.5 rounded-2xl neu-inset">
               <CandidateAvatar size={44} />
               <div className="overflow-hidden">
-                <div className="font-bold text-slate-900 text-sm">Sathyamoorthi M</div>
-                <div className="text-[11px] text-slate-500 font-medium truncate mt-0.5">
+                <div className="font-bold text-slate-900 dark:text-white text-sm">Sathyamoorthi M</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">
                   Quantitative Aptitude Paper
                 </div>
               </div>
@@ -370,9 +370,9 @@ export default function ExamInstructionsPage() {
 
             {/* System Compatibility & Connection Status (Real-time Dynamic Checks) */}
             <div className="pt-1 space-y-2 text-xs">
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Monitor className="w-4 h-4 text-slate-500" />
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 dark:bg-[#162036] border border-slate-100 dark:border-slate-800 shadow-xs">
+                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
+                  <Monitor className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                   <span>System Compatibility</span>
                 </div>
                 {systemStatus.state === 'checking' && (
@@ -382,25 +382,25 @@ export default function ExamInstructionsPage() {
                   </span>
                 )}
                 {systemStatus.state === 'compatible' && (
-                  <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="font-bold text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>{systemStatus.label}</span>
                   </span>
                 )}
                 {systemStatus.state === 'warning' && (
-                  <span className="font-bold text-amber-700 text-xs flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="font-bold text-amber-700 dark:text-amber-400 text-xs flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                     <span>{systemStatus.label}</span>
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 border border-slate-100 shadow-xs">
-                <div className="flex items-center gap-2 text-slate-600">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/70 dark:bg-[#162036] border border-slate-100 dark:border-slate-800 shadow-xs">
+                <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                   {networkStatus.state === 'offline' ? (
-                    <WifiOff className="w-4 h-4 text-rose-500" />
+                    <WifiOff className="w-4 h-4 text-rose-500 dark:text-rose-400" />
                   ) : (
-                    <Wifi className="w-4 h-4 text-slate-500" />
+                    <Wifi className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                   )}
                   <span>Network Connection</span>
                 </div>
@@ -411,20 +411,20 @@ export default function ExamInstructionsPage() {
                   </span>
                 )}
                 {networkStatus.state === 'stable' && (
-                  <span className="font-bold text-emerald-700 text-xs flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="font-bold text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>{networkStatus.label}</span>
                   </span>
                 )}
                 {networkStatus.state === 'slow' && (
-                  <span className="font-bold text-amber-700 text-xs flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="font-bold text-amber-700 dark:text-amber-400 text-xs flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
                     <span>{networkStatus.label}</span>
                   </span>
                 )}
                 {networkStatus.state === 'offline' && (
-                  <span className="font-bold text-rose-700 text-xs flex items-center gap-1">
-                    <WifiOff className="w-3.5 h-3.5 text-rose-600" />
+                  <span className="font-bold text-rose-700 dark:text-rose-400 text-xs flex items-center gap-1">
+                    <WifiOff className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
                     <span>Offline</span>
                   </span>
                 )}
@@ -432,7 +432,7 @@ export default function ExamInstructionsPage() {
             </div>
 
             {/* Direct Launch Exam Button */}
-            <div className="pt-4 border-t border-slate-100">
+            <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
               <button
                 onClick={handleStartExam}
                 className="w-full neu-chip-primary uppercase tracking-wider text-xs py-3.5 cursor-pointer shadow-md flex items-center justify-center gap-2 font-bold hover:shadow-lg transition-all"
@@ -445,7 +445,7 @@ export default function ExamInstructionsPage() {
         </div>
       </main>
 
-      <footer className="h-12 border-t border-blue-100 bg-white/80 px-6 flex items-center justify-center text-[11px] text-slate-400">
+      <footer className="h-12 border-t border-blue-100 dark:border-slate-800 bg-white/80 dark:bg-[#0D1524] px-6 flex items-center justify-center text-[11px] text-slate-400 dark:text-slate-500">
         SwS Exam Engine // Secure Testing Terminal
       </footer>
     </div>

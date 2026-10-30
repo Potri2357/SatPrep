@@ -308,17 +308,17 @@ export default function TopicDrillsHubPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FDFF] text-[#0F172A] flex flex-col">
+    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#090E17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col transition-colors">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-8">
         {/* Header Hero */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC] dark:border-slate-800">
           <div className="space-y-3 max-w-3xl">
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               Topic Drills &amp; Practice
             </h1>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Drill down into individual chapters with instant step-by-step mathematical derivations, speed shortcuts, and 0 negative penalty deductions.
             </p>
           </div>
@@ -326,7 +326,7 @@ export default function TopicDrillsHubPage() {
           <div className="flex items-center gap-3 shrink-0">
             <Link
               href="/tests"
-              className="px-5 py-2.5 rounded-2xl bg-white hover:bg-slate-50 border border-[#BCEBFC] text-[#005CE6] font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-2"
+              className="px-5 py-2.5 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-[#BCEBFC] dark:border-slate-700 text-[#005CE6] dark:text-blue-400 font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-2"
             >
               <Award className="w-4 h-4" />
               <span>Full Mock Exams (35 Qs)</span>
@@ -335,27 +335,27 @@ export default function TopicDrillsHubPage() {
         </div>
 
         {errorMsg && (
-          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2">
+          <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 text-xs sm:text-sm flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
         {/* Global Drill Settings & Quick Launch Toolbar (Directly Leads to Test) */}
-        <div className="p-4 sm:p-6 rounded-3xl neu-glass-card space-y-5 border border-blue-100 shadow-sm">
+        <div className="p-4 sm:p-6 rounded-3xl neu-glass-card space-y-5 border border-blue-100 dark:border-slate-800 shadow-sm">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 flex-wrap">
               {/* Feedback Mode Selector */}
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider shrink-0">Mode:</span>
-                <div className="inline-flex p-1 rounded-xl bg-[#E0F4FD]/70 border border-[#BCEBFC]">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider shrink-0">Mode:</span>
+                <div className="inline-flex p-1 rounded-xl bg-[#E0F4FD]/70 dark:bg-[#0D1524] border border-[#BCEBFC] dark:border-slate-800">
                   <button
                     onClick={() => setFeedbackMode('practice')}
                     className={cn(
                       "px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap",
                       feedbackMode === 'practice'
                         ? "bg-emerald-600 text-white shadow-xs"
-                        : "text-slate-600 hover:text-slate-900"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     )}
                   >
                     <Lightbulb className="w-3.5 h-3.5 shrink-0" />
@@ -368,7 +368,7 @@ export default function TopicDrillsHubPage() {
                       "px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap",
                       feedbackMode === 'exam'
                         ? "bg-[#005CE6] text-white shadow-xs"
-                        : "text-slate-600 hover:text-slate-900"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     )}
                   >
                     <Clock className="w-3.5 h-3.5 shrink-0" />
@@ -585,41 +585,41 @@ export default function TopicDrillsHubPage() {
             return (
               <div
                 key={topic.id}
-                className="neu-glass-card rounded-3xl p-6 flex flex-col justify-between hover:shadow-md hover:border-[#005CE6]/40 transition-all group relative overflow-hidden"
+                className="neu-glass-card rounded-3xl p-6 flex flex-col justify-between hover:shadow-md hover:border-[#005CE6]/40 dark:hover:border-blue-500/50 transition-all group relative overflow-hidden"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-end">
-                    <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                       <Clock className="w-3 h-3 text-slate-400" />
                       {meta.targetPace}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#005CE6] transition-colors leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-[#005CE6] dark:group-hover:text-blue-400 transition-colors leading-snug">
                       {topic.name}
                     </h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed">
                       {meta.conceptSummary}
                     </p>
                   </div>
 
                   {/* Improvised Exam Weightage & Difficulty Metrics Card */}
-                  <div className="grid grid-cols-2 gap-2 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] border border-[#BCEBFC] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)]">
+                  <div className="grid grid-cols-2 gap-2 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] dark:from-[#0D1524] dark:via-[#111A2E] dark:to-[#0D1524] border border-[#BCEBFC] dark:border-slate-800 shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)] dark:shadow-none">
                     {/* Weightage Block */}
-                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 border border-[#D6EEFC] flex flex-col justify-center shadow-2xs">
-                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 uppercase tracking-wider mb-0.5">
-                        <Target className="w-3 h-3 text-[#005CE6]" />
+                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#162036] border border-[#D6EEFC] dark:border-slate-700 flex flex-col justify-center shadow-2xs">
+                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
+                        <Target className="w-3 h-3 text-[#005CE6] dark:text-blue-400" />
                         <span>Weightage</span>
                       </div>
-                      <span className="text-xs font-black text-[#005CE6] tracking-tight truncate">
+                      <span className="text-xs font-black text-[#005CE6] dark:text-blue-400 tracking-tight truncate">
                         {meta.examWeight}
                       </span>
                     </div>
 
                     {/* Difficulty Block */}
-                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 border border-[#D6EEFC] flex flex-col justify-center shadow-2xs">
-                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 uppercase tracking-wider mb-0.5">
+                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#162036] border border-[#D6EEFC] dark:border-slate-700 flex flex-col justify-center shadow-2xs">
+                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
                         <Flame className={cn(
                           "w-3 h-3",
                           meta.difficulty === 'Easy' ? "text-emerald-500" : meta.difficulty === 'Moderate' ? "text-amber-500" : "text-rose-500"
@@ -633,7 +633,7 @@ export default function TopicDrillsHubPage() {
                         )} />
                         <span className={cn(
                           "text-xs font-black tracking-tight",
-                          meta.difficulty === 'Easy' ? "text-emerald-700" : meta.difficulty === 'Moderate' ? "text-amber-700" : "text-rose-700"
+                          meta.difficulty === 'Easy' ? "text-emerald-700 dark:text-emerald-400" : meta.difficulty === 'Moderate' ? "text-amber-700 dark:text-amber-400" : "text-rose-700 dark:text-rose-400"
                         )}>
                           {meta.difficulty}
                         </span>
@@ -643,14 +643,14 @@ export default function TopicDrillsHubPage() {
 
                   {/* Shortcuts preview */}
                   <div className="space-y-1.5 pt-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 block">
                       Speed Shortcuts Covered:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
                       {meta.shortcuts.map((sc, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10.5px] font-medium text-slate-700"
+                          className="px-2 py-0.5 rounded-md bg-white dark:bg-[#162036] border border-slate-200 dark:border-slate-700 text-[10.5px] font-medium text-slate-700 dark:text-slate-300"
                         >
                           {sc}
                         </span>

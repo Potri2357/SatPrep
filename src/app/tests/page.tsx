@@ -228,21 +228,21 @@ export default function MockTestsHubPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FDFF] text-[#0F172A] flex flex-col">
+    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#090E17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col transition-colors">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-8">
         {/* Header Hero */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC] dark:border-slate-800">
           <div className="space-y-3 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E0F4FD] border border-[#BCEBFC] text-[#005CE6] text-xs font-bold">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E0F4FD] dark:bg-blue-950/80 border border-[#BCEBFC] dark:border-blue-900 text-[#005CE6] dark:text-blue-400 text-xs font-bold">
               <Award className="w-3.5 h-3.5" />
               <span>Real IBPS Exam Simulator 2026</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               Mock Tests Series
             </h1>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Experience the actual 20-minute sectional speed crunch with 35 questions, authentic negative marking (-0.25), server-synchronized timers, and live percentile benchmarking.
             </p>
           </div>
@@ -259,7 +259,7 @@ export default function MockTestsHubPage() {
         </div>
 
         {errorMsg && (
-          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-center gap-2">
+          <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-300 text-xs sm:text-sm flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
           </div>
@@ -267,14 +267,14 @@ export default function MockTestsHubPage() {
 
         {/* Filter Navigation Tabs */}
         <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1.5 rounded-2xl bg-[#E0F4FD]/60 border border-[#BCEBFC]">
+          <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1.5 rounded-2xl bg-[#E0F4FD]/60 dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800">
             <button
               onClick={() => setSelectedCategory('all')}
               className={cn(
                 "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'all'
-                  ? "bg-white text-[#005CE6] shadow-xs"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               All Tests ({MOCK_TESTS_CATALOG.length})
@@ -284,8 +284,8 @@ export default function MockTestsHubPage() {
               className={cn(
                 "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'full_mock'
-                  ? "bg-white text-[#005CE6] shadow-xs"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               Full-Length Prelims (35 Qs)
@@ -295,17 +295,17 @@ export default function MockTestsHubPage() {
               className={cn(
                 "px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap",
                 selectedCategory === 'sectional'
-                  ? "bg-white text-[#005CE6] shadow-xs"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-white dark:bg-blue-600 text-[#005CE6] dark:text-white shadow-xs"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               )}
             >
               Sectional Speed Mocks
             </button>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Exact IBPS PO & Clerk Question Blueprint</span>
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>Exact IBPS PO &amp; Clerk Question Blueprint</span>
           </div>
         </div>
 
@@ -320,63 +320,63 @@ export default function MockTestsHubPage() {
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-end">
-                    <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-slate-400" />
                       {test.durationMin} Mins
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#005CE6] transition-colors leading-snug">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 group-hover:text-[#005CE6] dark:group-hover:text-blue-400 transition-colors leading-snug">
                       {test.title}
                     </h3>
-                    <p className="text-xs text-slate-600 mt-2 leading-relaxed line-clamp-3">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 leading-relaxed line-clamp-3">
                       {test.subtitle}
                     </p>
                   </div>
 
                   {/* Test Metrics Pill Bar — Improvised Aesthetic Design */}
-                  <div className="grid grid-cols-3 gap-1 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] border border-[#BCEBFC] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)] text-center divide-x divide-[#D6EEFC]">
+                  <div className="grid grid-cols-3 gap-1 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] dark:from-[#0D1524] dark:via-[#111A2E] dark:to-[#0D1524] border border-[#BCEBFC] dark:border-slate-800 shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)] dark:shadow-none text-center divide-x divide-[#D6EEFC] dark:divide-slate-800">
                     <div className="px-1.5 py-1 flex flex-col items-center justify-center">
-                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 uppercase tracking-wider mb-0.5">
-                        <Target className="w-2.5 h-2.5 text-[#005CE6]" />
+                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
+                        <Target className="w-2.5 h-2.5 text-[#005CE6] dark:text-blue-400" />
                         <span>Questions</span>
                       </div>
-                      <span className="text-[13px] font-black text-slate-900 font-mono tracking-tight">{test.questionCount} Qs</span>
+                      <span className="text-[13px] font-black text-slate-900 dark:text-slate-100 font-mono tracking-tight">{test.questionCount} Qs</span>
                     </div>
                     <div className="px-1.5 py-1 flex flex-col items-center justify-center">
-                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 uppercase tracking-wider mb-0.5">
-                        <Award className="w-2.5 h-2.5 text-emerald-600" />
+                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
+                        <Award className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Marks</span>
                       </div>
-                      <span className="text-[13px] font-black text-[#005CE6] font-mono tracking-tight">{test.totalMarks}</span>
+                      <span className="text-[13px] font-black text-[#005CE6] dark:text-blue-400 font-mono tracking-tight">{test.totalMarks}</span>
                     </div>
                     <div className="px-1.5 py-1 flex flex-col items-center justify-center">
-                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 uppercase tracking-wider mb-0.5">
+                      <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
                         <AlertCircle className="w-2.5 h-2.5 text-rose-500" />
                         <span>Penalty</span>
                       </div>
-                      <span className="text-[13px] font-black text-rose-600 font-mono tracking-tight">-{test.negativeMarks}</span>
+                      <span className="text-[13px] font-black text-rose-600 dark:text-rose-400 font-mono tracking-tight">-{test.negativeMarks}</span>
                     </div>
                   </div>
 
                   {/* Topics Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {test.topicsCovered.map((topic, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-medium text-slate-600">
+                      <span key={i} className="px-2 py-0.5 rounded-md bg-white dark:bg-[#162036] border border-slate-200 dark:border-slate-700 text-[10px] font-medium text-slate-600 dark:text-slate-300">
                         {topic}
                       </span>
                     ))}
                   </div>
 
                   {/* Cutoff Hint */}
-                  <div className="text-[11px] text-slate-500 font-medium flex items-center gap-1.5 pt-1">
-                    <Target className="w-3.5 h-3.5 text-[#005CE6]" />
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium flex items-center gap-1.5 pt-1">
+                    <Target className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" />
                     <span>{test.cutoffHint}</span>
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2">
+                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
                   <button
                     onClick={() => handleStartMock(test)}
                     disabled={isLoading}
