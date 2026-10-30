@@ -15,6 +15,10 @@ export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) 
 
   useEffect(() => {
     setMounted(true);
+    if (!localStorage.getItem('sws_default_light_v1')) {
+      localStorage.setItem('theme', 'light');
+      localStorage.setItem('sws_default_light_v1', 'true');
+    }
     const stored = localStorage.getItem('theme');
     if (stored === 'dark') {
       setTheme('dark');

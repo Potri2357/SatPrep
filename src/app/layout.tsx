@@ -38,7 +38,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`,
+            __html: `(function(){try{if(!localStorage.getItem('sws_default_light_v1')){localStorage.setItem('theme','light');localStorage.setItem('sws_default_light_v1','true');}var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}})();`,
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -50,7 +50,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className={`${dmSans.className} min-h-screen bg-[#F7FDFF] text-[#0F172A] antialiased selection:bg-[#005CE6] selection:text-white`}>
+      <body className={`${dmSans.className} min-h-screen bg-[#F7FDFF] text-[#0F172A] dark:bg-[#121212] dark:text-slate-100 antialiased selection:bg-[#005CE6] selection:text-white`}>
         {children}
       </body>
     </html>
