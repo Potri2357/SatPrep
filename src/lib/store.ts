@@ -19,6 +19,18 @@ import {
   OverallResultsData,
 } from './types';
 import { FULL_MOCK_35_QUESTIONS, FULL_MOCK_35_KEYS } from './bank-exam-blueprint';
+import { generateProceduralQuestions } from './gemini';
+import ibpsQuantQuestions from '@/data/ibps_po_2025_quant.json';
+import uploadedQuestionsData from '@/data/uploaded_questions.json';
+
+export function normalizeTopicId(t: string): string {
+  if (!t) return 'simplification';
+  const norm = t.toLowerCase().trim();
+  if (norm === 'ratio-and-proportion') return 'ratio-proportion';
+  if (norm === 'simple-and-compound-interest') return 'si-ci';
+  if (norm === 'data-interpretation') return 'tabular-di';
+  return norm;
+}
 
 // Initial Seed Topics
 export const INITIAL_TOPICS: Topic[] = [
@@ -36,33 +48,149 @@ export const INITIAL_TOPICS: Topic[] = [
 ];
 
 export const INITIAL_EXAMS: Exam[] = [
+  // Tier 1: Pure Velocity (The Easiest)
+  {
+    id: 'sbi-clerk-prelims',
+    name: 'SBI Clerk Prelims',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 1: Pure Velocity — Raw Processing Speed (35 Qs, 20 Mins, -0.25). High school level math, near-flawless execution.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'ibps-clerk-prelims',
+    name: 'IBPS Clerk Prelims',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 1: Pure Velocity — Raw Processing Speed (35 Qs, 20 Mins, -0.25). 10-15 Simplification, 5 Quadratic, 5 Series, 1 Graph.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'rbi-assistant-prelims',
+    name: 'RBI Assistant Prelims',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 1: Pure Velocity — High 90%+ Cut-off Sprint (35 Qs, 20 Mins, -0.25). Absolute maximum speed and flawless accuracy.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'ibps-rrb-clerk-mains',
+    name: 'IBPS RRB Clerk Mains',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 1: Pure Velocity — Speed Clerical Numerical Ability (40 Qs, 30 Mins, -0.25). Rapid execution without complex traps.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+
+  // Tier 2: Calculation Stamina (Moderate)
+  {
+    id: 'sbi-po-prelims',
+    name: 'SBI PO Prelims',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 2: Calculation Stamina — Conceptual Speed & Endurance (35 Qs, 20 Mins, -0.25). 2-3 DI sets, 10-15 multi-step Word Problems.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
   {
     id: 'ibps-po-prelims-2026',
     name: 'IBPS PO Prelims 2026',
     family: 'Bank',
     year_label: '2026',
-    description: '35 Questions Quantitative Aptitude, 20 Minutes sectional timing, 0.25 negative marks.',
-    calculator_enabled: false,
-    options_count: 5,
-    status: 'active',
-    instructions_html: '<p>The clock has been set at the server and the countdown timer at the top right corner of screen will display the time remaining for you to complete the exam. Each question carries 1.00 mark and an incorrect answer will deduct 0.25 marks.</p>',
-  },
-  {
-    id: 'sbi-clerk-prelims-2026',
-    name: 'SBI Clerk Prelims 2026',
-    family: 'Bank',
-    year_label: '2026',
-    description: 'High speed clerical numerical ability mock series with instant rank and percentile.',
+    description: 'Tier 2: Calculation Stamina — 35 Questions Quantitative Aptitude, 20 Minutes sectional timing, -0.25 negative marks.',
     calculator_enabled: false,
     options_count: 5,
     status: 'active',
   },
   {
-    id: 'rbi-assistant-2026',
-    name: 'RBI Assistant Prelims 2026',
+    id: 'ibps-po-prelims',
+    name: 'IBPS PO Prelims',
     family: 'Bank',
     year_label: '2026',
-    description: 'Accuracy ramp with speed calculation shortcuts for Reserve Bank of India Assistant.',
+    description: 'Tier 2: Calculation Stamina — Lengthy calculated numbers, DI caselets, and arithmetic word problems.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'sbi-clerk-mains',
+    name: 'SBI Clerk Mains',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 2: Calculation Stamina — Lengthy Calculation Steps & Moderate DI Sets (50 Qs, 45 Mins, -0.25).',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'ibps-clerk-mains',
+    name: 'IBPS Clerk Mains',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 2: Calculation Stamina — Balanced Flow: Secure speed marks, then pick direct DI/Word problems (50 Qs, 45 Mins, -0.25).',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'rbi-assistant-mains',
+    name: 'RBI Assistant Mains',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 2: Calculation Stamina — Brutal Cut-offs & High Precision (40 Qs, 30 Mins, -0.25).',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+
+  // Tier 3: Conceptual Depth (Moderate-High)
+  {
+    id: 'rbi-grade-b-phase-1',
+    name: 'RBI Grade B Phase 1',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 3: Conceptual Depth — Advanced Concept Application (30 Qs, 25 Mins, -0.25). Tough Arithmetic, calculated DI tables, Data Sufficiency.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'ibps-rrb-po-mains',
+    name: 'IBPS RRB PO Mains',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 3: Conceptual Depth — Deep Arithmetic Mastery & Sectional Limits (40 Qs, 35 Mins, -0.25).',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+
+  // Tier 4: Advanced Analytics (The Toughest)
+  {
+    id: 'sbi-po-mains',
+    name: 'SBI PO Mains',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 4: Advanced Analytics — Logical Analysis & Interpretation (30 Qs, 45 Mins, -0.33). Missing DI, variable-based Caselets, probability charts.',
+    calculator_enabled: false,
+    options_count: 5,
+    status: 'active',
+  },
+  {
+    id: 'ibps-po-mains',
+    name: 'IBPS PO Mains',
+    family: 'Bank',
+    year_label: '2026',
+    description: 'Tier 4: Advanced Analytics — Extreme Time Pressure & Unique Problems (35 Qs, 45 Mins, -0.25). Selectivity Strategy: 10-15 high accuracy Qs.',
     calculator_enabled: false,
     options_count: 5,
     status: 'active',
@@ -498,23 +626,81 @@ export const INITIAL_KEYS: Record<string, QuestionKey> = {
 export const ALL_PRACTICE_QUESTIONS: Question[] = (() => {
   const seen = new Set<string>();
   const list: Question[] = [];
-  FULL_MOCK_35_QUESTIONS.forEach((q) => {
-    seen.add(q.stem.trim());
-    list.push(q);
-  });
-  INITIAL_QUESTIONS.forEach((q) => {
-    if (!seen.has(q.stem.trim())) {
-      seen.add(q.stem.trim());
+
+  const addUnique = (q: Question) => {
+    const stemNorm = q.stem.trim();
+    if (!seen.has(stemNorm)) {
+      seen.add(stemNorm);
       list.push(q);
     }
-  });
+  };
+
+  FULL_MOCK_35_QUESTIONS.forEach(addUnique);
+  INITIAL_QUESTIONS.forEach(addUnique);
+
+  if (Array.isArray(ibpsQuantQuestions)) {
+    ibpsQuantQuestions.forEach((item: any) => {
+      addUnique({
+        id: item.id,
+        stem: item.stem,
+        options: [
+          { id: 'a', text: item.option_a },
+          { id: 'b', text: item.option_b },
+          { id: 'c', text: item.option_c },
+          { id: 'd', text: item.option_d },
+          { id: 'e', text: item.option_e },
+        ],
+        type: 'mcq',
+        topic_id: normalizeTopicId(item.topic || 'simplification'),
+        difficulty_assigned: Number(item.difficulty) || 2,
+        status: 'live',
+        source: 'manual',
+        version: 1,
+      });
+    });
+  }
+
+  if (Array.isArray(uploadedQuestionsData)) {
+    uploadedQuestionsData.forEach((item: any) => {
+      if (item?.question) {
+        addUnique({
+          ...item.question,
+          topic_id: normalizeTopicId(item.question.topic_id),
+        });
+      }
+    });
+  }
+
   return list;
 })();
 
-export const ALL_PRACTICE_KEYS: Record<string, QuestionKey> = {
-  ...INITIAL_KEYS,
-  ...FULL_MOCK_35_KEYS,
-};
+export const ALL_PRACTICE_KEYS: Record<string, QuestionKey> = (() => {
+  const keys: Record<string, QuestionKey> = {
+    ...INITIAL_KEYS,
+    ...FULL_MOCK_35_KEYS,
+  };
+
+  if (Array.isArray(ibpsQuantQuestions)) {
+    ibpsQuantQuestions.forEach((item: any) => {
+      keys[item.id] = {
+        question_id: item.id,
+        correct_option: (item.correct || 'a').toLowerCase(),
+        solution: item.solution || 'Step-by-step mathematical derivation.',
+        shortcut: item.shortcut,
+      };
+    });
+  }
+
+  if (Array.isArray(uploadedQuestionsData)) {
+    uploadedQuestionsData.forEach((item: any) => {
+      if (item?.key) {
+        keys[item.key.question_id] = item.key;
+      }
+    });
+  }
+
+  return keys;
+})();
 
 // Global In-Memory Store
 class SatPrepStore {
@@ -545,25 +731,14 @@ class SatPrepStore {
     // Seed questions with unique stems to prevent duplication
     const seenStems = new Set<string>();
 
-    FULL_MOCK_35_QUESTIONS.forEach((q) => {
-      const stemNorm = q.stem.trim();
-      seenStems.add(stemNorm);
-      this.questions.set(q.id, q);
-    });
-    Object.entries(FULL_MOCK_35_KEYS).forEach(([qid, k]) => this.keys.set(qid, k));
-
-    INITIAL_QUESTIONS.forEach((q) => {
+    ALL_PRACTICE_QUESTIONS.forEach((q) => {
       const stemNorm = q.stem.trim();
       if (!seenStems.has(stemNorm)) {
         seenStems.add(stemNorm);
         this.questions.set(q.id, q);
       }
     });
-    Object.entries(INITIAL_KEYS).forEach(([qid, k]) => {
-      if (!this.keys.has(qid)) {
-        this.keys.set(qid, k);
-      }
-    });
+    Object.entries(ALL_PRACTICE_KEYS).forEach(([qid, k]) => this.keys.set(qid, k));
 
     // Seed sample reports
     this.reports.push({
@@ -672,18 +847,19 @@ class SatPrepStore {
 
       [...simps, ...quads, ...series, ...di, ...arith].forEach(addQuestionUnique);
     } else {
-      // Topic test / Custom practice: filter by chosen topics or selected QIDs
-      let pool = Array.from(this.questions.values()).filter((q) => q.status === 'live' || q.status === 'reviewed');
+      // Topic test / Custom practice: filter strictly by chosen topics or selected QIDs
+      const targetTopicsNorm = (config.topics || []).map(normalizeTopicId);
 
-      if (config.source_type === 'manual' && config.selected_qids && config.selected_qids.length > 0) {
-        pool = pool.filter((q) => config.selected_qids!.includes(q.id));
-      } else if (config.topics && config.topics.length > 0) {
-        pool = pool.filter((q) => config.topics.includes(q.topic_id));
-      }
-
-      if (pool.length === 0) {
-        pool = Array.from(this.questions.values());
-      }
+      let pool = Array.from(this.questions.values()).filter((q) => {
+        if (q.status !== 'live' && q.status !== 'reviewed') return false;
+        if (config.source_type === 'manual' && config.selected_qids && config.selected_qids.length > 0) {
+          return config.selected_qids.includes(q.id);
+        }
+        if (targetTopicsNorm.length > 0) {
+          return targetTopicsNorm.includes(normalizeTopicId(q.topic_id));
+        }
+        return true;
+      });
 
       // Add unique matching questions first
       pool.forEach((q) => {
@@ -692,13 +868,45 @@ class SatPrepStore {
         }
       });
 
-      // If more questions needed, pull additional unique questions from the blueprint bank (NEVER duplicate)
-      if (selected.length < config.question_count) {
-        FULL_MOCK_35_QUESTIONS.forEach((q) => {
-          if (selected.length < config.question_count) {
-            addQuestionUnique(q);
-          }
-        });
+      // If more questions needed for the topic, generate procedural questions FOR THIS EXACT TOPIC
+      if (selected.length < config.question_count && config.topics && config.topics.length > 0) {
+        const primaryTopic = config.topics[0];
+        const topicNorm = normalizeTopicId(primaryTopic);
+        const topicObj = INITIAL_TOPICS.find((t) => normalizeTopicId(t.id) === topicNorm);
+        const needed = config.question_count - selected.length;
+        try {
+          const generated = generateProceduralQuestions(
+            primaryTopic,
+            topicObj ? topicObj.name : primaryTopic,
+            2,
+            needed
+          );
+          generated.forEach((gq, gIdx) => {
+            const genQId = `q-proc-${primaryTopic}-${Date.now()}-${gIdx + 1}`;
+            const qObj: Question = {
+              id: genQId,
+              stem: gq.stem,
+              options: gq.options,
+              type: 'mcq',
+              topic_id: primaryTopic,
+              difficulty_assigned: gq.difficulty || 2,
+              status: 'live',
+              source: 'template',
+              version: 1,
+            };
+            const kObj: QuestionKey = {
+              question_id: genQId,
+              correct_option: gq.correct_option.toLowerCase(),
+              solution: gq.solution,
+              shortcut: gq.shortcut,
+              option_rationales: gq.option_rationales,
+            };
+            this.addQuestion(qObj, kObj);
+            addQuestionUnique(qObj);
+          });
+        } catch (genErr) {
+          console.warn('Procedural topic question generation notice:', genErr);
+        }
       }
     }
 

@@ -436,7 +436,8 @@ ratio-and-proportion,"The ratio of boys to girls in a class is 5 : 4. If 4 girls
       });
       const data = await res.json();
       if (data.success) {
-        setSuccessBanner(`Successfully added ${data.added_count} questions to the live question bank!`);
+        const cloudNote = data.storage?.supabase === 'saved' ? ' and saved to Supabase cloud database' : '';
+        setSuccessBanner(`Successfully added ${data.added_count} questions to the live question bank${cloudNote}!`);
         setImportSuccessCount(data.added_count);
         setParsedRows([]);
         setUploadedPdfInfo(null);

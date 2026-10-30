@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '@/components/brand-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 import {
   LayoutDashboard,
   HelpCircle,
@@ -181,7 +182,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </button>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0">
+            <ThemeToggle />
             <Link
               href="/"
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/70 hover:border-blue-300 text-slate-700 hover:text-blue-700 text-xs font-semibold shadow-xs transition-all"

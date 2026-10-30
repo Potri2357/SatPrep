@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/brand-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { MathRenderer } from '@/lib/math-renderer';
 import { PaletteState, AssembledQuestion } from '@/lib/types';
 import { ScratchpadModal } from '@/components/scratchpad';
@@ -593,6 +594,8 @@ export default function ExamTestWindow() {
 
         {/* Right: Candidate Details & Finish Action */}
         <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle className="bg-white/10 hover:bg-white/20 border-white/20 text-white" />
+
           {isPracticeMode && (
             <button
               onClick={() => setShowSubmitModal(true)}
@@ -689,10 +692,10 @@ export default function ExamTestWindow() {
       {/* 3. MAIN WORKSPACE: Question Canvas (Left) + Question Palette (Right) */}
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT / CENTER: Question Canvas */}
-        <main className="flex-1 flex flex-col overflow-y-auto p-3 sm:p-4 lg:p-5 max-w-4xl mx-auto w-full">
+        <main className="flex-1 flex flex-col p-3 sm:p-4 lg:p-5 max-w-4xl mx-auto w-full overflow-hidden">
           {currentQ ? (
-            <div className="rounded-2xl bg-white border border-[#BCEBFC]/90 shadow-[0_4px_24px_rgba(0,92,230,0.06)] flex flex-col justify-between overflow-hidden">
-              <div className="p-4 sm:p-5 lg:p-6 space-y-3.5 flex-1">
+            <div className="rounded-2xl bg-white border border-[#BCEBFC]/90 shadow-[0_4px_24px_rgba(0,92,230,0.06)] flex flex-col h-full max-h-full overflow-hidden">
+              <div className="p-4 sm:p-5 lg:p-6 space-y-3.5 flex-1 overflow-y-auto">
                 {/* Question Info Bar */}
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 text-xs">
                   <div className="flex items-center gap-2">
@@ -1146,8 +1149,8 @@ export default function ExamTestWindow() {
                 )}
               </div>
 
-              {/* CARD ACTION FOOTER */}
-              <div className="px-4 sm:px-5 py-2.5 bg-slate-50/90 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
+              {/* CARD ACTION FOOTER - Pinned firmly in place */}
+              <div className="px-4 sm:px-5 py-2.5 bg-slate-50/95 backdrop-blur-sm border-t border-slate-200 flex flex-wrap items-center justify-between gap-2.5 shrink-0 sticky bottom-0 z-10 shadow-xs">
                 {isPracticeMode ? (
                   <>
                     <div className="flex items-center gap-2">

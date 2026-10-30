@@ -5,9 +5,13 @@ import {
   generateProceduralQuestions,
   GeneratedQuestionPayload,
 } from '@/lib/gemini';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
+import fs from 'fs';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
+
+const DATA_FILE_PATH = path.join(process.cwd(), 'src/data/uploaded_questions.json');
 
 export async function POST(req: NextRequest) {
   try {
@@ -90,33 +94,71 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Non-blocking async upsert into Supabase for persistent background sync
-    (async () => {
-      try {
-        // Ensure topic exists in topics table
-        await supabase.from('topics').upsert(
-          [
-            {
-              id: topic_id,
-              subject_id: 'quant',
-              name: topicName,
-              group_name: topicObj?.group_name || 'Arithmetic',
-              target_stock: 150,
-              min_stock: 50,
-              is_template_eligible: true,
-              is_di: false,
-              mains_only: false,
-            },
-          ],
-          { onConflict: 'id' }
-        );
+    // 1. Direct persistent upsert into Supabase (await so Vercel does not terminate lambda prematurely)
+    try {
+      await supabaseAdmin.from('topics').upsert(
+        [
+          {
+            id: topic_id,
+            subject_id: 'quant',
+            name: topicName,
+            group_name: topicObj?.group_name || 'Arithmetic',
+            target_stock: 150,
+            min_stock: 50,
+            is_template_eligible: true,
+            is_di: false,
+            mains_only: false,
+          },
+        ],
+        { onConflict: 'id' }
+      );
 
-        await supabase.from('questions').upsert(questionsToUpsert);
-        await supabase.from('question_keys').upsert(keysToUpsert);
-      } catch (sbErr) {
-        console.warn('Supabase questions generation async upsert notice:', sbErr);
+      const [qRes, kRes] = await Promise.all([
+        supabaseAdmin.from('questions').upsert(questionsToUpsert),
+        supabaseAdmin.from('question_keys').upsert(keysToUpsert),
+      ]);
+
+      if (qRes.error || kRes.error) {
+        console.warn('Supabase questions generation upsert notice:', qRes.error, kRes.error);
       }
-    })();
+    } catch (sbErr) {
+      console.warn('Supabase questions generation upsert error:', sbErr);
+    }
+
+    // 2. Local disk backup cache if running in writable environment
+    try {
+      let existingRows: any[] = [];
+      if (fs.existsSync(DATA_FILE_PATH)) {
+        existingRows = JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf-8')) || [];
+      }
+      for (const sq of savedQuestions) {
+        existingRows.push({
+          question: {
+            id: sq.id,
+            topic_id: sq.topic_id,
+            type: sq.type,
+            difficulty_assigned: sq.difficulty_assigned,
+            status: sq.status,
+            source: sq.source,
+            version: sq.version,
+            stem: sq.stem,
+            options: sq.options,
+          },
+          key: {
+            question_id: sq.id,
+            correct_option: sq.correct_option,
+            solution: sq.solution,
+            shortcut: sq.shortcut,
+            option_rationales: sq.option_rationales,
+          },
+        });
+      }
+      const dir = path.dirname(DATA_FILE_PATH);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(existingRows, null, 2), 'utf-8');
+    } catch (diskErr) {
+      // Non-fatal if serverless filesystem is read-only
+    }
 
     const job = globalStore.createJob({
       topic_id,

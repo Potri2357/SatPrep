@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandLogo } from '@/components/brand-logo';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { cn } from '@/lib/utils';
 import {
   Menu,
@@ -91,15 +92,15 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           <Link
             href="/"
             className="group flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-white/95 border border-[#BCEBFC] shadow-[0_2px_10px_rgba(0,92,230,0.08)] hover:border-[#005CE6]/60 hover:shadow-[0_4px_16px_rgba(0,92,230,0.15)] hover:bg-[#F0FAFF] transition-all focus:outline-none"
-            aria-label="SatPrep - Banking Exam Prep"
+            aria-label="SwS - Banking Exam Prep"
           >
             <div className="relative flex items-center justify-center p-0.5 rounded-xl bg-gradient-to-tr from-[#005CE6]/15 via-[#60CEF8]/25 to-white shadow-2xs group-hover:scale-105 transition-transform">
               <BrandLogo size={28} showWordmark={false} />
             </div>
             <span className="font-black text-[18px] tracking-tight flex items-center select-none">
-              <span className="text-slate-900 group-hover:text-slate-950 transition-colors">Sat</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] drop-shadow-[0_1px_2px_rgba(0,92,230,0.25)]">
-                Prep
+              <span className="text-slate-900 dark:text-white group-hover:text-slate-950 transition-colors">Sw</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] dark:text-blue-400 drop-shadow-[0_1px_2px_rgba(0,92,230,0.25)]">
+                S
               </span>
             </span>
           </Link>
@@ -117,11 +118,11 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
                 className={cn(
                   "flex items-center gap-1.5 text-[13.5px] transition-colors duration-150 relative py-1.5 group",
                   active
-                    ? "text-[#005CE6] font-bold"
-                    : "text-slate-600 font-medium hover:text-[#005CE6]"
+                    ? "text-[#005CE6] dark:text-blue-400 font-bold"
+                    : "text-slate-600 dark:text-slate-300 font-medium hover:text-[#005CE6]"
                 )}
               >
-                <Icon className={cn("w-4 h-4 transition-colors", active ? "text-[#005CE6]" : "text-slate-400 group-hover:text-[#005CE6]")} />
+                <Icon className={cn("w-4 h-4 transition-colors", active ? "text-[#005CE6] dark:text-blue-400" : "text-slate-400 group-hover:text-[#005CE6]")} />
                 <span>{item.title}</span>
                 {active && (
                   <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#005CE6] rounded-full" />
@@ -131,8 +132,10 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
           })}
         </nav>
 
-        {/* Right: Clean Candidate Avatar Only */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Right: Theme Toggle & Candidate Avatar */}
+        <div className="flex items-center gap-2.5 shrink-0">
+          <ThemeToggle />
+
           <div className="relative" ref={dropdownRef}>
             <button
               type="button"

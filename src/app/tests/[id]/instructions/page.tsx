@@ -155,7 +155,6 @@ export default function ExamInstructionsPage() {
   }, [testId]);
 
   const handleStartExam = () => {
-    if (!hasAgreed) return;
     router.push(`/tests/${testId}/exam`);
   };
 
@@ -432,29 +431,13 @@ export default function ExamInstructionsPage() {
               </div>
             </div>
 
-            {/* Mandatory Declaration Checkbox */}
-            <div className="pt-4 border-t border-slate-100 space-y-4">
-              <label className="flex items-start gap-3 cursor-pointer select-none group">
-                <input
-                  type="checkbox"
-                  checked={hasAgreed}
-                  onChange={(e) => setHasAgreed(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded text-[#2563EB] focus:ring-blue-500 border-slate-300 accent-[#2563EB]"
-                />
-                <span className="text-xs text-slate-600 group-hover:text-slate-900 leading-snug">
-                  {isPracticeMode
-                    ? 'I understand that this is a practice drill with immediate solutions, speed shortcuts, and zero negative markings.'
-                    : 'I have read and understood all instructions. I declare that I will attempt the exam independently and without any unfair means.'}
-                </span>
-              </label>
-
-              {/* Ready to Begin Button (Chip UI Primary) */}
+            {/* Direct Launch Exam Button */}
+            <div className="pt-4 border-t border-slate-100">
               <button
                 onClick={handleStartExam}
-                disabled={!hasAgreed}
-                className="w-full neu-chip-primary disabled:opacity-40 disabled:cursor-not-allowed uppercase tracking-wider text-xs py-3.5 cursor-pointer shadow-md"
+                className="w-full neu-chip-primary uppercase tracking-wider text-xs py-3.5 cursor-pointer shadow-md flex items-center justify-center gap-2 font-bold hover:shadow-lg transition-all"
               >
-                <span>{isPracticeMode ? 'Launch Practice Drill' : 'I am ready to begin the exam'}</span>
+                <span>{isPracticeMode ? 'Launch Practice Drill' : 'I am ready to begin the exam — Start Test'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -463,7 +446,7 @@ export default function ExamInstructionsPage() {
       </main>
 
       <footer className="h-12 border-t border-blue-100 bg-white/80 px-6 flex items-center justify-center text-[11px] text-slate-400">
-        SatPrep Exam Engine // Secure Testing Terminal
+        SwS Exam Engine // Secure Testing Terminal
       </footer>
     </div>
   );

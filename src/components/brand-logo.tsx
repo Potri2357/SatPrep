@@ -80,11 +80,11 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         <circle cx="50" cy="50" r="2.5" fill="#FFFFFF" fillOpacity="0.4" />
       </svg>
 
-      {/* Wordmark (Sat in solid Deep Navy #0F172A, Prep in Gradient Royal Blue #005CE6) */}
+      {/* Wordmark (Sw in solid Deep Navy #0F172A, S in Gradient Royal Blue #005CE6) */}
       {showWordmark && (
         <span className="font-extrabold tracking-tight text-xl font-['DM_Sans'] leading-none">
-          <span className={isDark ? 'text-white' : 'text-[#0F172A]'}>Sat</span>
-          <span className={isDark ? 'text-blue-300' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6]'}>Prep</span>
+          <span className={isDark ? 'text-white' : 'text-[#0F172A] dark:text-white'}>Sw</span>
+          <span className={isDark ? 'text-blue-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] dark:text-blue-400'}>S</span>
         </span>
       )}
     </div>

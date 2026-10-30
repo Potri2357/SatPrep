@@ -523,7 +523,7 @@ export default function OverallResultsPage() {
       {/* Footer */}
       <footer className="border-t border-[#E2E8F0] py-8 bg-white text-xs text-slate-500 mt-12">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 SatPrep. Banking Exam Performance Intelligence.</p>
+          <p>© 2026 SwS. Banking Exam Performance Intelligence.</p>
           <div className="flex gap-6 font-semibold">
             <Link href="/results" className="text-[#005CE6]">Overall Results</Link>
             <Link href="/tests" className="hover:text-[#005CE6] transition-colors">Mock Tests</Link>

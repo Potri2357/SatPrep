@@ -155,7 +155,7 @@ export default function ResultAnalysisPage() {
           <p className="text-sm font-semibold text-slate-600">Loading test results...</p>
         </main>
         <footer className="py-6 text-xs text-center text-slate-400">
-          SatPrep &bull; Official Examination Analytics
+          SwS &bull; Official Examination Analytics
         </footer>
       </div>
     );
@@ -192,7 +192,7 @@ export default function ResultAnalysisPage() {
           </div>
         </main>
         <footer className="py-6 text-xs text-center text-slate-400">
-          SatPrep &bull; Official Examination Analytics
+          SwS &bull; Official Examination Analytics
         </footer>
       </div>
     );

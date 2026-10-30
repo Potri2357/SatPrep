@@ -32,7 +32,7 @@ export default function AuthPage() {
         <div className="max-w-md w-full mx-auto my-auto py-10">
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#0F172A] mb-2">
-              {tab === 'signin' ? 'Welcome back to SatPrep' : 'Start your bank exam prep'}
+              {tab === 'signin' ? 'Welcome back to SwS' : 'Start your bank exam prep'}
             </h1>
             <p className="text-sm text-slate-500">
               {tab === 'signin'
@@ -199,12 +199,12 @@ export default function AuthPage() {
           </form>
 
           <p className="text-center text-xs text-slate-400 mt-6">
-            By continuing, you agree to SatPrep Terms of Service &amp; Privacy Policy.
+            By continuing, you agree to SwS Terms of Service &amp; Privacy Policy.
           </p>
         </div>
 
         <div className="text-xs text-slate-400 text-center lg:text-left">
-          © 2026 SatPrep. Dedicated Bank Exam Platform.
+          © 2026 SwS. Dedicated Bank Exam Platform.
         </div>
       </div>
 

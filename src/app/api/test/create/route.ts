@@ -1,10 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { globalStore } from '@/lib/store';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { title, exam_id, mode, topics, question_count, duration_min, source_type, selected_qids, feedback_mode } = body;
+
+    // Sync any newly saved/generated questions from Supabase into runtime store
+    try {
+      const { data: sbQuestions } = await supabaseAdmin
+        .from('questions')
+        .select('*')
+        .limit(200);
+
+      const { data: sbKeys } = await supabaseAdmin
+        .from('question_keys')
+        .select('*')
+        .limit(200);
+
+      if (Array.isArray(sbQuestions) && sbQuestions.length > 0) {
+        const keyMap = new Map<string, any>();
+        if (Array.isArray(sbKeys)) {
+          for (const k of sbKeys) keyMap.set(k.question_id, k);
+        }
+        for (const q of sbQuestions) {
+          const k = keyMap.get(q.id);
+          globalStore.addQuestion(q, k || {
+            question_id: q.id,
+            correct_option: 'a',
+            solution: 'Detailed calculation available in review.',
+          });
+        }
+      }
+    } catch {
+      // Non-blocking fallback to local store
+    }
 
     const test = globalStore.assembleTest({
       title: title || body.test_name,

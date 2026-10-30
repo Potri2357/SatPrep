@@ -454,7 +454,7 @@ export default function LandingPage() {
       <footer className="border-t border-[#E2E8F0] py-10 bg-white text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <BrandLogo size={32} showWordmark={true} />
-          <p>© 2026 SatPrep. Bank Exam Quantitative Aptitude Platform. All rights reserved.</p>
+          <p>© 2026 SwS. Bank Exam Quantitative Aptitude Platform. All rights reserved.</p>
           <div className="flex gap-6 font-semibold">
             <Link href="/results" className="hover:text-[#2563EB] transition-colors">Exam Results</Link>
             <Link href="/practice" className="hover:text-[#2563EB] transition-colors">Topic Drills</Link>

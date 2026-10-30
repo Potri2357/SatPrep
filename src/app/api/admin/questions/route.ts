@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ALL_PRACTICE_KEYS, globalStore } from '@/lib/store';
 import { Question, QuestionKey } from '@/lib/types';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import fs from 'fs';
 import path from 'path';
 
@@ -84,12 +84,12 @@ export async function GET() {
 
   // 4. Supabase Cloud Database Questions & Keys
   try {
-    const { data: sbQuestions, error: qErr } = await supabase
+    const { data: sbQuestions, error: qErr } = await supabaseAdmin
       .from('questions')
       .select('*')
       .order('id', { ascending: false });
 
-    const { data: sbKeys } = await supabase
+    const { data: sbKeys } = await supabaseAdmin
       .from('question_keys')
       .select('*');
 
@@ -166,7 +166,7 @@ export async function PUT(req: NextRequest) {
         version: (question.version || 1) + 1,
       };
 
-      await supabase.from('questions').upsert([qRow]);
+      await supabaseAdmin.from('questions').upsert([qRow]);
 
       const correctOpt = (key?.correct_option || question.correct_option || 'a').toLowerCase();
       const sol = key?.solution || question.solution || 'Updated solution.';
@@ -179,7 +179,7 @@ export async function PUT(req: NextRequest) {
         shortcut: short,
       };
 
-      await supabase.from('question_keys').upsert([kRow]);
+      await supabaseAdmin.from('question_keys').upsert([kRow]);
     } catch (sbErr) {
       console.warn('Supabase PUT notice:', sbErr);
     }
@@ -311,6 +311,7 @@ export async function POST(req: NextRequest) {
 
     // 1. Save to Supabase Cloud Database
     let supabaseSaved = false;
+    let supabaseError: any = null;
     try {
       if (supabaseQuestionRows.length > 0) {
         const uniqueTopics = Array.from(new Set(supabaseQuestionRows.map((r) => r.topic_id)));
@@ -325,17 +326,19 @@ export async function POST(req: NextRequest) {
           target_stock: 150,
           min_stock: 50,
         }));
-        await supabase.from('topics').upsert(topicRows, { onConflict: 'id' });
+        await supabaseAdmin.from('topics').upsert(topicRows, { onConflict: 'id' });
 
-        const { error: qErr } = await supabase.from('questions').upsert(supabaseQuestionRows);
-        const { error: kErr } = await supabase.from('question_keys').upsert(supabaseKeyRows);
+        const { error: qErr } = await supabaseAdmin.from('questions').upsert(supabaseQuestionRows);
+        const { error: kErr } = await supabaseAdmin.from('question_keys').upsert(supabaseKeyRows);
         if (!qErr && !kErr) {
           supabaseSaved = true;
         } else {
+          supabaseError = qErr || kErr;
           console.warn('Supabase upsert warning:', qErr, kErr);
         }
       }
-    } catch (sbErr) {
+    } catch (sbErr: any) {
+      supabaseError = sbErr?.message || sbErr;
       console.warn('Supabase sync notice:', sbErr);
     }
 
