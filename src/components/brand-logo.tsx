@@ -53,7 +53,8 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           cx="50"
           cy="50"
           r="47"
-          className={theme === 'dark' ? 'fill-slate-800 stroke-blue-500' : theme === 'light' ? 'fill-[#F0FAFF] stroke-[url(#brand-ring-grad)]' : 'fill-[#F0FAFF] dark:fill-slate-800 stroke-[url(#brand-ring-grad)] dark:stroke-blue-500'}
+          fill={theme === 'dark' ? '#1E293B' : '#F0FAFF'}
+          stroke={theme === 'dark' ? '#3B82F6' : 'url(#brand-ring-grad)'}
           strokeWidth="2.5"
         />
         <circle cx="50" cy="50" r="46" fill="url(#brand-logo-grid)" />
@@ -73,7 +74,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             width="18"
             height="56"
             rx="9"
-            className={theme === 'dark' ? 'fill-blue-300' : theme === 'light' ? 'fill-[#0F172A]' : 'fill-[#0F172A] dark:fill-blue-300'}
+            fill={theme === 'dark' ? '#93C5FD' : navy700}
           />
           <rect
             x="22"
@@ -81,7 +82,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             width="56"
             height="18"
             rx="9"
-            className={theme === 'dark' ? 'fill-blue-300' : theme === 'light' ? 'fill-[#0F172A]' : 'fill-[#0F172A] dark:fill-blue-300'}
+            fill={theme === 'dark' ? '#93C5FD' : navy700}
           />
         </g>
 

@@ -11,7 +11,20 @@ import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const DATA_FILE_PATH = path.join(process.cwd(), 'src/data/uploaded_questions.json');
+const DATA_FILE_PATH = path.join(process.cwd(), 'data/uploaded_questions.json');
+const LEGACY_DATA_PATH = path.join(process.cwd(), 'src/data/uploaded_questions.json');
+
+function getExistingRows(): any[] {
+  try {
+    if (fs.existsSync(DATA_FILE_PATH)) {
+      return JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf-8')) || [];
+    }
+    if (fs.existsSync(LEGACY_DATA_PATH)) {
+      return JSON.parse(fs.readFileSync(LEGACY_DATA_PATH, 'utf-8')) || [];
+    }
+  } catch {}
+  return [];
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -125,12 +138,9 @@ export async function POST(req: NextRequest) {
       console.warn('Supabase questions generation upsert error:', sbErr);
     }
 
-    // 2. Local disk backup cache if running in writable environment
+    // 2. Local disk backup cache if running in writable environment (outside src to avoid HMR loops)
     try {
-      let existingRows: any[] = [];
-      if (fs.existsSync(DATA_FILE_PATH)) {
-        existingRows = JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf-8')) || [];
-      }
+      const existingRows = getExistingRows();
       for (const sq of savedQuestions) {
         existingRows.push({
           question: {

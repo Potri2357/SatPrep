@@ -7,7 +7,20 @@ import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const DATA_FILE_PATH = path.join(process.cwd(), 'src/data/uploaded_questions.json');
+const DATA_FILE_PATH = path.join(process.cwd(), 'data/uploaded_questions.json');
+const LEGACY_DATA_PATH = path.join(process.cwd(), 'src/data/uploaded_questions.json');
+
+function readPersistedQuestions(): any[] {
+  try {
+    if (fs.existsSync(DATA_FILE_PATH)) {
+      return JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf-8')) || [];
+    }
+    if (fs.existsSync(LEGACY_DATA_PATH)) {
+      return JSON.parse(fs.readFileSync(LEGACY_DATA_PATH, 'utf-8')) || [];
+    }
+  } catch {}
+  return [];
+}
 
 export async function GET() {
   const map = new Map<string, any>();
@@ -23,23 +36,21 @@ export async function GET() {
     map.set(q.id, { ...q });
   }
 
-  // 2. Persisted local file questions
+  // 2. Persisted local file questions (outside src to prevent Fast Refresh loops)
   try {
-    if (fs.existsSync(DATA_FILE_PATH)) {
-      const persisted = JSON.parse(fs.readFileSync(DATA_FILE_PATH, 'utf-8'));
-      if (Array.isArray(persisted)) {
-        for (const item of persisted) {
-          if (item?.question) {
-            map.set(item.question.id, { ...item.question });
-          }
-          if (item?.key) {
-            keysMap.set(item.key.question_id, item.key);
-          }
+    const persisted = readPersistedQuestions();
+    if (Array.isArray(persisted)) {
+      for (const item of persisted) {
+        if (item?.question) {
+          map.set(item.question.id, { ...item.question });
+        }
+        if (item?.key) {
+          keysMap.set(item.key.question_id, item.key);
         }
       }
     }
   } catch (err) {
-    console.warn('Could not read uploaded_questions.json:', err);
+    console.warn('Could not read uploaded questions:', err);
   }
 
   // 3. IBPS PO 2025 Extracted Quant Questions
