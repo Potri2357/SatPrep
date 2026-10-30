@@ -98,13 +98,13 @@ export default function GenerationControlCentrePage() {
       </div>
 
       {/* Create Questions Form */}
-      <div className="p-6 rounded-3xl bg-white border border-blue-100 shadow-xs space-y-5 relative z-20">
+      <div className="p-6 rounded-3xl bg-white border border-blue-100 shadow-xs space-y-5 relative z-30">
         <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
           <Zap className="w-4 h-4 text-blue-600" />
           <span>Generate New Practice Questions</span>
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs relative z-30">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-xs relative z-40">
           <div>
             <label className="font-semibold text-slate-700 block mb-1.5">Subject Topic</label>
             <CustomDropdown

@@ -10,15 +10,11 @@ interface BrandLogoProps {
 export const BrandLogo: React.FC<BrandLogoProps> = ({
   size = 36,
   showWordmark = true,
-  theme = 'light',
+  theme = 'auto',
   className = '',
 }) => {
-  // Brand colors using the 5-color palette
-  const isDark = theme === 'dark';
   const blue500 = "#005CE6"; // Deep Cobalt Royal Blue
   const navy700 = "#0F172A"; // High-contrast Deep Slate Navy
-  const ice100 = "#F0FAFF";
-  const iceRing = "#BCEBFC";
 
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
@@ -57,8 +53,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           cx="50"
           cy="50"
           r="47"
-          fill={isDark ? '#1E293B' : ice100}
-          stroke={isDark ? '#3B82F6' : 'url(#brand-ring-grad)'}
+          className={theme === 'dark' ? 'fill-slate-800 stroke-blue-500' : theme === 'light' ? 'fill-[#F0FAFF] stroke-[url(#brand-ring-grad)]' : 'fill-[#F0FAFF] dark:fill-slate-800 stroke-[url(#brand-ring-grad)] dark:stroke-blue-500'}
           strokeWidth="2.5"
         />
         <circle cx="50" cy="50" r="46" fill="url(#brand-logo-grid)" />
@@ -70,21 +65,35 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
           <rect x="22" y="41" width="56" height="18" rx="9" fill={blue500} />
         </g>
 
-        {/* Lower-Right half in Deep Slate Navy (#0F172A) */}
+        {/* Lower-Right half in Deep Slate Navy in light mode, Sky Blue in dark mode */}
         <g clipPath="url(#brand-lower-right-clip)">
-          <rect x="41" y="22" width="18" height="56" rx="9" fill={isDark ? '#93C5FD' : navy700} />
-          <rect x="22" y="41" width="56" height="18" rx="9" fill={isDark ? '#93C5FD' : navy700} />
+          <rect
+            x="41"
+            y="22"
+            width="18"
+            height="56"
+            rx="9"
+            className={theme === 'dark' ? 'fill-blue-300' : theme === 'light' ? 'fill-[#0F172A]' : 'fill-[#0F172A] dark:fill-blue-300'}
+          />
+          <rect
+            x="22"
+            y="41"
+            width="56"
+            height="18"
+            rx="9"
+            className={theme === 'dark' ? 'fill-blue-300' : theme === 'light' ? 'fill-[#0F172A]' : 'fill-[#0F172A] dark:fill-blue-300'}
+          />
         </g>
 
         {/* Subtle center junction dot */}
-        <circle cx="50" cy="50" r="2.5" fill="#FFFFFF" fillOpacity="0.4" />
+        <circle cx="50" cy="50" r="2.5" fill="#FFFFFF" fillOpacity="0.5" />
       </svg>
 
-      {/* Wordmark (Sw in solid Deep Navy #0F172A, S in Gradient Royal Blue #005CE6) */}
+      {/* Wordmark (Sw in solid Deep Navy #0F172A / white in dark, S in Gradient Royal Blue #005CE6) */}
       {showWordmark && (
         <span className="font-extrabold tracking-tight text-xl font-['DM_Sans'] leading-none">
-          <span className={isDark ? 'text-white' : 'text-[#0F172A] dark:text-white'}>Sw</span>
-          <span className={isDark ? 'text-blue-400' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] dark:text-blue-400'}>S</span>
+          <span className={theme === 'dark' ? 'text-white' : theme === 'light' ? 'text-[#0F172A]' : 'text-[#0F172A] dark:text-white'}>Sw</span>
+          <span className={theme === 'dark' ? 'text-blue-400' : theme === 'light' ? 'text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6]' : 'text-transparent bg-clip-text bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] dark:text-blue-400'}>S</span>
         </span>
       )}
     </div>

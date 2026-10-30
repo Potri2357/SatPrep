@@ -112,7 +112,7 @@ export function Features10() {
   const [isPaused, setIsPaused] = useState(false);
 
   return (
-    <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-white via-[#F7FDFF] to-white border-t border-slate-200/80">
+    <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-white via-[#F7FDFF] to-white dark:from-[#090E17] dark:via-[#0D1524] dark:to-[#090E17] border-t border-slate-200/80 dark:border-slate-800 transition-colors">
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-[#005CE6]/6 via-[#60CEF8]/10 to-transparent rounded-full blur-3xl" />
@@ -122,22 +122,22 @@ export function Features10() {
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E0F4FD] border border-[#BCEBFC] text-[#005CE6] text-xs font-bold tracking-wide shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E0F4FD] dark:bg-blue-950/80 border border-[#BCEBFC] dark:border-blue-900 text-[#005CE6] dark:text-blue-400 text-xs font-bold tracking-wide shadow-xs">
             <Sparkles className="w-3.5 h-3.5" />
             <span>INTERCONNECTED EXAM ECOSYSTEM</span>
           </div>
 
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A]">
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A] dark:text-white">
             The Live Banking Quant Engine Map
           </h2>
 
-          <p className="text-slate-600 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Every submodule in SatPrep syncs directly with the central IBPS timing and penalty algorithms — giving you authentic exam velocity before test day.
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Every submodule in SwS syncs directly with the central IBPS timing and penalty algorithms — giving you authentic exam velocity before test day.
           </p>
         </div>
 
         {/* Integration Map Visualizer with Orbiting Nodes */}
-        <div className="relative rounded-3xl bg-white/80 backdrop-blur-xl border border-[#BCEBFC]/80 shadow-[0_20px_50px_rgba(0,92,230,0.08)] p-6 sm:p-10 mb-12 overflow-hidden">
+        <div className="relative rounded-3xl bg-white/80 dark:bg-[#111A2E]/90 backdrop-blur-xl border border-[#BCEBFC]/80 dark:border-slate-800 shadow-[0_20px_50px_rgba(0,92,230,0.08)] p-6 sm:p-10 mb-12 overflow-hidden transition-colors">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left / Center: Interactive Orbital System (7 Cols) */}
@@ -222,10 +222,10 @@ export function Features10() {
                           }}
                           onMouseLeave={() => setIsPaused(false)}
                           className={cn(
-                            "group relative flex items-center gap-2 p-2 sm:p-2.5 rounded-2xl bg-white border shadow-md transition-all duration-300 hover:scale-115 cursor-pointer text-left",
+                            "group relative flex items-center gap-2 p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-[#162238] border shadow-md transition-all duration-300 hover:scale-115 cursor-pointer text-left",
                             isSelected
                               ? "border-[#005CE6] ring-3 ring-[#005CE6]/20 shadow-[0_8px_25px_rgba(0,92,230,0.22)] scale-110"
-                              : "border-slate-200/90 hover:border-[#0096D6]/60"
+                              : "border-slate-200/90 dark:border-slate-700 hover:border-[#0096D6]/60"
                           )}
                         >
                           <div
@@ -239,10 +239,10 @@ export function Features10() {
                           </div>
 
                           <div className="hidden sm:block pr-1">
-                            <p className="text-[11px] font-bold text-slate-800 leading-tight whitespace-nowrap">
+                            <p className="text-[11px] font-bold text-slate-800 dark:text-slate-100 leading-tight whitespace-nowrap">
                               {node.name}
                             </p>
-                            <span className="text-[9px] font-medium text-slate-400 block whitespace-nowrap font-mono">
+                            <span className="text-[9px] font-medium text-slate-400 dark:text-slate-400 block whitespace-nowrap font-mono">
                               {node.category}
                             </span>
                           </div>
@@ -271,17 +271,17 @@ export function Features10() {
 
             {/* Right: Active Node Detail Inspector Card (5 Cols) */}
             <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-6">
-              <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-white via-[#F8FBFF] to-white border border-[#BCEBFC] shadow-sm space-y-5">
+              <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-white via-[#F8FBFF] to-white dark:from-[#162238] dark:via-[#111A2E] dark:to-[#162238] border border-[#BCEBFC] dark:border-slate-700 shadow-sm space-y-5">
                 
                 {/* Node Status Tag */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] font-bold text-emerald-700 font-mono uppercase tracking-wider">
+                    <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 font-mono uppercase tracking-wider">
                       Live Subsystem
                     </span>
                   </div>
-                  <span className="text-[11px] font-bold text-[#005CE6] bg-[#E0F4FD] px-2.5 py-0.5 rounded-full border border-[#BCEBFC]">
+                  <span className="text-[11px] font-bold text-[#005CE6] dark:text-blue-300 bg-[#E0F4FD] dark:bg-blue-950/80 px-2.5 py-0.5 rounded-full border border-[#BCEBFC] dark:border-blue-800">
                     {activeNode.metric}
                   </span>
                 </div>
@@ -301,29 +301,29 @@ export function Features10() {
                     })}
                   </div>
                   <div>
-                    <h3 className="text-lg font-extrabold text-[#0F172A] leading-snug">
+                    <h3 className="text-lg font-extrabold text-[#0F172A] dark:text-white leading-snug">
                       {activeNode.name}
                     </h3>
-                    <p className="text-xs font-semibold text-slate-500 font-mono">
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-mono">
                       {activeNode.category}
                     </p>
                   </div>
                 </div>
 
                 {/* Node Description */}
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                   {activeNode.description}
                 </p>
 
                 {/* Integration Checklist Points */}
-                <div className="pt-3 border-t border-slate-100 space-y-2">
+                <div className="pt-3 border-t border-slate-100 dark:border-slate-700 space-y-2">
                   {[
                     "Zero latency synchronized countdown timer",
                     "IBPS Prelims standard -0.25 penalty weighting",
                     "Instant step-by-step breakdown with digital roots & unit digit rules"
                   ].map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs text-slate-700">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <div key={idx} className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       <span>{feat}</span>
                     </div>
                   ))}

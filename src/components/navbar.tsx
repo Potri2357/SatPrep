@@ -85,16 +85,16 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
   };
 
   return (
-    <header className={cn("sticky top-0 z-50 w-full bg-[#F7FDFF]/90 backdrop-blur-xl border-b border-[#BCEBFC]/80 shadow-[0_1px_3px_rgba(0,92,230,0.03),0_4px_16px_rgba(0,92,230,0.03)] transition-all", className)}>
+    <header className={cn("sticky top-0 z-50 w-full bg-[#F7FDFF]/90 dark:bg-[#0B1324]/90 backdrop-blur-xl border-b border-[#BCEBFC]/80 dark:border-slate-800 shadow-[0_1px_3px_rgba(0,92,230,0.03),0_4px_16px_rgba(0,92,230,0.03)] transition-colors", className)}>
       <div className="max-w-7xl mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
         {/* Left: Highlighted Brand Name and Icon Alone */}
         <div className="flex items-center">
           <Link
             href="/"
-            className="group flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-white/95 border border-[#BCEBFC] shadow-[0_2px_10px_rgba(0,92,230,0.08)] hover:border-[#005CE6]/60 hover:shadow-[0_4px_16px_rgba(0,92,230,0.15)] hover:bg-[#F0FAFF] transition-all focus:outline-none"
+            className="group flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-white/95 dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-700 shadow-[0_2px_10px_rgba(0,92,230,0.08)] hover:border-[#005CE6]/60 hover:shadow-[0_4px_16px_rgba(0,92,230,0.15)] hover:bg-[#F0FAFF] dark:hover:bg-slate-800 transition-all focus:outline-none"
             aria-label="SwS - Banking Exam Prep"
           >
-            <div className="relative flex items-center justify-center p-0.5 rounded-xl bg-gradient-to-tr from-[#005CE6]/15 via-[#60CEF8]/25 to-white shadow-2xs group-hover:scale-105 transition-transform">
+            <div className="relative flex items-center justify-center p-0.5 rounded-xl bg-gradient-to-tr from-[#005CE6]/15 via-[#60CEF8]/25 to-white dark:to-slate-800 shadow-2xs group-hover:scale-105 transition-transform">
               <BrandLogo size={28} showWordmark={false} />
             </div>
             <span className="font-black text-[18px] tracking-tight flex items-center select-none">
@@ -157,13 +157,13 @@ export const Navbar: React.FC<NavbarProps> = ({ className = '' }) => {
 
             {/* Clean Dropdown Menu */}
             {profileDropdownOpen && (
-              <div className="absolute right-0 mt-2.5 w-64 max-w-[calc(100vw-2rem)] rounded-2xl bg-white/98 backdrop-blur-2xl border border-[#BCEBFC] shadow-[0_12px_40px_rgba(0,92,230,0.08)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
+              <div className="absolute right-0 mt-2.5 w-64 max-w-[calc(100vw-2rem)] rounded-2xl bg-white/98 dark:bg-[#111A2E] backdrop-blur-2xl border border-[#BCEBFC] dark:border-slate-700 shadow-[0_12px_40px_rgba(0,92,230,0.08)] p-2 z-[60] animate-in fade-in slide-in-from-top-1 duration-150 space-y-1">
                 {/* Profile Header */}
-                <div className="p-3 rounded-xl bg-[#F0FAFF] border border-[#BCEBFC]/60 flex items-center gap-3">
+                <div className="p-3 rounded-xl bg-[#F0FAFF] dark:bg-slate-800/80 border border-[#BCEBFC]/60 dark:border-slate-700 flex items-center gap-3">
                   <CandidateAvatar size={36} />
                   <div className="min-w-0 flex-1">
-                    <div className="font-bold text-xs text-slate-900 truncate">Sathyamoorthi M</div>
-                    <div className="text-[11px] text-slate-500 truncate">sathyamoorthi@satprep.in</div>
+                    <div className="font-bold text-xs text-slate-900 dark:text-white truncate">Sathyamoorthi M</div>
+                    <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">sathyamoorthi@satprep.in</div>
                   </div>
                 </div>
 
