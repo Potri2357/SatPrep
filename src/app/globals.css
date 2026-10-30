@@ -144,6 +144,216 @@ button, input, select, textarea {
   color: #FFFFFF !important;
 }
 
+/* ==============================================================================
+   Surround-Adaptive Perceptual Color Modeling (helmlab dark-mode adaptation)
+   Perceptual adaptation of semantic hues for dark surrounds:
+   - Shift saturated light-mode hues to higher lightness and calibrated vibrance
+   - Translucent tinted surfaces (rgba(color, 0.12)) for soft badges & pills
+   - Calibrated soft borders (rgba(color, 0.28)) to prevent glare / chromatic vibration
+   - Clear contrast for text: primary #F8FAFC, secondary #94A3B8, tertiary #64748B
+   ============================================================================== */
+
+/* 1. BLUE (Sky / Brand Accent) */
+.dark .text-blue-500,
+.dark .text-blue-600,
+.dark .text-blue-700,
+.dark .text-blue-800,
+.dark .text-blue-900,
+.dark .text-\[\#005CE6\],
+.dark .text-\[\#004dc2\],
+.dark .text-\[\#003B99\],
+.dark .text-\[\#1E40AF\] {
+  color: #60A5FA !important;
+}
+.dark .bg-blue-50,
+.dark .bg-blue-100 {
+  background-color: rgba(96, 165, 250, 0.12) !important;
+  border-color: rgba(96, 165, 250, 0.28) !important;
+}
+.dark .border-blue-100,
+.dark .border-blue-200,
+.dark .border-blue-300 {
+  border-color: rgba(96, 165, 250, 0.28) !important;
+}
+
+/* 2. GREEN / EMERALD (Success / Answered / Accuracy) */
+.dark .text-emerald-500,
+.dark .text-emerald-600,
+.dark .text-emerald-700,
+.dark .text-emerald-800,
+.dark .text-emerald-900,
+.dark .text-emerald-950,
+.dark .text-green-500,
+.dark .text-green-600,
+.dark .text-green-700,
+.dark .text-green-800 {
+  color: #4ADE80 !important;
+}
+.dark .bg-emerald-50,
+.dark .bg-emerald-100,
+.dark .bg-green-50,
+.dark .bg-green-100 {
+  background-color: rgba(74, 222, 128, 0.12) !important;
+  border-color: rgba(74, 222, 128, 0.28) !important;
+}
+.dark .border-emerald-100,
+.dark .border-emerald-200,
+.dark .border-emerald-300,
+.dark .border-green-200 {
+  border-color: rgba(74, 222, 128, 0.28) !important;
+}
+
+/* 3. RED / ROSE (Penalty / Incorrect / Critical) */
+.dark .text-rose-500,
+.dark .text-rose-600,
+.dark .text-rose-700,
+.dark .text-rose-800,
+.dark .text-rose-900,
+.dark .text-rose-950,
+.dark .text-red-500,
+.dark .text-red-600,
+.dark .text-red-700,
+.dark .text-red-800 {
+  color: #F87171 !important;
+}
+.dark .bg-rose-50,
+.dark .bg-rose-100,
+.dark .bg-red-50,
+.dark .bg-red-100 {
+  background-color: rgba(248, 113, 113, 0.12) !important;
+  border-color: rgba(248, 113, 113, 0.28) !important;
+}
+.dark .border-rose-100,
+.dark .border-rose-200,
+.dark .border-rose-300,
+.dark .border-red-200 {
+  border-color: rgba(248, 113, 113, 0.28) !important;
+}
+
+/* 4. AMBER / YELLOW (Stamina / Caution / Time Alert) */
+.dark .text-amber-500,
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900,
+.dark .text-amber-950,
+.dark .text-yellow-600,
+.dark .text-yellow-700 {
+  color: #FBBF24 !important;
+}
+.dark .bg-amber-50,
+.dark .bg-amber-100,
+.dark .bg-yellow-50,
+.dark .bg-yellow-100 {
+  background-color: rgba(251, 191, 36, 0.12) !important;
+  border-color: rgba(251, 191, 36, 0.28) !important;
+}
+.dark .border-amber-100,
+.dark .border-amber-200,
+.dark .border-amber-300,
+.dark .border-yellow-200 {
+  border-color: rgba(251, 191, 36, 0.28) !important;
+}
+
+/* 5. PURPLE / VIOLET (Review / Conceptual Depth / Analytics) */
+.dark .text-purple-500,
+.dark .text-purple-600,
+.dark .text-purple-700,
+.dark .text-purple-800,
+.dark .text-purple-900,
+.dark .text-purple-950,
+.dark .text-violet-600,
+.dark .text-violet-700 {
+  color: #A78BFA !important;
+}
+.dark .bg-purple-50,
+.dark .bg-purple-100,
+.dark .bg-violet-50,
+.dark .bg-violet-100 {
+  background-color: rgba(167, 139, 250, 0.12) !important;
+  border-color: rgba(167, 139, 250, 0.28) !important;
+}
+.dark .border-purple-100,
+.dark .border-purple-200,
+.dark .border-purple-300,
+.dark .border-violet-200 {
+  border-color: rgba(167, 139, 250, 0.28) !important;
+}
+
+/* 6. CYAN / SKY (Velocity / Processing Speed) */
+.dark .text-cyan-500,
+.dark .text-cyan-600,
+.dark .text-cyan-700,
+.dark .text-cyan-800,
+.dark .text-\[\#0096D6\],
+.dark .text-\[\#60CEF8\] {
+  color: #38BDF8 !important;
+}
+.dark .bg-cyan-50,
+.dark .bg-cyan-100 {
+  background-color: rgba(56, 189, 248, 0.12) !important;
+  border-color: rgba(56, 189, 248, 0.28) !important;
+}
+.dark .border-cyan-100,
+.dark .border-cyan-200,
+.dark .border-cyan-300 {
+  border-color: rgba(56, 189, 248, 0.28) !important;
+}
+
+/* 7. PINK / FUCHSIA */
+.dark .text-pink-500,
+.dark .text-pink-600,
+.dark .text-pink-700,
+.dark .text-pink-800 {
+  color: #F472B6 !important;
+}
+.dark .bg-pink-50,
+.dark .bg-pink-100 {
+  background-color: rgba(244, 114, 182, 0.12) !important;
+  border-color: rgba(244, 114, 182, 0.28) !important;
+}
+
+/* 8. LIME */
+.dark .text-lime-500,
+.dark .text-lime-600,
+.dark .text-lime-700,
+.dark .text-lime-800 {
+  color: #A3E635 !important;
+}
+.dark .bg-lime-50,
+.dark .bg-lime-100 {
+  background-color: rgba(163, 230, 53, 0.12) !important;
+  border-color: rgba(163, 230, 53, 0.28) !important;
+}
+
+/* 9. INTERACTIVE STATUS BUTTONS & QUESTION PALETTE (Perceptually Adapted) */
+.dark .bg-emerald-600,
+.dark .bg-emerald-500 {
+  background-color: #10B981 !important;
+  color: #FFFFFF !important;
+}
+
+.dark .bg-rose-600,
+.dark .bg-rose-500,
+.dark .bg-red-600,
+.dark .bg-red-500 {
+  background-color: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+
+.dark .bg-purple-600,
+.dark .bg-purple-500 {
+  background-color: #8B5CF6 !important;
+  color: #FFFFFF !important;
+}
+
+.dark .bg-amber-600,
+.dark .bg-amber-500 {
+  background-color: #F59E0B !important;
+  color: #FFFFFF !important;
+}
+
+/* Base Surfaces in Dark Mode */
 .dark .bg-white {
   background-color: #111A2E;
 }
@@ -164,6 +374,7 @@ button, input, select, textarea {
   background-color: rgba(17, 26, 46, 0.70);
 }
 
+/* Dark Mode Typography Hierarchy */
 .dark .text-slate-900,
 .dark .text-\[\#0F172A\],
 .dark .text-\[\#0A1628\] {
@@ -175,29 +386,25 @@ button, input, select, textarea {
 }
 
 .dark .text-slate-700 {
-  color: #CBD5E1;
+  color: #CBD5E1 !important;
 }
 
 .dark .text-slate-600 {
+  color: #94A3B8 !important;
+}
+
+.dark .text-slate-500 {
   color: #94A3B8;
 }
 
-.dark .text-\[\#1E40AF\] {
-  color: #93C5FD !important;
+.dark .text-slate-400 {
+  color: #64748B;
 }
 
-.dark .text-\[\#003B99\] {
-  color: #60CEF8 !important;
-}
-
+/* Neutral Borders in Dark Mode */
 .dark .border-slate-200,
 .dark .border-slate-100 {
   border-color: #1E293B !important;
-}
-
-.dark .border-blue-100,
-.dark .border-blue-200 {
-  border-color: rgba(30, 58, 138, 0.4) !important;
 }
 
 .dark .border-\[\#BCEBFC\],
@@ -208,7 +415,7 @@ button, input, select, textarea {
   border-color: #1E293B !important;
 }
 
-.dark .bg-blue-50,
+/* Inset / Canvas Backgrounds in Dark Mode */
 .dark .bg-\[\#F0FAFF\],
 .dark .bg-\[\#F0FAFF\]\/90,
 .dark .bg-\[\#F0FAFF\]\/40,

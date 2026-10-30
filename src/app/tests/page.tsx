@@ -406,20 +406,20 @@ export default function MockTestsHubPage() {
 
         {/* Mock Test Settings & Options Modal */}
         {configuringTest && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="relative w-full max-w-lg rounded-3xl bg-white border border-[#BCEBFC] shadow-[0_20px_60px_rgba(0,92,230,0.18)] p-6 sm:p-7 space-y-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-[0_20px_60px_rgba(0,92,230,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] p-6 sm:p-7 space-y-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
               
               {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100">
+              <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#E0F4FD] border border-[#BCEBFC] flex items-center justify-center text-[#005CE6] shadow-2xs">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E0F4FD] dark:bg-blue-950/40 border border-[#BCEBFC] dark:border-blue-900/50 flex items-center justify-center text-[#005CE6] dark:text-blue-400 shadow-2xs">
                     <SlidersHorizontal className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 leading-tight">
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white leading-tight">
                       Test Settings &amp; Options
                     </h3>
-                    <p className="text-xs text-slate-500 font-medium truncate max-w-xs sm:max-w-sm mt-0.5">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate max-w-xs sm:max-w-sm mt-0.5">
                       {configuringTest.title}
                     </p>
                   </div>
@@ -428,7 +428,7 @@ export default function MockTestsHubPage() {
                 <button
                   type="button"
                   onClick={() => setConfiguringTest(null)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -436,7 +436,7 @@ export default function MockTestsHubPage() {
 
               {/* Option 1: Feedback & Exam Mode */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                   Feedback &amp; Scoring Mode
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -449,17 +449,17 @@ export default function MockTestsHubPage() {
                     className={cn(
                       "p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2",
                       configFeedbackMode === 'exam'
-                        ? "bg-[#F0FAFF] border-[#005CE6] text-[#005CE6] ring-2 ring-[#005CE6]/20 shadow-xs"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-[#F0FAFF] dark:bg-blue-950/40 border-[#005CE6] dark:border-blue-500 text-[#005CE6] dark:text-blue-400 ring-2 ring-[#005CE6]/20 shadow-xs"
+                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
                     )}
                   >
                     <div className="flex items-center justify-between w-full">
                       <span className="text-xs font-extrabold flex items-center gap-1.5">
                         <Clock className="w-3.5 h-3.5" /> Exam Mode
                       </span>
-                      {configFeedbackMode === 'exam' && <CheckCircle2 className="w-3.5 h-3.5 text-[#005CE6]" />}
+                      {configFeedbackMode === 'exam' && <CheckCircle2 className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" />}
                     </div>
-                    <span className="text-[11px] text-slate-500 leading-tight">
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
                       Strict timer, solutions at end, authentic -0.25 penalty.
                     </span>
                   </button>
@@ -473,17 +473,17 @@ export default function MockTestsHubPage() {
                     className={cn(
                       "p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2",
                       configFeedbackMode === 'practice'
-                        ? "bg-emerald-50 border-emerald-500 text-emerald-800 ring-2 ring-emerald-500/20 shadow-xs"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 dark:border-emerald-500 text-emerald-800 dark:text-emerald-300 ring-2 ring-emerald-500/20 shadow-xs"
+                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
                     )}
                   >
                     <div className="flex items-center justify-between w-full">
                       <span className="text-xs font-extrabold flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> Practice Mode
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Practice Mode
                       </span>
-                      {configFeedbackMode === 'practice' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                      {configFeedbackMode === 'practice' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
                     </div>
-                    <span className="text-[11px] text-slate-500 leading-tight">
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
                       Instant option verification, derivations revealed, 0 penalty.
                     </span>
                   </button>
@@ -493,10 +493,10 @@ export default function MockTestsHubPage() {
               {/* Option 2: Countdown Timer Duration */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                     Sectional Timer Duration
                   </label>
-                  <span className="text-xs font-mono font-bold text-[#005CE6]">
+                  <span className="text-xs font-mono font-bold text-[#005CE6] dark:text-blue-400">
                     {configDuration === 0 ? "Untimed" : `${configDuration} Minutes`}
                   </span>
                 </div>
@@ -515,7 +515,7 @@ export default function MockTestsHubPage() {
                         "py-2 px-2 rounded-xl text-xs font-bold transition-all border cursor-pointer text-center",
                         configDuration === dur.val
                           ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                          : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300"
+                          : "bg-white dark:bg-[#162036] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
                       )}
                     >
                       {dur.label}
@@ -526,7 +526,7 @@ export default function MockTestsHubPage() {
 
               {/* Option 3: Negative Penalty Rule */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                   Negative Penalty Deduction
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -536,12 +536,12 @@ export default function MockTestsHubPage() {
                     className={cn(
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configPenalty > 0
-                        ? "bg-rose-50 border-rose-300 text-rose-700 ring-2 ring-rose-200"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-500 text-rose-700 dark:text-rose-300 ring-2 ring-rose-200 dark:ring-rose-900/30"
+                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                     )}
                   >
                     <span>-{configuringTest.negativeMarks} Penalty (Official)</span>
-                    {configPenalty > 0 && <CheckCircle2 className="w-3.5 h-3.5 text-rose-600" />}
+                    {configPenalty > 0 && <CheckCircle2 className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />}
                   </button>
 
                   <button
@@ -550,19 +550,19 @@ export default function MockTestsHubPage() {
                     className={cn(
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configPenalty === 0
-                        ? "bg-emerald-50 border-emerald-400 text-emerald-800 ring-2 ring-emerald-200"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 dark:border-emerald-500 text-emerald-800 dark:text-emerald-300 ring-2 ring-emerald-200 dark:ring-emerald-900/30"
+                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                     )}
                   >
                     <span>0 Negative Marks (Relaxed)</span>
-                    {configPenalty === 0 && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
+                    {configPenalty === 0 && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
                   </button>
                 </div>
               </div>
 
               {/* Option 4: Question Count */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
                   Question Quantity
                 </label>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -573,7 +573,7 @@ export default function MockTestsHubPage() {
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configQuestionCount === configuringTest.questionCount
                         ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                     )}
                   >
                     <span>Full Blueprint ({configuringTest.questionCount} Questions)</span>
@@ -587,7 +587,7 @@ export default function MockTestsHubPage() {
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configQuestionCount === 15
                         ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                     )}
                   >
                     <span>Short Sprint (15 Questions)</span>
@@ -597,11 +597,11 @@ export default function MockTestsHubPage() {
               </div>
 
               {/* Actions Footer */}
-              <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setConfiguringTest(null)}
-                  className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-colors cursor-pointer"
+                  className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-xs sm:text-sm transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
