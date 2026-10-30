@@ -39,7 +39,7 @@ export default function OnboardingPage() {
           <BrandLogo size={36} showWordmark={true} />
         </Link>
         {/* Step Capsule Indicator */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-blue-100 shadow-xs">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-[#1E1E1E] border border-blue-100 dark:border-[#2C2C2C] shadow-xs">
           {[1, 2, 3].map((s) => (
             <div
               key={s}
@@ -47,8 +47,8 @@ export default function OnboardingPage() {
                 s === step
                   ? 'w-8 bg-gradient-to-r from-blue-600 to-blue-700 shadow-sm'
                   : s < step
-                  ? 'w-2 bg-emerald-500'
-                  : 'w-2 bg-slate-200'
+                  ? 'w-2 bg-[#005CE6] dark:bg-blue-400'
+                  : 'w-2 bg-slate-200 dark:bg-[#333333]'
               }`}
             />
           ))}

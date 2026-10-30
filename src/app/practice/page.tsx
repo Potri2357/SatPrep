@@ -354,7 +354,7 @@ export default function TopicDrillsHubPage() {
                     className={cn(
                       "px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap",
                       feedbackMode === 'practice'
-                        ? "bg-emerald-600 text-white shadow-xs"
+                        ? "bg-[#005CE6] dark:bg-[#333333] text-white shadow-xs"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     )}
                   >
@@ -367,7 +367,7 @@ export default function TopicDrillsHubPage() {
                     className={cn(
                       "px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap",
                       feedbackMode === 'exam'
-                        ? "bg-[#005CE6] text-white shadow-xs"
+                        ? "bg-[#005CE6] dark:bg-[#333333] text-white shadow-xs"
                         : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     )}
                   >
@@ -482,7 +482,7 @@ export default function TopicDrillsHubPage() {
             <button
               onClick={() => handleStartDrill(toolbarTopic, questionCount, feedbackMode)}
               disabled={loadingTopicId === toolbarTopic}
-              className="w-full lg:w-auto py-2.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 disabled:opacity-50"
+              className="w-full lg:w-auto py-2.5 px-6 rounded-2xl bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] hover:from-[#004dc2] hover:to-[#007cd6] text-white font-extrabold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95 disabled:opacity-50"
             >
               {loadingTopicId === toolbarTopic ? (
                 <>
@@ -499,17 +499,17 @@ export default function TopicDrillsHubPage() {
             </button>
           </div>
 
-          <div className="text-[11.5px] text-slate-600 flex items-center gap-2 pt-2 border-t border-slate-100">
+          <div className="text-[11.5px] text-slate-600 dark:text-slate-400 flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-[#2C2C2C]">
             {feedbackMode === 'practice' ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400 shrink-0" />
                 <span>
                   <strong>Instant Practice Active:</strong> Real-time option verification, speed calculation shortcuts, distractor trap analysis, ambient per-question stopwatch, and 0 negative penalty deductions.
                 </span>
               </>
             ) : (
               <>
-                <Clock className="w-3.5 h-3.5 text-[#005CE6] shrink-0" />
+                <Clock className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400 shrink-0" />
                 <span>
                   <strong>Timed Exam Active:</strong> Strict {Math.ceil(questionCount * 0.8)}-minute countdown timer with -0.25 negative marks. Full solutions revealed on the final results page.
                 </span>
@@ -663,7 +663,7 @@ export default function TopicDrillsHubPage() {
                   <button
                     onClick={() => handleStartDrill(topic.id, questionCount, feedbackMode)}
                     disabled={isLoading}
-                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer"
+                    className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#007AE6] hover:from-[#004dc2] hover:to-[#0066cc] text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer"
                   >
                     {isLoading ? (
                       <>
@@ -683,7 +683,7 @@ export default function TopicDrillsHubPage() {
                   <button
                     type="button"
                     onClick={() => openCustomizer(topic)}
-                    className="p-3 rounded-xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-600 transition-colors cursor-pointer"
+                    className="p-3 rounded-xl border border-slate-200 dark:border-[#2C2C2C] hover:border-[#005CE6]/40 hover:bg-blue-50/50 dark:hover:bg-[#282828] dark:hover:border-blue-500/40 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
                     title={`Configure custom drill settings for ${topic.name}`}
                   >
                     <SlidersHorizontal className="w-4 h-4" />
@@ -700,7 +700,7 @@ export default function TopicDrillsHubPage() {
             <div className="w-full max-w-lg bg-white dark:bg-[#1E1E1E] rounded-3xl shadow-2xl border border-slate-200 dark:border-[#2C2C2C] p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-150 text-slate-800 dark:text-slate-100">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#2C2C2C] pb-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40">
+                  <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-[#005CE6] dark:text-blue-400 border border-blue-200 dark:border-blue-800/40">
                     <SlidersHorizontal className="w-5 h-5" />
                   </div>
                   <div>
@@ -728,12 +728,12 @@ export default function TopicDrillsHubPage() {
                     className={cn(
                       "p-3.5 rounded-2xl border text-left transition-all cursor-pointer",
                       customFeedbackMode === 'practice'
-                        ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-400 dark:border-emerald-600/50 text-emerald-900 dark:text-emerald-300 ring-2 ring-emerald-400/20 shadow-xs"
+                        ? "bg-blue-50 dark:bg-[#282828] border-blue-400 dark:border-[#404040] text-blue-900 dark:text-white ring-2 ring-blue-400/20 dark:ring-white/10 shadow-xs"
                         : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#333333] text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-[#444444]"
                     )}
                   >
                     <div className="flex items-center gap-1.5 font-bold text-xs mb-1">
-                      <Lightbulb className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <Lightbulb className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" />
                       <span>Practice Mode</span>
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
@@ -828,7 +828,7 @@ export default function TopicDrillsHubPage() {
                   type="button"
                   onClick={handleLaunchCustomDrill}
                   disabled={isStartingCustom}
-                  className="w-2/3 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="w-2/3 py-3 rounded-2xl bg-gradient-to-r from-[#005CE6] to-[#007AE6] hover:from-[#004dc2] hover:to-[#0066cc] text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isStartingCustom ? (
                     <>

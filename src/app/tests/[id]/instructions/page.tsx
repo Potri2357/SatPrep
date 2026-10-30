@@ -202,7 +202,7 @@ export default function ExamInstructionsPage() {
               </div>
               <div className="px-4 py-3 rounded-2xl neu-pill text-center">
                 <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">Neg. Penalty</span>
-                <span className={cn("text-base font-extrabold font-mono", isPracticeMode ? "text-emerald-700 dark:text-emerald-400" : "text-slate-900 dark:text-slate-100")}>
+                <span className={cn("text-base font-extrabold font-mono", isPracticeMode ? "text-[#005CE6] dark:text-blue-400" : "text-slate-900 dark:text-slate-100")}>
                   {isPracticeMode ? '0.00' : '-0.25'}
                 </span>
               </div>
@@ -234,7 +234,7 @@ export default function ExamInstructionsPage() {
                   </div>
 
                   <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#181818] border border-slate-100 dark:border-[#2C2C2C]">
-                    <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                    <Award className="w-4 h-4 text-[#005CE6] dark:text-blue-400 shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-slate-900 dark:text-white">3. Zero Negative Penalties:</strong> Wrong answers incur 0 negative marks. Practice is meant for learning and exploring options without fear of penalty deductions.
                     </div>
@@ -257,9 +257,9 @@ export default function ExamInstructionsPage() {
                   </div>
 
                   <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-[#F8FAFC] dark:bg-[#181818] border border-slate-100 dark:border-[#2C2C2C]">
-                    <Award className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                    <Award className="w-4 h-4 text-[#005CE6] dark:text-blue-400 shrink-0 mt-0.5" />
                     <div>
-                      <strong className="text-slate-900 dark:text-white">2. Marking Scheme:</strong> You will be awarded <strong className="text-emerald-700 dark:text-emerald-400 font-bold">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700 dark:text-rose-400 font-bold">-0.25 marks</strong>. Unattempted questions carry zero penalties.
+                      <strong className="text-slate-900 dark:text-white">2. Marking Scheme:</strong> You will be awarded <strong className="text-[#005CE6] dark:text-blue-400 font-bold">+1.00 mark</strong> for each correct answer. An incorrect response incurs a negative deduction of <strong className="text-rose-700 dark:text-rose-400 font-bold">-0.25 marks</strong>. Unattempted questions carry zero penalties.
                     </div>
                   </div>
 
@@ -310,32 +310,32 @@ export default function ExamInstructionsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/50 dark:bg-emerald-950/30 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-emerald-200 dark:border-[#2C2C2C] bg-emerald-50/50 dark:bg-[#252525] shadow-xs">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   3
                 </div>
                 <div>
-                  <div className="font-bold text-emerald-900 dark:text-emerald-300">Answered</div>
+                  <div className="font-bold text-emerald-900 dark:text-slate-200">Answered</div>
                   <div className="text-slate-600 dark:text-slate-400 text-[11px]">You have answered this question.</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/30 shadow-xs">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 dark:border-[#2C2C2C] bg-purple-50/50 dark:bg-[#252525] shadow-xs">
                 <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
                   4
                 </div>
                 <div>
-                  <div className="font-bold text-purple-900 dark:text-purple-300">Marked for Review</div>
+                  <div className="font-bold text-purple-900 dark:text-slate-200">Marked for Review</div>
                   <div className="text-slate-600 dark:text-slate-400 text-[11px]">Marked for review without answering.</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/30 shadow-xs sm:col-span-2">
-                <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 ring-2 ring-emerald-400 shadow-sm">
+              <div className="flex items-center gap-3 p-3 rounded-2xl border border-purple-200 dark:border-[#2C2C2C] bg-purple-50/50 dark:bg-[#252525] shadow-xs sm:col-span-2">
+                <div className="w-9 h-9 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shrink-0 ring-2 ring-emerald-400 dark:ring-blue-400 shadow-sm">
                   5
                 </div>
                 <div>
-                  <div className="font-bold text-purple-900 dark:text-purple-300">Answered &amp; Marked for Review</div>
+                  <div className="font-bold text-purple-900 dark:text-slate-200">Answered &amp; Marked for Review</div>
                   <div className="text-slate-600 dark:text-slate-400 text-[11px]">Answered and marked for review (will be evaluated).</div>
                 </div>
               </div>
@@ -375,8 +375,8 @@ export default function ExamInstructionsPage() {
                   </span>
                 )}
                 {systemStatus.state === 'compatible' && (
-                  <span className="font-bold text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="font-bold text-emerald-700 dark:text-blue-400 text-xs flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-blue-400" />
                     <span>{systemStatus.label}</span>
                   </span>
                 )}
@@ -404,8 +404,8 @@ export default function ExamInstructionsPage() {
                   </span>
                 )}
                 {networkStatus.state === 'stable' && (
-                  <span className="font-bold text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  <span className="font-bold text-emerald-700 dark:text-blue-400 text-xs flex items-center gap-1">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-blue-400" />
                     <span>{networkStatus.label}</span>
                   </span>
                 )}

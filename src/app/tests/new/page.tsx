@@ -45,7 +45,7 @@ export const QUANT_DIFFICULTY_MATRIX: Record<number, MatrixTier> = {
     tierNumber: 1,
     tierName: 'Tier 1: Pure Velocity',
     difficultyLabel: 'The Easiest',
-    badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800',
+    badgeClass: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 dark:border-blue-800',
     coreFocus: 'Raw Processing Speed — High school level math, Near-flawless execution needed',
     blueprintProfile: '10–15 Simplification / Approximations, 5 Direct Quadratic Equations, 5 Simple Missing/Wrong Series, 1 Standard, readable graph / chart',
     targetStrategy: 'Flawless Sprint: Solve systematically from question 1 to 35; absolute maximum speed.',
@@ -636,8 +636,8 @@ function TestBuilderForm() {
                   <p className="text-[11.5px] text-slate-600 dark:text-slate-400 leading-relaxed">
                     Immediate step-by-step derivation, 15-second shortcut, and option trap review after each question. Untimed, zero negative marks.
                   </p>
-                  <div className="mt-2.5 flex items-center gap-2 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800">
+                  <div className="mt-2.5 flex items-center gap-2 text-[10px] font-bold text-[#005CE6] dark:text-blue-400">
+                    <span className="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/40">
                       Recommended for Topic Drills
                     </span>
                   </div>
@@ -821,7 +821,7 @@ function TestBuilderForm() {
                 <Award className="w-4 h-4 text-[#005CE6]" />
                 <span>Test Specification</span>
               </span>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[#005CE6] dark:text-blue-400 border border-blue-200 dark:border-blue-900/40">
                 OFFICIAL PATTERN
               </span>
             </div>
@@ -858,7 +858,7 @@ function TestBuilderForm() {
 
               <div className="flex items-center justify-between py-1 border-b border-slate-100 dark:border-slate-800/80">
                 <span className="text-slate-500">Derivations &amp; Shortcuts</span>
-                <span className="font-bold text-emerald-600">
+                <span className="font-bold text-[#005CE6] dark:text-blue-400">
                   {feedbackMode === 'practice' ? 'Instant Step-by-Step' : 'Post-Exam Solution Book'}
                 </span>
               </div>

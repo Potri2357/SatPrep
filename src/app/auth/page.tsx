@@ -231,7 +231,7 @@ export default function AuthPage() {
           <div className="space-y-4 text-sm">
             <div className="p-5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-lg">
               <div className="font-bold mb-1 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <CheckCircle2 className="w-4 h-4 text-[#60CEF8]" />
                 <span>Server-Frozen Test Bundles</span>
               </div>
               <p className="text-xs text-blue-100 leading-relaxed">
@@ -241,7 +241,7 @@ export default function AuthPage() {
 
             <div className="p-5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-lg">
               <div className="font-bold mb-1 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                <CheckCircle2 className="w-4 h-4 text-[#60CEF8]" />
                 <span>Psychometric Error Diagnosis</span>
               </div>
               <p className="text-xs text-blue-100 leading-relaxed">

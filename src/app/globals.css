@@ -205,14 +205,14 @@ button, input, select, textarea {
 .dark .bg-emerald-100,
 .dark .bg-green-50,
 .dark .bg-green-100 {
-  background-color: rgba(74, 222, 128, 0.12) !important;
-  border-color: rgba(74, 222, 128, 0.28) !important;
+  background-color: #232323 !important;
+  border-color: #2C2C2C !important;
 }
 .dark .border-emerald-100,
 .dark .border-emerald-200,
 .dark .border-emerald-300,
 .dark .border-green-200 {
-  border-color: rgba(74, 222, 128, 0.28) !important;
+  border-color: #2C2C2C !important;
 }
 
 /* 3. RED / ROSE (Penalty / Incorrect / Critical) */
@@ -232,14 +232,14 @@ button, input, select, textarea {
 .dark .bg-rose-100,
 .dark .bg-red-50,
 .dark .bg-red-100 {
-  background-color: rgba(248, 113, 113, 0.12) !important;
-  border-color: rgba(248, 113, 113, 0.28) !important;
+  background-color: #232323 !important;
+  border-color: #2C2C2C !important;
 }
 .dark .border-rose-100,
 .dark .border-rose-200,
 .dark .border-rose-300,
 .dark .border-red-200 {
-  border-color: rgba(248, 113, 113, 0.28) !important;
+  border-color: #2C2C2C !important;
 }
 
 /* 4. AMBER / YELLOW (Stamina / Caution / Time Alert) */
@@ -257,14 +257,14 @@ button, input, select, textarea {
 .dark .bg-amber-100,
 .dark .bg-yellow-50,
 .dark .bg-yellow-100 {
-  background-color: rgba(251, 191, 36, 0.12) !important;
-  border-color: rgba(251, 191, 36, 0.28) !important;
+  background-color: #232323 !important;
+  border-color: #2C2C2C !important;
 }
 .dark .border-amber-100,
 .dark .border-amber-200,
 .dark .border-amber-300,
 .dark .border-yellow-200 {
-  border-color: rgba(251, 191, 36, 0.28) !important;
+  border-color: #2C2C2C !important;
 }
 
 /* 5. PURPLE / VIOLET (Review / Conceptual Depth / Analytics) */
@@ -282,14 +282,14 @@ button, input, select, textarea {
 .dark .bg-purple-100,
 .dark .bg-violet-50,
 .dark .bg-violet-100 {
-  background-color: rgba(167, 139, 250, 0.12) !important;
-  border-color: rgba(167, 139, 250, 0.28) !important;
+  background-color: #232323 !important;
+  border-color: #2C2C2C !important;
 }
 .dark .border-purple-100,
 .dark .border-purple-200,
 .dark .border-purple-300,
 .dark .border-violet-200 {
-  border-color: rgba(167, 139, 250, 0.28) !important;
+  border-color: #2C2C2C !important;
 }
 
 /* 6. CYAN / SKY (Velocity / Processing Speed) */

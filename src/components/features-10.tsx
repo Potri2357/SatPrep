@@ -271,8 +271,8 @@ export function Features10() {
                 {/* Node Status Tag */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 font-mono uppercase tracking-wider">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#005CE6] dark:bg-blue-400 animate-pulse" />
+                    <span className="text-[11px] font-bold text-[#005CE6] dark:text-blue-400 font-mono uppercase tracking-wider">
                       Live Subsystem
                     </span>
                   </div>
@@ -318,7 +318,7 @@ export function Features10() {
                     "Instant step-by-step breakdown with digital roots & unit digit rules"
                   ].map((feat, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400 shrink-0" />
                       <span>{feat}</span>
                     </div>
                   ))}

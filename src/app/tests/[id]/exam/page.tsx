@@ -1193,7 +1193,7 @@ export default function ExamTestWindow() {
                       ) : (
                         <button
                           onClick={() => setShowSubmitModal(true)}
-                          className="px-4 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          className="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#005CE6] hover:bg-blue-700 text-white flex items-center gap-1.5 cursor-pointer shadow-xs"
                         >
                           <span>Finish Practice Drill</span>
                           <Check className="w-3.5 h-3.5 stroke-[3]" />
@@ -1406,7 +1406,7 @@ export default function ExamTestWindow() {
             {isPracticeMode ? (
               <button
                 onClick={() => setShowSubmitModal(true)}
-                className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-xs hover:shadow text-center block"
+                className="w-full py-2.5 rounded-xl bg-[#005CE6] hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-xs hover:shadow text-center block"
               >
                 Finish Drill &amp; Score
               </button>
@@ -1595,10 +1595,7 @@ export default function ExamTestWindow() {
               </button>
               <button
                 onClick={() => handleSubmitTest(false)}
-                className={cn(
-                  "w-1/2 py-2.5 rounded-xl text-white text-xs font-bold cursor-pointer shadow-xs",
-                  isPracticeMode ? "bg-emerald-600 hover:bg-emerald-700" : "bg-[#005CE6] hover:bg-blue-700"
-                )}
+                className="w-1/2 py-2.5 rounded-xl text-white text-xs font-bold cursor-pointer shadow-xs bg-[#005CE6] hover:bg-blue-700"
               >
                 {isPracticeMode ? 'Score Drill' : 'Yes, Submit Final'}
               </button>

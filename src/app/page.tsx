@@ -202,12 +202,12 @@ export default function LandingPage() {
                       Question No. 4 of {mockupTab === 'mock' ? '35' : '10'}
                     </span>
                     <div className="flex gap-2">
-                      <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                      <span className="text-[10px] font-bold text-[#005CE6] dark:text-blue-400 bg-blue-50 dark:bg-[#252525] px-2 py-0.5 rounded border border-blue-200 dark:border-[#333333]">
                         +1.00 Correct
                       </span>
                       <span className={cn(
                         "text-[10px] font-bold px-2 py-0.5 rounded border",
-                        mockupTab === 'mock' ? "text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-800" : "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800"
+                        mockupTab === 'mock' ? "text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 border-rose-200 dark:border-rose-800" : "text-[#005CE6] dark:text-blue-400 bg-blue-50 dark:bg-[#252525] border-blue-200 dark:border-[#333333]"
                       )}>
                         {mockupTab === 'mock' ? '-0.25 Penalty' : '0 Penalty'}
                       </span>
@@ -233,13 +233,8 @@ export default function LandingPage() {
                       let badgeStyle = 'border border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400';
 
                       if (isSelected) {
-                        if (isPractice) {
-                          cardStyle = 'bg-emerald-50/90 dark:bg-emerald-950/70 border-emerald-500 text-emerald-950 dark:text-emerald-200 shadow-xs ring-1 ring-emerald-500';
-                          badgeStyle = 'bg-emerald-600 text-white border-transparent';
-                        } else {
-                          cardStyle = 'bg-[#EFF6FF] dark:bg-blue-950/60 border-[#2563EB] text-[#1E40AF] dark:text-blue-300 font-semibold shadow-xs';
-                          badgeStyle = 'bg-[#2563EB] text-white border-transparent';
-                        }
+                        cardStyle = 'bg-[#EFF6FF] dark:bg-[#1E293B]/70 border-[#2563EB] dark:border-blue-500/50 text-[#1E40AF] dark:text-blue-300 font-semibold shadow-xs';
+                        badgeStyle = 'bg-[#2563EB] text-white border-transparent';
                       }
 
                       return (
@@ -260,8 +255,8 @@ export default function LandingPage() {
                           </div>
 
                           {isSelected && isPractice && (
-                            <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1 bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                            <span className="text-[11px] font-bold text-[#005CE6] dark:text-blue-400 flex items-center gap-1 bg-white dark:bg-[#252525] px-2 py-0.5 rounded-md border border-blue-200 dark:border-[#333333]">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" />
                               <span>Correct Option</span>
                             </span>
                           )}
@@ -272,12 +267,12 @@ export default function LandingPage() {
 
                   {/* Instant Solution Drawer (When Practice Tab Active) */}
                   {mockupTab === 'practice' && (
-                    <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 space-y-2 animate-in fade-in duration-200">
-                      <div className="flex items-center gap-2 text-xs font-bold text-emerald-900 dark:text-emerald-300">
-                        <Lightbulb className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <div className="p-4 rounded-2xl bg-blue-50/60 dark:bg-[#1A2536] border border-blue-200 dark:border-blue-900/40 space-y-2 animate-in fade-in duration-200">
+                      <div className="flex items-center gap-2 text-xs font-bold text-[#005CE6] dark:text-blue-300">
+                        <Lightbulb className="w-4 h-4 text-[#005CE6] dark:text-blue-400" />
                         <span>15-Second Speed Derivation</span>
                       </div>
-                      <p className="text-xs text-emerald-800 dark:text-emerald-300 font-mono leading-relaxed">
+                      <p className="text-xs text-slate-700 dark:text-slate-300 font-mono leading-relaxed">
                         CP = 100 → MP = 140. Successive discount: 10% &amp; 15% → Net multiplier = 0.9 × 0.85 = 0.765. SP = 140 × 0.765 = 107.10. Profit = 7.10 units = ₹142.80 → 1 unit = ₹20.11 → CP = ₹2,100.
                       </p>
                     </div>
@@ -380,10 +375,10 @@ export default function LandingPage() {
 
             <Link
               href="/practice"
-              className="p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200/80 dark:border-[#2C2C2C] shadow-sm hover:scale-[1.02] hover:border-emerald-400 dark:hover:border-emerald-500/50 transition-all group flex flex-col justify-between"
+              className="p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200/80 dark:border-[#2C2C2C] shadow-sm hover:scale-[1.02] hover:border-[#005CE6]/40 dark:hover:border-blue-500/50 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/40 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-[#E0F4FD] dark:bg-blue-950/60 text-[#005CE6] dark:text-blue-400 border border-[#BCEBFC] dark:border-blue-900/40 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <Target className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
@@ -393,7 +388,7 @@ export default function LandingPage() {
                   Chapter-wise drills on Simplification, Quadratic Equations, Number Series, and Profit &amp; Loss with instant solutions.
                 </p>
               </div>
-              <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 group-hover:from-emerald-700 group-hover:to-teal-700 text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
+              <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#007AE6] group-hover:from-[#004dc2] group-hover:to-[#0066cc] text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
                 <span>Explore Topic Drills</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
               </div>
@@ -401,10 +396,10 @@ export default function LandingPage() {
 
             <Link
               href="/practice"
-              className="p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200/80 dark:border-[#2C2C2C] shadow-sm hover:scale-[1.02] hover:border-purple-400 dark:hover:border-purple-500/50 transition-all group flex flex-col justify-between"
+              className="p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200/80 dark:border-[#2C2C2C] shadow-sm hover:scale-[1.02] hover:border-[#005CE6]/40 dark:hover:border-blue-500/50 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-900/40 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-[#E0F4FD] dark:bg-blue-950/60 text-[#005CE6] dark:text-blue-400 border border-[#BCEBFC] dark:border-blue-900/40 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <BarChart3 className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
@@ -414,7 +409,7 @@ export default function LandingPage() {
                   Tabular, Missing Tables, Dual Pie Charts, and Stacked Bar questions with step-by-step ratio and percentage derivations.
                 </p>
               </div>
-              <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 group-hover:from-purple-700 group-hover:to-indigo-700 text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
+              <div className="mt-6 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#005CE6] to-[#007AE6] group-hover:from-[#004dc2] group-hover:to-[#0066cc] text-white text-xs sm:text-sm font-bold flex items-center justify-between shadow-xs group-hover:shadow transition-all">
                 <span>Solve DI Sets</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
               </div>
