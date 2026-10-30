@@ -34,7 +34,7 @@ export default function LandingPage() {
   const [selectedOpt, setSelectedOpt] = useState<string>('C');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F0F6FF] via-[#FFFFFF] to-[#F8FAFC] dark:from-[#090E17] dark:via-[#0D1524] dark:to-[#090E17] text-[#0F172A] dark:text-[#F8FAFC] selection:bg-[#005CE6] selection:text-white transition-colors">
+    <div className="min-h-screen bg-gradient-to-b from-[#F0F6FF] via-[#FFFFFF] to-[#F8FAFC] dark:from-[#121212] dark:via-[#181818] dark:to-[#121212] text-[#0F172A] dark:text-[#FFFFFF] selection:bg-[#005CE6] selection:text-white transition-colors">
       {/* Consistent Unified Navbar */}
       <Navbar />
 
@@ -44,7 +44,7 @@ export default function LandingPage() {
       <section className="relative pt-20 pb-14 sm:pt-24 sm:pb-18 overflow-hidden">
 
         {/* Background base */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#EEF6FF] via-[#F7FDFF] to-white dark:from-[#080E1A] dark:via-[#0D1629] dark:to-[#090E17] transition-colors" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#EEF6FF] via-[#F7FDFF] to-white dark:from-[#121212] dark:via-[#181818] dark:to-[#121212] transition-colors" />
 
         {/* Top-centre radial aurora */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[380px] pointer-events-none"
@@ -141,10 +141,10 @@ export default function LandingPage() {
 
       {/* Interactive Dual-Mode Exam Terminal Mockup — Below Hero */}
 
-      <section className="relative pb-16 sm:pb-24 bg-gradient-to-b from-[#F0F8FF] to-white dark:from-[#090E17] dark:to-[#0D1524] transition-colors">
+      <section className="relative pb-16 sm:pb-24 bg-gradient-to-b from-[#F0F8FF] to-white dark:from-[#121212] dark:to-[#181818] transition-colors">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
 
-          <div className="rounded-3xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-[0_20px_60px_rgba(0,92,230,0.1)] overflow-hidden transition-colors">
+          <div className="rounded-3xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[0_20px_60px_rgba(0,92,230,0.1)] overflow-hidden transition-colors">
             {/* Terminal Window Header Bar */}
             <div className="bg-gradient-to-r from-[#005CE6] via-[#006DE6] to-[#0096D6] px-4 sm:px-6 py-3 flex items-center justify-between text-white text-xs">
               <div className="flex items-center gap-3">
@@ -193,11 +193,11 @@ export default function LandingPage() {
             </div>
 
             {/* Split Screen Terminal View */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-100 dark:divide-slate-800 bg-[#F8FAFC] dark:bg-[#0D1524]">
+            <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-100 dark:divide-[#2C2C2C] bg-[#F8FAFC] dark:bg-[#181818]">
               {/* Question Stem Area */}
-              <div className="lg:col-span-2 p-6 sm:p-8 bg-white dark:bg-[#111A2E] flex flex-col justify-between space-y-6">
+              <div className="lg:col-span-2 p-6 sm:p-8 bg-white dark:bg-[#1E1E1E] flex flex-col justify-between space-y-6">
                 <div className="space-y-5">
-                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#2C2C2C] pb-3">
                     <span className="font-bold text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                       Question No. 4 of {mockupTab === 'mock' ? '35' : '10'}
                     </span>
@@ -229,7 +229,7 @@ export default function LandingPage() {
                     ].map((opt) => {
                       const isSelected = selectedOpt === opt.id;
                       const isPractice = mockupTab === 'practice';
-                      let cardStyle = 'bg-white dark:bg-[#162238] border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-blue-300 dark:hover:border-blue-500';
+                      let cardStyle = 'bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-700 dark:text-slate-200 hover:border-blue-300 dark:hover:border-blue-500';
                       let badgeStyle = 'border border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400';
 
                       if (isSelected) {
@@ -301,21 +301,21 @@ export default function LandingPage() {
               </div>
 
               {/* Question Palette Rail */}
-              <div className="p-6 bg-[#F8FAFC] dark:bg-[#0D1524] flex flex-col justify-between space-y-6">
+              <div className="p-6 bg-[#F8FAFC] dark:bg-[#181818] flex flex-col justify-between space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-xs text-slate-700 dark:text-slate-300 uppercase tracking-wider">Question Palette</span>
-                    <span className="text-[11px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                    <span className="text-[11px] font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
                       Active Section
                     </span>
                   </div>
 
                   <div className="grid grid-cols-5 gap-2">
                     {Array.from({ length: 15 }).map((_, i) => {
-                      let color = 'bg-white dark:bg-[#162238] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700';
-                      if (i === 0 || i === 1 || i === 3) color = 'bg-emerald-600 text-white border-transparent';
-                      if (i === 2) color = 'bg-rose-500 text-white border-transparent';
-                      if (i === 4) color = 'bg-purple-600 text-white border-transparent ring-2 ring-emerald-500';
+                      let color = 'bg-white dark:bg-[#252525] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-[#2C2C2C]';
+                      if (i === 0 || i === 1 || i === 3) color = 'bg-emerald-600 dark:bg-emerald-500 text-white border-transparent';
+                      if (i === 2) color = 'bg-rose-500 dark:bg-rose-500 text-white border-transparent';
+                      if (i === 4) color = 'bg-purple-600 dark:bg-purple-500 text-white border-transparent ring-2 ring-emerald-500';
                       return (
                         <div
                           key={i}
@@ -332,11 +332,11 @@ export default function LandingPage() {
                 </div>
 
                 {/* Legend */}
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                <div className="pt-4 border-t border-slate-200 dark:border-[#2C2C2C] space-y-2 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
                   <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-emerald-600" /> Answered: 3</div>
                   <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded-full bg-purple-600" /> Marked for Review: 1</div>
                   <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-rose-500" /> Not Answered: 1</div>
-                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-white dark:bg-[#162238] border border-slate-300 dark:border-slate-600" /> Not Visited: 10</div>
+                  <div className="flex items-center gap-2"><span className="w-2.5 h-2.5 rounded bg-white dark:bg-[#252525] border border-slate-300 dark:border-[#2C2C2C]" /> Not Visited: 10</div>
                 </div>
               </div>
             </div>
@@ -345,7 +345,7 @@ export default function LandingPage() {
       </section>
 
       {/* Primary Exam Modules Section */}
-      <section className="py-16 sm:py-24 bg-white dark:bg-[#090E17] border-t border-slate-200/80 dark:border-slate-800 transition-colors">
+      <section className="py-16 sm:py-24 bg-white dark:bg-[#121212] border-t border-slate-200/80 dark:border-[#2C2C2C] transition-colors">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-xl mx-auto mb-12 sm:mb-16 space-y-2">
             <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#0F172A] dark:text-white">
@@ -359,10 +359,10 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link
               href="/tests"
-              className="p-7 rounded-3xl bg-white dark:bg-[#111A2E] border border-slate-200/80 dark:border-slate-800 shadow-sm hover:scale-[1.02] hover:border-[#005CE6]/40 dark:hover:border-blue-500/50 transition-all group flex flex-col justify-between"
+              className="p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200/80 dark:border-[#2C2C2C] shadow-sm hover:scale-[1.02] hover:border-[#005CE6]/40 dark:hover:border-blue-500/50 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-[#E0F4FD] dark:bg-blue-950/80 text-[#005CE6] dark:text-blue-400 border border-[#BCEBFC] dark:border-blue-900 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-[#E0F4FD] dark:bg-blue-950/60 text-[#005CE6] dark:text-blue-400 border border-[#BCEBFC] dark:border-blue-900/40 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <Award className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
@@ -380,10 +380,10 @@ export default function LandingPage() {
 
             <Link
               href="/practice"
-              className="p-7 rounded-3xl bg-white dark:bg-[#111A2E] border border-slate-200/80 dark:border-slate-800 shadow-sm hover:scale-[1.02] hover:border-emerald-400 dark:hover:border-emerald-500/50 transition-all group flex flex-col justify-between"
+              className="p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200/80 dark:border-[#2C2C2C] shadow-sm hover:scale-[1.02] hover:border-emerald-400 dark:hover:border-emerald-500/50 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/40 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <Target className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
@@ -401,10 +401,10 @@ export default function LandingPage() {
 
             <Link
               href="/practice"
-              className="p-7 rounded-3xl bg-white dark:bg-[#111A2E] border border-slate-200/80 dark:border-slate-800 shadow-sm hover:scale-[1.02] hover:border-purple-400 dark:hover:border-purple-500/50 transition-all group flex flex-col justify-between"
+              className="p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200/80 dark:border-[#2C2C2C] shadow-sm hover:scale-[1.02] hover:border-purple-400 dark:hover:border-purple-500/50 transition-all group flex flex-col justify-between"
             >
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-900 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-200 dark:border-purple-900/40 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform shadow-xs">
                   <BarChart3 className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#0F172A] dark:text-white mb-2">
@@ -450,7 +450,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[#E2E8F0] dark:border-slate-800 py-10 bg-white dark:bg-[#090E17] text-xs text-slate-500 dark:text-slate-400 transition-colors">
+      <footer className="border-t border-[#E2E8F0] dark:border-[#2C2C2C] py-10 bg-white dark:bg-[#121212] text-xs text-slate-500 dark:text-slate-400 transition-colors">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <BrandLogo size={32} showWordmark={true} />
           <p>© 2026 SwS. Bank Exam Quantitative Aptitude Platform. All rights reserved.</p>

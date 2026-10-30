@@ -308,7 +308,7 @@ export default function TopicDrillsHubPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#090E17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col transition-colors">
+    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#121212] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col transition-colors">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-8">
@@ -348,7 +348,7 @@ export default function TopicDrillsHubPage() {
               {/* Feedback Mode Selector */}
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider shrink-0">Mode:</span>
-                <div className="inline-flex p-1 rounded-xl bg-[#E0F4FD]/70 dark:bg-[#0D1524] border border-[#BCEBFC] dark:border-slate-800">
+                <div className="inline-flex p-1 rounded-xl bg-[#E0F4FD]/70 dark:bg-[#181818] border border-[#BCEBFC] dark:border-[#2C2C2C]">
                   <button
                     onClick={() => setFeedbackMode('practice')}
                     className={cn(
@@ -605,9 +605,9 @@ export default function TopicDrillsHubPage() {
                   </div>
 
                   {/* Improvised Exam Weightage & Difficulty Metrics Card */}
-                  <div className="grid grid-cols-2 gap-2 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] dark:from-[#0D1524] dark:via-[#111A2E] dark:to-[#0D1524] border border-[#BCEBFC] dark:border-slate-800 shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)] dark:shadow-none">
+                  <div className="grid grid-cols-2 gap-2 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] dark:from-[#181818] dark:via-[#232323] dark:to-[#181818] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)] dark:shadow-none">
                     {/* Weightage Block */}
-                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#162036] border border-[#D6EEFC] dark:border-slate-700 flex flex-col justify-center shadow-2xs">
+                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#252525] border border-[#D6EEFC] dark:border-[#2C2C2C] flex flex-col justify-center shadow-2xs">
                       <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
                         <Target className="w-3 h-3 text-[#005CE6] dark:text-blue-400" />
                         <span>Weightage</span>
@@ -618,7 +618,7 @@ export default function TopicDrillsHubPage() {
                     </div>
 
                     {/* Difficulty Block */}
-                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#162036] border border-[#D6EEFC] dark:border-slate-700 flex flex-col justify-center shadow-2xs">
+                    <div className="px-2.5 py-1.5 rounded-xl bg-white/95 dark:bg-[#252525] border border-[#D6EEFC] dark:border-[#2C2C2C] flex flex-col justify-center shadow-2xs">
                       <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
                         <Flame className={cn(
                           "w-3 h-3",
@@ -650,7 +650,7 @@ export default function TopicDrillsHubPage() {
                       {meta.shortcuts.map((sc, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded-md bg-white dark:bg-[#162036] border border-slate-200 dark:border-slate-700 text-[10.5px] font-medium text-slate-700 dark:text-slate-300"
+                          className="px-2 py-0.5 rounded-md bg-white dark:bg-[#252525] border border-slate-200 dark:border-[#2C2C2C] text-[10.5px] font-medium text-slate-700 dark:text-slate-300"
                         >
                           {sc}
                         </span>

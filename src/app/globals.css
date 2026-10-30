@@ -45,17 +45,28 @@
   }
 
   .dark {
-    --canvas: #090E17;
-    --canvas-alt: #0D1524;
-    --surface: #111A2E;
-    --surface-glass: rgba(17, 26, 46, 0.90);
-    --border: #1E293B;
-    --border-blue: #1E3A8A;
+    /* Exact Material Dark Theme Elevation Hierarchy from user palette */
+    --canvas: #121212;              /* 0dp: Base Canvas (#121212) */
+    --canvas-alt: #181818;          /* Inset Well / Code / Inputs */
+    --surface: #1E1E1E;             /* 1dp: Standard Card Surface (#1E1E1E) */
+    --surface-elevated: #232323;    /* 2dp: Slightly Elevated Cards (#232323) */
+    --surface-header: #252525;      /* 3dp: Navbars / Sticky Bars (#252525) */
+    --surface-chip: #272727;        /* 4dp: Chips / Secondary Controls (#272727) */
+    --surface-dialog: #2C2C2C;      /* 6dp: Modals / Floating Menus (#2C2C2C) */
+    --surface-popover: #2E2E2E;     /* 8dp: Slide-overs / High Modals (#2E2E2E) */
+    --surface-active: #333333;      /* 12dp: Active Selection / Hover (#333333) */
+    --surface-overlay: #383838;     /* 24dp: Highest Elevation Overlays (#383838) */
+    --surface-glass: rgba(30, 30, 30, 0.94);
 
-    --text-primary: #F8FAFC;
-    --text-secondary: #CBD5E1;
-    --text-tertiary: #94A3B8;
-    --text-muted: #64748B;
+    --border: #2C2C2C;              /* Neutral 1px Border Stroke (#2C2C2C) */
+    --border-elevated: #333333;     /* Elevated Border Stroke (#333333) */
+    --border-active: #383838;       /* Focus / Active Border (#383838) */
+    --border-blue: #2563EB;
+
+    --text-primary: #FFFFFF;        /* 100% Crisp White */
+    --text-secondary: #D4D4D4;      /* High-legibility Soft Slate */
+    --text-tertiary: #A3A3A3;       /* Balanced Secondary */
+    --text-muted: #737373;          /* Muted / Hints */
   }
 
   *, *::before, *::after {
@@ -74,70 +85,71 @@ body {
 
 .dark body,
 html.dark body {
-  background-color: #090E17;
-  color: #F8FAFC;
+  background-color: #121212;
+  color: #FFFFFF;
 }
 
 button, input, select, textarea {
   font-family: var(--font-dm-sans);
 }
 
-/* Dark Mode Overrides & Enhancements */
+/* Dark Mode Overrides & Enhancements (Elevated Charcoal System) */
 .dark .glass-panel,
 .dark .neu-glass-card {
-  background: #111A2E !important;
-  border-color: #1E293B !important;
+  background: #1E1E1E !important;
+  border-color: #2C2C2C !important;
   box-shadow: 
-    0 1px 3px rgba(0, 0, 0, 0.4),
-    0 8px 24px -4px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(30, 58, 138, 0.35) !important;
-  color: #F8FAFC !important;
+    0 1px 3px rgba(0, 0, 0, 0.5),
+    0 8px 24px -4px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+  color: #FFFFFF !important;
 }
 
 .dark .glass-panel:hover,
 .dark .neu-glass-card:hover {
-  border-color: rgba(59, 130, 246, 0.5) !important;
+  background: #232323 !important;
+  border-color: #383838 !important;
   box-shadow: 
-    0 2px 6px rgba(0, 0, 0, 0.5),
-    0 14px 32px -4px rgba(0, 0, 0, 0.7),
-    0 0 0 1px rgba(59, 130, 246, 0.4) !important;
+    0 2px 6px rgba(0, 0, 0, 0.6),
+    0 14px 32px -4px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(96, 165, 250, 0.35) !important;
 }
 
 .dark .glass-pill,
 .dark .neu-pill {
-  background: #162036 !important;
-  border-color: #1E293B !important;
-  color: #E2E8F0 !important;
+  background: #252525 !important;
+  border-color: #2C2C2C !important;
+  color: #E0E0E0 !important;
 }
 
 .dark .neu-inset {
-  background: #0D1524 !important;
-  border-color: #1E293B !important;
+  background: #181818 !important;
+  border-color: #252525 !important;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6) !important;
 }
 
 .dark .chip-btn,
 .dark .neu-chip {
-  background: rgba(22, 32, 54, 0.9) !important;
-  border-color: #1E293B !important;
+  background: #252525 !important;
+  border-color: #2C2C2C !important;
   box-shadow: 
-    3px 3px 8px rgba(0, 0, 0, 0.4), 
-    -2px -2px 6px rgba(30, 41, 59, 0.25),
+    3px 3px 8px rgba(0, 0, 0, 0.5), 
+    -2px -2px 6px rgba(44, 44, 44, 0.2),
     inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
-  color: #E2E8F0 !important;
+  color: #E0E0E0 !important;
 }
 
 .dark .chip-btn:hover,
 .dark .neu-chip:hover {
-  background: rgba(30, 41, 59, 0.95) !important;
-  border-color: rgba(59, 130, 246, 0.5) !important;
+  background: #2E2E2E !important;
+  border-color: #383838 !important;
   color: #FFFFFF !important;
 }
 
 .dark .chip-btn-primary,
 .dark .neu-chip-primary {
   background: linear-gradient(135deg, #005CE6 0%, #007AE6 100%) !important;
-  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  border: 1px solid rgba(96, 165, 250, 0.5) !important;
   box-shadow: 
     0 4px 14px rgba(0, 92, 230, 0.4),
     inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
@@ -353,58 +365,88 @@ button, input, select, textarea {
   color: #FFFFFF !important;
 }
 
-/* Base Surfaces in Dark Mode */
+/* Base Surfaces in Dark Mode (Pure Charcoal Elevation System) */
 .dark .bg-white {
-  background-color: #111A2E;
+  background-color: #1E1E1E;
 }
 
 .dark .bg-white\/95 {
-  background-color: rgba(17, 26, 46, 0.95);
+  background-color: rgba(30, 30, 30, 0.95);
 }
 
 .dark .bg-white\/90 {
-  background-color: rgba(17, 26, 46, 0.90);
+  background-color: rgba(30, 30, 30, 0.90);
 }
 
 .dark .bg-white\/80 {
-  background-color: rgba(17, 26, 46, 0.80);
+  background-color: rgba(30, 30, 30, 0.80);
 }
 
 .dark .bg-white\/70 {
-  background-color: rgba(17, 26, 46, 0.70);
+  background-color: rgba(30, 30, 30, 0.70);
+}
+
+/* Mapping Legacy Navy Classes to New Neutral Charcoal Elevation Tokens */
+.dark .bg-\[\#090E17\],
+.dark .dark\:bg-\[\#090E17\] {
+  background-color: #121212 !important;
+}
+
+.dark .bg-\[\#0D1524\],
+.dark .dark\:bg-\[\#0D1524\] {
+  background-color: #181818 !important;
+}
+
+.dark .bg-\[\#111A2E\],
+.dark .dark\:bg-\[\#111A2E\] {
+  background-color: #1E1E1E !important;
+}
+
+.dark .bg-\[\#162036\],
+.dark .dark\:bg-\[\#162036\],
+.dark .bg-\[\#162238\],
+.dark .dark\:bg-\[\#162238\] {
+  background-color: #252525 !important;
+}
+
+.dark .bg-\[\#0B1324\],
+.dark .dark\:bg-\[\#0B1324\] {
+  background-color: #1E1E1E !important;
 }
 
 /* Dark Mode Typography Hierarchy */
 .dark .text-slate-900,
 .dark .text-\[\#0F172A\],
 .dark .text-\[\#0A1628\] {
-  color: #F8FAFC !important;
+  color: #FFFFFF !important;
 }
 
 .dark .text-slate-800 {
-  color: #E2E8F0 !important;
+  color: #F0F0F0 !important;
 }
 
 .dark .text-slate-700 {
-  color: #CBD5E1 !important;
+  color: #D4D4D4 !important;
 }
 
 .dark .text-slate-600 {
-  color: #94A3B8 !important;
+  color: #A3A3A3 !important;
 }
 
 .dark .text-slate-500 {
-  color: #94A3B8;
+  color: #888888 !important;
 }
 
 .dark .text-slate-400 {
-  color: #64748B;
+  color: #737373 !important;
 }
 
 /* Neutral Borders in Dark Mode */
+.dark .border-slate-800,
+.dark .border-slate-700,
 .dark .border-slate-200,
 .dark .border-slate-100 {
-  border-color: #1E293B !important;
+  border-color: #2C2C2C !important;
 }
 
 .dark .border-\[\#BCEBFC\],
@@ -412,7 +454,7 @@ button, input, select, textarea {
 .dark .border-\[\#C5E4F8\],
 .dark .border-\[\#D6EEFC\],
 .dark .border-\[\#E2E8F0\] {
-  border-color: #1E293B !important;
+  border-color: #2C2C2C !important;
 }
 
 /* Inset / Canvas Backgrounds in Dark Mode */
@@ -425,7 +467,7 @@ button, input, select, textarea {
 .dark .bg-\[\#F8FAFC\],
 .dark .bg-\[\#F9FDFF\],
 .dark .bg-\[\#FBFDFF\] {
-  background-color: #0D1524 !important;
+  background-color: #121212 !important;
 }
 
 .dark .bg-\[\#E0F4FD\],
@@ -434,33 +476,44 @@ button, input, select, textarea {
 .dark .bg-\[\#EAF5FE\],
 .dark .bg-\[\#EBF5FF\],
 .dark .bg-\[\#EFF6FF\] {
-  background-color: #162036 !important;
+  background-color: #232323 !important;
 }
 
 .dark .bg-slate-50,
 .dark .bg-slate-50\/90,
 .dark .bg-slate-50\/95,
 .dark .bg-slate-50\/80 {
-  background-color: #0D1524 !important;
+  background-color: #181818 !important;
 }
 
 .dark .bg-slate-100,
 .dark .bg-slate-100\/90,
 .dark .bg-slate-100\/80 {
-  background-color: #162036 !important;
+  background-color: #232323 !important;
+}
+
+.dark .bg-slate-200 {
+  background-color: #2C2C2C !important;
 }
 
 .dark input,
 .dark select,
 .dark textarea {
-  color: #F8FAFC;
-  background-color: #0D1524;
-  border-color: #1E293B;
+  color: #FFFFFF;
+  background-color: #181818;
+  border-color: #2C2C2C;
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #60A5FA;
+  background-color: #1E1E1E;
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #64748B;
+  color: #757575;
 }
 
 .no-scrollbar::-webkit-scrollbar {

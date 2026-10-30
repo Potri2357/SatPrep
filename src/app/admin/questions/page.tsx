@@ -304,7 +304,7 @@ export default function QuestionBankManagementPage() {
       )}
 
       {/* Modern Filter Toolbar */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-[#111A2E] border border-blue-100 dark:border-slate-800 flex flex-col md:flex-row gap-3 shadow-xs relative z-20">
+      <div className="p-4 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-blue-100 dark:border-[#2C2C2C] flex flex-col md:flex-row gap-3 shadow-xs relative z-20">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-blue-500 absolute left-3.5 top-3" />
           <input
@@ -346,7 +346,7 @@ export default function QuestionBankManagementPage() {
       {viewMode === 'finder' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           {/* Left / Middle Pane: The Question Browser List (5 Cols) */}
-          <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111A2E] border border-blue-100 dark:border-slate-800 shadow-xs overflow-hidden flex flex-col h-[760px]">
+          <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-blue-100 dark:border-[#2C2C2C] shadow-xs overflow-hidden flex flex-col h-[760px]">
             {/* Finder List Header */}
             <div className="p-3.5 px-5 bg-slate-50/90 dark:bg-slate-900/80 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 shrink-0">
               <span className="font-bold text-slate-700 dark:text-slate-300">
@@ -418,7 +418,7 @@ export default function QuestionBankManagementPage() {
           </div>
 
           {/* Right Pane: Mac Finder Quick Look / Inspector (7 Cols) */}
-          <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111A2E] border border-blue-100 dark:border-slate-800 shadow-md overflow-hidden sticky top-20 h-[760px] flex flex-col">
+          <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-blue-100 dark:border-[#2C2C2C] shadow-md overflow-hidden sticky top-20 h-[760px] flex flex-col">
             {selectedQuestion ? (
               <>
                 {/* Mac Finder Window Header Bar with Traffic Light Dots */}
@@ -574,7 +574,7 @@ export default function QuestionBankManagementPage() {
 
       {/* VIEW 2: CLASSIC TABLE MODE */}
       {viewMode === 'table' && (
-        <div className="rounded-3xl bg-white dark:bg-[#111A2E] border border-blue-100 dark:border-slate-800 overflow-hidden shadow-xs relative z-10">
+        <div className="rounded-3xl bg-white dark:bg-[#1E1E1E] border border-blue-100 dark:border-[#2C2C2C] overflow-hidden shadow-xs relative z-10">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-blue-100 dark:border-slate-800 bg-blue-50/50 dark:bg-slate-900/60 text-slate-500 uppercase tracking-wider text-[10px] font-bold">
@@ -642,7 +642,7 @@ export default function QuestionBankManagementPage() {
       {/* EDIT MODAL */}
       {editingQ && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-panel bg-white dark:bg-[#111A2E] rounded-3xl border border-blue-100 dark:border-slate-800 max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+          <div className="glass-panel bg-white dark:bg-[#252525] rounded-3xl border border-blue-100 dark:border-[#2C2C2C] max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
                 <Edit3 className="w-4 h-4 text-[#005CE6]" />

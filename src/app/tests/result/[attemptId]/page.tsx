@@ -148,7 +148,7 @@ export default function ResultAnalysisPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#090E17] flex flex-col justify-between text-[#0F172A] dark:text-[#F8FAFC] transition-colors">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#121212] flex flex-col justify-between text-[#0F172A] dark:text-[#F8FAFC] transition-colors">
         <Navbar />
         <main className="max-w-md mx-auto w-full pt-20 pb-16 px-4 text-center space-y-4 my-auto">
           <div className="w-10 h-10 border-3 border-[#005CE6] border-t-transparent rounded-full animate-spin mx-auto" />
@@ -163,7 +163,7 @@ export default function ResultAnalysisPage() {
 
   if (!snapshot) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#090E17] flex flex-col justify-between text-[#0F172A] dark:text-[#F8FAFC] transition-colors">
+      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#121212] flex flex-col justify-between text-[#0F172A] dark:text-[#F8FAFC] transition-colors">
         <Navbar />
         <main className="max-w-md mx-auto w-full pt-16 pb-12 px-4 text-center space-y-6 my-auto">
           <div className="w-16 h-16 rounded-3xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-900 text-rose-600 dark:text-rose-400 flex items-center justify-center mx-auto">
@@ -185,7 +185,7 @@ export default function ResultAnalysisPage() {
             </Link>
             <Link
               href="/results"
-              className="px-6 py-3 rounded-2xl bg-white dark:bg-[#162036] border border-[#BCEBFC] dark:border-slate-700 text-[#005CE6] dark:text-blue-400 hover:bg-[#F0FAFF] dark:hover:bg-[#111A2E] font-bold text-xs sm:text-sm shadow-2xs inline-flex items-center gap-2"
+              className="px-6 py-3 rounded-2xl bg-white dark:bg-[#252525] border border-[#BCEBFC] dark:border-[#2C2C2C] text-[#005CE6] dark:text-blue-400 hover:bg-[#F0FAFF] dark:hover:bg-[#1E1E1E] font-bold text-xs sm:text-sm shadow-2xs inline-flex items-center gap-2"
             >
               <span>View Overall Results</span>
             </Link>
@@ -201,7 +201,7 @@ export default function ResultAnalysisPage() {
   const sc = snapshot.score_card;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#090E17] flex flex-col text-slate-800 dark:text-slate-100 relative overflow-hidden transition-colors">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#121212] flex flex-col text-slate-800 dark:text-slate-100 relative overflow-hidden transition-colors">
       {/* Ambient background glow */}
       <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-200/20 dark:bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 left-10 w-96 h-96 bg-blue-300/10 dark:bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -232,7 +232,7 @@ export default function ResultAnalysisPage() {
             <div className="flex items-center gap-2.5 flex-wrap">
               <Link
                 href="/results"
-                className="px-4 py-2.5 rounded-xl bg-white dark:bg-[#162036] border border-[#BCEBFC] dark:border-slate-700 text-[#005CE6] dark:text-blue-400 hover:bg-[#F0FAFF] dark:hover:bg-[#111A2E] font-bold text-xs flex items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all"
+                className="px-4 py-2.5 rounded-xl bg-white dark:bg-[#252525] border border-[#BCEBFC] dark:border-[#2C2C2C] text-[#005CE6] dark:text-blue-400 hover:bg-[#F0FAFF] dark:hover:bg-[#1E1E1E] font-bold text-xs flex items-center gap-1.5 shadow-2xs hover:shadow-xs transition-all"
               >
                 <BarChart3 className="w-3.5 h-3.5" />
                 <span>Overall Results</span>
@@ -406,7 +406,7 @@ export default function ResultAnalysisPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
               <thead>
-                <tr className="border-b border-blue-100 dark:border-slate-800 bg-blue-50/40 dark:bg-[#162036] text-blue-900 dark:text-blue-300 uppercase tracking-wider text-[10px]">
+                <tr className="border-b border-blue-100 dark:border-slate-800 bg-blue-50/40 dark:bg-[#252525] text-blue-900 dark:text-blue-300 uppercase tracking-wider text-[10px]">
                   <th className="py-3 px-3 rounded-l-xl">Topic</th>
                   <th className="py-3 px-3">Attempts</th>
                   <th className="py-3 px-3">Correct</th>
@@ -465,7 +465,7 @@ export default function ResultAnalysisPage() {
           </div>
 
           {/* Question Palette Bar (Clean Chip Navigator) */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-2xs space-y-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-slate-800 shadow-2xs space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               {/* Filter Tabs */}
               <div className="flex flex-wrap gap-1.5 text-xs">
@@ -542,7 +542,7 @@ export default function ResultAnalysisPage() {
           {uniqueQuestionsReview[selectedQIndex] && (() => {
             const activeQ = uniqueQuestionsReview[selectedQIndex];
             return (
-              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-sm space-y-4">
+              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-slate-800 shadow-sm space-y-4">
                 {/* Compact Question Header */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-800 text-xs">
                   <div className="flex items-center gap-2">
@@ -590,7 +590,7 @@ export default function ResultAnalysisPage() {
                     const isCorrectOpt = opt.id === activeQ.correct_answer;
                     const isUserSelected = opt.id === activeQ.your_answer;
 
-                    let optClass = 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162036] text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600';
+                    let optClass = 'border-slate-200 dark:border-slate-700 bg-white dark:bg-[#252525] text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600';
                     if (isCorrectOpt) {
                       optClass = 'border-emerald-300 dark:border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/50 text-emerald-950 dark:text-emerald-200 font-semibold ring-1 ring-emerald-300 dark:ring-emerald-700';
                     } else if (isUserSelected && !isCorrectOpt) {
@@ -691,7 +691,7 @@ export default function ResultAnalysisPage() {
 
                   {/* Active Explanation Content */}
                   {explanationTab === 'solution' && (
-                    <div className="p-3.5 rounded-xl bg-[#F0FAFF] dark:bg-[#0D1524] border border-[#BCEBFC] dark:border-slate-800 space-y-1.5 animate-in fade-in duration-150">
+                    <div className="p-3.5 rounded-xl bg-[#F0FAFF] dark:bg-[#181818] border border-[#BCEBFC] dark:border-slate-800 space-y-1.5 animate-in fade-in duration-150">
                       <div className="text-[11px] font-bold text-[#005CE6] dark:text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                         <span>Official Step-by-Step Method</span>
@@ -713,7 +713,7 @@ export default function ResultAnalysisPage() {
                   )}
 
                   {explanationTab === 'traps' && activeQ.option_rationales && (
-                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#0D1524] border border-slate-200 dark:border-slate-800 space-y-1.5 animate-in fade-in duration-150">
+                    <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#181818] border border-slate-200 dark:border-slate-800 space-y-1.5 animate-in fade-in duration-150">
                       <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                         Why other choices were incorrect:
                       </div>
@@ -739,7 +739,7 @@ export default function ResultAnalysisPage() {
                       setExplanationTab('solution');
                     }}
                     disabled={selectedQIndex === 0}
-                    className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162036] hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 font-semibold text-slate-700 dark:text-slate-300 transition-colors cursor-pointer text-xs"
+                    className="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#252525] hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-40 font-semibold text-slate-700 dark:text-slate-300 transition-colors cursor-pointer text-xs"
                   >
                     ← Previous
                   </button>
@@ -772,7 +772,7 @@ export default function ResultAnalysisPage() {
       {/* REPORT QUESTION MODAL */}
       {reportingQid && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="glass-panel bg-white/95 dark:bg-[#111A2E]/95 rounded-3xl border border-blue-100 dark:border-slate-800 max-w-md w-full p-6 space-y-4 shadow-2xl">
+          <div className="glass-panel bg-white/95 dark:bg-[#1E1E1E]/95 rounded-3xl border border-blue-100 dark:border-slate-800 max-w-md w-full p-6 space-y-4 shadow-2xl">
             <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Flag className="w-4 h-4 text-rose-500" />
               <span>Report Question Error</span>
@@ -795,7 +795,7 @@ export default function ResultAnalysisPage() {
                     <select
                       value={reportReason}
                       onChange={(e) => setReportReason(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162036] text-slate-800 dark:text-slate-200"
+                      className="w-full h-10 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#252525] text-slate-800 dark:text-slate-200"
                     >
                       <option value="wrong_answer">Wrong Answer Key</option>
                       <option value="unclear">Ambiguous / Unclear Question Stem</option>
@@ -812,7 +812,7 @@ export default function ResultAnalysisPage() {
                       value={reportText}
                       onChange={(e) => setReportText(e.target.value)}
                       placeholder="Specify your calculation or why the key is disputed..."
-                      className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162036] text-slate-800 dark:text-slate-200 text-xs"
+                      className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#252525] text-slate-800 dark:text-slate-200 text-xs"
                     />
                   </div>
                 </div>

@@ -83,7 +83,7 @@ export default function OverallResultsPage() {
     });
 
   return (
-    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#090E17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-[#005CE6] selection:text-white transition-colors">
+    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#121212] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-[#005CE6] selection:text-white transition-colors">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-8">
@@ -188,7 +188,7 @@ export default function OverallResultsPage() {
             {/* Filter, Search & Controls Bar */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2">
               {/* Category Filter Tabs */}
-              <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1 rounded-2xl bg-[#E0F4FD]/60 dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 self-start sm:self-auto shrink-0">
+              <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1 rounded-2xl bg-[#E0F4FD]/60 dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-slate-800 self-start sm:self-auto shrink-0">
                 <button
                   type="button"
                   onClick={() => setSelectedCategory('all')}
@@ -236,18 +236,18 @@ export default function OverallResultsPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by test name..."
-                    className="w-full pl-9 pr-4 py-2 rounded-2xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-700 text-xs sm:text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#005CE6] focus:ring-2 focus:ring-[#005CE6]/20 transition-all text-slate-800 dark:text-slate-100"
+                    className="w-full pl-9 pr-4 py-2 rounded-2xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-slate-700 text-xs sm:text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-[#005CE6] focus:ring-2 focus:ring-[#005CE6]/20 transition-all text-slate-800 dark:text-slate-100"
                   />
                 </div>
 
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="px-3.5 py-2 rounded-2xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-700 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#005CE6] cursor-pointer"
+                  className="px-3.5 py-2 rounded-2xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-slate-700 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#005CE6] cursor-pointer"
                 >
-                  <option value="latest" className="dark:bg-[#111A2E]">Sort: Most Recent</option>
-                  <option value="score" className="dark:bg-[#111A2E]">Sort: Highest Score</option>
-                  <option value="accuracy" className="dark:bg-[#111A2E]">Sort: Highest Accuracy</option>
+                  <option value="latest" className="dark:bg-[#1E1E1E]">Sort: Most Recent</option>
+                  <option value="score" className="dark:bg-[#1E1E1E]">Sort: Highest Score</option>
+                  <option value="accuracy" className="dark:bg-[#1E1E1E]">Sort: Highest Accuracy</option>
                 </select>
               </div>
             </div>
@@ -261,7 +261,7 @@ export default function OverallResultsPage() {
               </div>
 
               {testsList.length === 0 ? (
-                <div className="p-12 sm:p-16 rounded-3xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 text-center space-y-5">
+                <div className="p-12 sm:p-16 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-slate-800 text-center space-y-5">
                   <div className="w-16 h-16 rounded-3xl bg-[#E0F4FD] dark:bg-blue-950/80 text-[#005CE6] dark:text-blue-400 flex items-center justify-center mx-auto border border-[#BCEBFC] dark:border-blue-900 shadow-2xs">
                     <Award className="w-8 h-8" />
                   </div>
@@ -282,7 +282,7 @@ export default function OverallResultsPage() {
                   </div>
                 </div>
               ) : filteredTests.length === 0 ? (
-                <div className="p-12 rounded-3xl bg-white dark:bg-[#111A2E] border border-slate-200 dark:border-slate-800 text-center space-y-4">
+                <div className="p-12 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-slate-200 dark:border-slate-800 text-center space-y-4">
                   <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto">
                     <Search className="w-6 h-6" />
                   </div>
@@ -363,7 +363,7 @@ export default function OverallResultsPage() {
                                 <span>{test.wrong} Wrong (-{test.negative_marks})</span>
                               </span>
 
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#162036] text-slate-700 dark:text-slate-300 text-[11px] font-medium border border-slate-200 dark:border-slate-700">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#252525] text-slate-700 dark:text-slate-300 text-[11px] font-medium border border-slate-200 dark:border-slate-700">
                                 <span>{test.skipped} Skipped</span>
                               </span>
 
@@ -378,7 +378,7 @@ export default function OverallResultsPage() {
                             {/* Score Display Card */}
                             <div className="grid grid-cols-3 sm:flex sm:items-center gap-3 sm:gap-6 text-center">
                               {/* Marks */}
-                              <div className="p-2 sm:p-0 rounded-2xl bg-slate-50 sm:bg-transparent dark:bg-[#0D1524] dark:sm:bg-transparent">
+                              <div className="p-2 sm:p-0 rounded-2xl bg-slate-50 sm:bg-transparent dark:bg-[#181818] dark:sm:bg-transparent">
                                 <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
                                   Score
                                 </div>
@@ -391,7 +391,7 @@ export default function OverallResultsPage() {
                               </div>
 
                               {/* Accuracy */}
-                              <div className="p-2 sm:p-0 rounded-2xl bg-slate-50 sm:bg-transparent dark:bg-[#0D1524] dark:sm:bg-transparent">
+                              <div className="p-2 sm:p-0 rounded-2xl bg-slate-50 sm:bg-transparent dark:bg-[#181818] dark:sm:bg-transparent">
                                 <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
                                   Accuracy
                                 </div>
@@ -404,7 +404,7 @@ export default function OverallResultsPage() {
                               </div>
 
                               {/* Time Spent */}
-                              <div className="p-2 sm:p-0 rounded-2xl bg-slate-50 sm:bg-transparent dark:bg-[#0D1524] dark:sm:bg-transparent">
+                              <div className="p-2 sm:p-0 rounded-2xl bg-slate-50 sm:bg-transparent dark:bg-[#181818] dark:sm:bg-transparent">
                                 <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
                                   Time Spent
                                 </div>
@@ -421,7 +421,7 @@ export default function OverallResultsPage() {
                             <div className="shrink-0 flex items-center">
                               <Link
                                 href={`/tests/result/${test.attempt_id}`}
-                                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white dark:bg-[#162036] border border-[#BCEBFC] dark:border-slate-700 hover:border-[#005CE6] dark:hover:border-blue-500 hover:bg-[#F0FAFF] dark:hover:bg-[#111A2E] text-[#005CE6] dark:text-blue-400 font-bold text-xs sm:text-sm shadow-2xs hover:shadow-xs transition-all flex items-center justify-center gap-1.5 group/btn cursor-pointer"
+                                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white dark:bg-[#252525] border border-[#BCEBFC] dark:border-slate-700 hover:border-[#005CE6] dark:hover:border-blue-500 hover:bg-[#F0FAFF] dark:hover:bg-[#1E1E1E] text-[#005CE6] dark:text-blue-400 font-bold text-xs sm:text-sm shadow-2xs hover:shadow-xs transition-all flex items-center justify-center gap-1.5 group/btn cursor-pointer"
                               >
                                 <span>View Test Scorecard</span>
                                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -464,7 +464,7 @@ export default function OverallResultsPage() {
                     return (
                       <div
                         key={t.topic_id}
-                        className="p-4 rounded-2xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC]/80 dark:border-slate-800 shadow-2xs space-y-3"
+                        className="p-4 rounded-2xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC]/80 dark:border-slate-800 shadow-2xs space-y-3"
                       >
                         <div className="flex items-start justify-between gap-2">
                           <h4 className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">
@@ -518,7 +518,7 @@ export default function OverallResultsPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-[#E2E8F0] dark:border-slate-800 py-8 bg-white dark:bg-[#0D1524] text-xs text-slate-500 dark:text-slate-400 mt-12">
+      <footer className="border-t border-[#E2E8F0] dark:border-[#2C2C2C] py-8 bg-white dark:bg-[#121212] text-xs text-slate-500 dark:text-slate-400 mt-12">
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© 2026 SwS. Banking Exam Performance Intelligence.</p>
           <div className="flex gap-6 font-semibold">

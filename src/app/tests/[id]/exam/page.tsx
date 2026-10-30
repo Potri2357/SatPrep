@@ -558,9 +558,9 @@ export default function ExamTestWindow() {
   const isRed = secondsRemaining <= 60; // <= 1 min
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#090E17] flex flex-col select-none text-slate-800 dark:text-slate-100 font-sans transition-colors">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#121212] flex flex-col select-none text-slate-800 dark:text-slate-100 font-sans transition-colors">
       {/* 1. TOP CANDIDATE & EXAM HEADER */}
-      <header className="h-14 sm:h-16 bg-[#005CE6] dark:bg-[#0B234F] text-white px-4 sm:px-6 flex items-center justify-between border-b border-blue-700 dark:border-blue-900 shrink-0 z-30">
+      <header className="h-14 sm:h-16 bg-[#005CE6] dark:bg-[#1E1E1E] text-white px-4 sm:px-6 flex items-center justify-between border-b border-blue-700 dark:border-[#2C2C2C] shrink-0 z-30">
         <div className="flex items-center gap-3 sm:gap-4">
           <BrandLogo size={32} showWordmark={false} />
           <div>

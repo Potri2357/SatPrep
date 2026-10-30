@@ -112,7 +112,7 @@ export function Features10() {
   const [isPaused, setIsPaused] = useState(false);
 
   return (
-    <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-white via-[#F7FDFF] to-white dark:from-[#090E17] dark:via-[#0D1524] dark:to-[#090E17] border-t border-slate-200/80 dark:border-slate-800 transition-colors">
+    <section className="relative py-20 sm:py-28 overflow-hidden bg-gradient-to-b from-white via-[#F7FDFF] to-white dark:from-[#121212] dark:via-[#181818] dark:to-[#121212] border-t border-slate-200/80 dark:border-[#2C2C2C] transition-colors">
       {/* Background Decorators */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-[#005CE6]/6 via-[#60CEF8]/10 to-transparent rounded-full blur-3xl" />
@@ -132,7 +132,7 @@ export function Features10() {
         </div>
 
         {/* Integration Map Visualizer with Orbiting Nodes */}
-        <div className="relative rounded-3xl bg-white/80 dark:bg-[#111A2E]/90 backdrop-blur-xl border border-[#BCEBFC]/80 dark:border-slate-800 shadow-[0_20px_50px_rgba(0,92,230,0.08)] p-6 sm:p-10 mb-12 overflow-hidden transition-colors">
+        <div className="relative rounded-3xl bg-white/80 dark:bg-[#1E1E1E]/95 backdrop-blur-xl border border-[#BCEBFC]/80 dark:border-[#2C2C2C] shadow-[0_20px_50px_rgba(0,92,230,0.08)] p-6 sm:p-10 mb-12 overflow-hidden transition-colors">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left / Center: Interactive Orbital System (7 Cols) */}
@@ -217,10 +217,10 @@ export function Features10() {
                           }}
                           onMouseLeave={() => setIsPaused(false)}
                           className={cn(
-                            "group relative flex items-center gap-2 p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-[#162238] border shadow-md transition-all duration-300 hover:scale-115 cursor-pointer text-left",
+                            "group relative flex items-center gap-2 p-2 sm:p-2.5 rounded-2xl bg-white dark:bg-[#252525] border shadow-md transition-all duration-300 hover:scale-115 cursor-pointer text-left",
                             isSelected
                               ? "border-[#005CE6] ring-3 ring-[#005CE6]/20 shadow-[0_8px_25px_rgba(0,92,230,0.22)] scale-110"
-                              : "border-slate-200/90 dark:border-slate-700 hover:border-[#0096D6]/60"
+                              : "border-slate-200/90 dark:border-[#2C2C2C] hover:border-[#0096D6]/60"
                           )}
                         >
                           <div
@@ -266,7 +266,7 @@ export function Features10() {
 
             {/* Right: Active Node Detail Inspector Card (5 Cols) */}
             <div className="lg:col-span-5 flex flex-col justify-between h-full space-y-6">
-              <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-white via-[#F8FBFF] to-white dark:from-[#162238] dark:via-[#111A2E] dark:to-[#162238] border border-[#BCEBFC] dark:border-slate-700 shadow-sm space-y-5">
+              <div className="p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-white via-[#F8FBFF] to-white dark:from-[#252525] dark:via-[#1E1E1E] dark:to-[#252525] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-sm space-y-5">
                 
                 {/* Node Status Tag */}
                 <div className="flex items-center justify-between">

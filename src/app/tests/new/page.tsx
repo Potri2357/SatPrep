@@ -421,7 +421,7 @@ function TestBuilderForm() {
   const diTopics = INITIAL_TOPICS.filter((t) => t.group_name === 'DI');
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#090E17] flex flex-col justify-between text-slate-800 dark:text-slate-100 selection:bg-[#005CE6] selection:text-white">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#121212] flex flex-col justify-between text-slate-800 dark:text-slate-100 selection:bg-[#005CE6] selection:text-white">
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
@@ -438,7 +438,7 @@ function TestBuilderForm() {
           </div>
 
           {/* Section 1: Target Exam Picker & Matrix Filter */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-[0_4px_20px_rgba(0,92,230,0.05)] space-y-5">
+          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[0_4px_20px_rgba(0,92,230,0.05)] space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-[#005CE6] text-white flex items-center justify-center text-[10px] font-bold">1</span>
@@ -522,7 +522,7 @@ function TestBuilderForm() {
             </div>
 
             {/* Matrix Blueprint Profile Card (The Bank-Only Quant Difficulty Matrix) */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-50/60 via-white to-blue-50/30 dark:from-slate-900 dark:via-[#111A2E] dark:to-slate-900 border border-blue-200/80 dark:border-blue-900 space-y-3.5">
+            <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-50/60 via-white to-blue-50/30 dark:from-slate-900 dark:via-[#1E1E1E] dark:to-slate-900 border border-blue-200/80 dark:border-[#2C2C2C] space-y-3.5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-blue-100 dark:border-slate-800 pb-2.5">
                 <div className="flex items-center gap-2">
                   <Compass className="w-4 h-4 text-[#005CE6]" />
@@ -683,7 +683,7 @@ function TestBuilderForm() {
           </div>
 
           {/* Section 2: Syllabus Topics Selection */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-[0_4px_20px_rgba(0,92,230,0.05)] space-y-6">
+          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[0_4px_20px_rgba(0,92,230,0.05)] space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-[#005CE6] text-white flex items-center justify-center text-[10px] font-bold">2</span>
@@ -815,7 +815,7 @@ function TestBuilderForm() {
 
         {/* Right 1 Col: Test Summary & Launch Blueprint */}
         <div className="space-y-6">
-          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-[0_4px_24px_rgba(0,92,230,0.06)] space-y-6 sticky top-24">
+          <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[0_4px_24px_rgba(0,92,230,0.06)] space-y-6 sticky top-24">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <span className="font-bold text-sm text-[#0F172A] dark:text-white flex items-center gap-2">
                 <Award className="w-4 h-4 text-[#005CE6]" />

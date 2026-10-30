@@ -228,12 +228,12 @@ export default function MockTestsHubPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#090E17] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col transition-colors">
+    <div className="min-h-screen bg-[#F7FDFF] dark:bg-[#121212] text-[#0F172A] dark:text-[#FFFFFF] flex flex-col transition-colors">
       <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-8">
         {/* Header Hero */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC] dark:border-slate-800">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#BCEBFC] dark:border-[#2C2C2C]">
           <div className="space-y-3 max-w-3xl">
             <h1 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
               Mock Tests Series
@@ -263,7 +263,7 @@ export default function MockTestsHubPage() {
 
         {/* Filter Navigation Tabs */}
         <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1.5 rounded-2xl bg-[#E0F4FD]/60 dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800">
+          <div className="inline-flex max-w-full overflow-x-auto no-scrollbar p-1.5 rounded-2xl bg-[#E0F4FD]/60 dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-[#2C2C2C]">
             <button
               onClick={() => setSelectedCategory('all')}
               className={cn(
@@ -332,7 +332,7 @@ export default function MockTestsHubPage() {
                   </div>
 
                   {/* Test Metrics Pill Bar — Improvised Aesthetic Design */}
-                  <div className="grid grid-cols-3 gap-1 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] dark:from-[#0D1524] dark:via-[#111A2E] dark:to-[#0D1524] border border-[#BCEBFC] dark:border-slate-800 shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)] dark:shadow-none text-center divide-x divide-[#D6EEFC] dark:divide-slate-800">
+                  <div className="grid grid-cols-3 gap-1 p-2 rounded-2xl bg-gradient-to-b from-[#F8FCFF] via-[#F1F8FD] to-[#EAF5FC] dark:from-[#181818] dark:via-[#232323] dark:to-[#181818] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),0_2px_6px_rgba(0,92,230,0.03)] dark:shadow-none text-center divide-x divide-[#D6EEFC] dark:divide-[#2C2C2C]">
                     <div className="px-1.5 py-1 flex flex-col items-center justify-center">
                       <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
                         <Target className="w-2.5 h-2.5 text-[#005CE6] dark:text-blue-400" />
@@ -359,7 +359,7 @@ export default function MockTestsHubPage() {
                   {/* Topics Tags */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {test.topicsCovered.map((topic, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded-md bg-white dark:bg-[#162036] border border-slate-200 dark:border-slate-700 text-[10px] font-medium text-slate-600 dark:text-slate-300">
+                      <span key={i} className="px-2 py-0.5 rounded-md bg-white dark:bg-[#252525] border border-slate-200 dark:border-[#2C2C2C] text-[10px] font-medium text-slate-600 dark:text-slate-300">
                         {topic}
                       </span>
                     ))}
@@ -407,10 +407,10 @@ export default function MockTestsHubPage() {
         {/* Mock Test Settings & Options Modal */}
         {configuringTest && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-[#111A2E] border border-[#BCEBFC] dark:border-slate-800 shadow-[0_20px_60px_rgba(0,92,230,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] p-6 sm:p-7 space-y-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div className="relative w-full max-w-lg rounded-3xl bg-white dark:bg-[#1E1E1E] border border-[#BCEBFC] dark:border-[#2C2C2C] shadow-[0_20px_60px_rgba(0,92,230,0.18)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.7)] p-6 sm:p-7 space-y-6 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
               
               {/* Modal Header */}
-              <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-start justify-between gap-4 pb-4 border-b border-slate-100 dark:border-[#2C2C2C]">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-[#E0F4FD] dark:bg-blue-950/40 border border-[#BCEBFC] dark:border-blue-900/50 flex items-center justify-center text-[#005CE6] dark:text-blue-400 shadow-2xs">
                     <SlidersHorizontal className="w-5 h-5" />
@@ -428,7 +428,7 @@ export default function MockTestsHubPage() {
                 <button
                   type="button"
                   onClick={() => setConfiguringTest(null)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#2C2C2C] transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -450,7 +450,7 @@ export default function MockTestsHubPage() {
                       "p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2",
                       configFeedbackMode === 'exam'
                         ? "bg-[#F0FAFF] dark:bg-blue-950/40 border-[#005CE6] dark:border-blue-500 text-[#005CE6] dark:text-blue-400 ring-2 ring-[#005CE6]/20 shadow-xs"
-                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2E2E2E]"
                     )}
                   >
                     <div className="flex items-center justify-between w-full">
@@ -474,7 +474,7 @@ export default function MockTestsHubPage() {
                       "p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2",
                       configFeedbackMode === 'practice'
                         ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 dark:border-emerald-500 text-emerald-800 dark:text-emerald-300 ring-2 ring-emerald-500/20 shadow-xs"
-                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2E2E2E]"
                     )}
                   >
                     <div className="flex items-center justify-between w-full">
@@ -515,7 +515,7 @@ export default function MockTestsHubPage() {
                         "py-2 px-2 rounded-xl text-xs font-bold transition-all border cursor-pointer text-center",
                         configDuration === dur.val
                           ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                          : "bg-white dark:bg-[#162036] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800"
+                          : "bg-white dark:bg-[#252525] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-[#2C2C2C] hover:bg-slate-50 dark:hover:bg-[#2C2C2C]"
                       )}
                     >
                       {dur.label}
@@ -537,7 +537,7 @@ export default function MockTestsHubPage() {
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configPenalty > 0
                         ? "bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-500 text-rose-700 dark:text-rose-300 ring-2 ring-rose-200 dark:ring-rose-900/30"
-                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2C2C2C]"
                     )}
                   >
                     <span>-{configuringTest.negativeMarks} Penalty (Official)</span>
@@ -551,7 +551,7 @@ export default function MockTestsHubPage() {
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configPenalty === 0
                         ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 dark:border-emerald-500 text-emerald-800 dark:text-emerald-300 ring-2 ring-emerald-200 dark:ring-emerald-900/30"
-                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2C2C2C]"
                     )}
                   >
                     <span>0 Negative Marks (Relaxed)</span>
@@ -573,7 +573,7 @@ export default function MockTestsHubPage() {
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configQuestionCount === configuringTest.questionCount
                         ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2C2C2C]"
                     )}
                   >
                     <span>Full Blueprint ({configuringTest.questionCount} Questions)</span>
@@ -587,7 +587,7 @@ export default function MockTestsHubPage() {
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configQuestionCount === 15
                         ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                        : "bg-white dark:bg-[#162036] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2C2C2C]"
                     )}
                   >
                     <span>Short Sprint (15 Questions)</span>
@@ -597,11 +597,11 @@ export default function MockTestsHubPage() {
               </div>
 
               {/* Actions Footer */}
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3">
+              <div className="pt-3 border-t border-slate-100 dark:border-[#2C2C2C] flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() => setConfiguringTest(null)}
-                  className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-xs sm:text-sm transition-colors cursor-pointer"
+                  className="w-1/3 py-3 px-4 rounded-xl border border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#252525] font-bold text-xs sm:text-sm transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>

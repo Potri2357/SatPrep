@@ -72,11 +72,11 @@ export function CustomDropdown({
         disabled={disabled}
         onClick={() => setIsOpen((prev) => !prev)}
         className={cn(
-          'w-full h-11 px-3.5 rounded-xl border border-blue-100 dark:border-slate-700 bg-white dark:bg-[#111A2E] text-slate-800 dark:text-slate-200 text-xs font-medium',
+          'w-full h-11 px-3.5 rounded-xl border border-blue-100 dark:border-[#2C2C2C] bg-white dark:bg-[#1E1E1E] text-slate-800 dark:text-slate-200 text-xs font-medium',
           'flex items-center justify-between gap-2 transition-all cursor-pointer shadow-2xs',
-          'hover:border-blue-300 dark:hover:border-blue-500 hover:bg-[#F8FAFC] dark:hover:bg-slate-800',
+          'hover:border-blue-300 dark:hover:border-blue-500 hover:bg-[#F8FAFC] dark:hover:bg-[#252525]',
           'focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500',
-          isOpen && 'border-blue-500 ring-2 ring-blue-500/20 bg-white dark:bg-[#111A2E]',
+          isOpen && 'border-blue-500 ring-2 ring-blue-500/20 bg-white dark:bg-[#1E1E1E]',
           disabled && 'opacity-50 cursor-not-allowed hover:border-blue-100',
           triggerClassName
         )}
@@ -97,7 +97,7 @@ export function CustomDropdown({
         <div
           className={cn(
             'absolute left-0 right-0 top-full mt-1.5 z-[70]',
-            'bg-white dark:bg-[#111A2E] border border-blue-100 dark:border-slate-700 rounded-2xl shadow-2xl shadow-slate-900/15 dark:shadow-black/50',
+            'bg-white dark:bg-[#252525] border border-blue-100 dark:border-[#2C2C2C] rounded-2xl shadow-2xl shadow-slate-900/15 dark:shadow-black/50',
             'p-1.5 max-h-64 overflow-y-auto overscroll-contain animate-in fade-in zoom-in-95 duration-150',
             menuClassName
           )}
