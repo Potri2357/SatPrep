@@ -28,7 +28,13 @@ function getExistingRows(): any[] {
 
 export async function POST(req: NextRequest) {
   try {
-    const { topic_id, difficulty, count, method, preferred_model } = await req.json();
+    const body = await req.json();
+    const topic_id = body.topic_id || body.topicId || 'number-series';
+    const difficulty = body.difficulty || 3;
+    const count = body.count;
+    const method = body.method;
+    const preferred_model = body.preferred_model;
+
     const topicObj = INITIAL_TOPICS.find((t) => t.id === topic_id);
     const topicName = topicObj ? topicObj.name : 'Quantitative Aptitude';
     const targetCount = Math.min(Math.max(Number(count) || 1, 1), 20);

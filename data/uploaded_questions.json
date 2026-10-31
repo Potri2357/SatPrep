@@ -4438,5 +4438,363 @@
       "solution": "Step-by-step solution for Question 100: The correct choice is Option B (300000). Verified from official IBPS PO 2025 Preliminary examination paper.",
       "shortcut": "Speed Shortcut: Analyze the unit digit / ratios to eliminate remaining options and select Option B within 30 seconds."
     }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447424096-1",
+      "type": "mcq",
+      "difficulty_assigned": 2,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "An article is marked at ₹$250$ and sold at a profit margin of $12\\%$. What is the final selling price of the article?",
+      "options": [
+        {
+          "id": "a",
+          "text": "₹280"
+        },
+        {
+          "id": "b",
+          "text": "₹298"
+        },
+        {
+          "id": "c",
+          "text": "₹256"
+        },
+        {
+          "id": "d",
+          "text": "₹316"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447424096-1",
+      "correct_option": "a",
+      "solution": "Cost Price = ₹$250$. Profit percentage = $12\\%$. Final Selling Price $= 250 \\times (1 + \\frac{12}{100}) = ₹280$.",
+      "shortcut": "Direct multiplier multiplication: $250 \\times 1.12 = ₹280$."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447424096-2",
+      "type": "mcq",
+      "difficulty_assigned": 2,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "An article is marked at ₹$310$ and sold at a profit margin of $15\\%$. What is the final selling price of the article?",
+      "options": [
+        {
+          "id": "a",
+          "text": "₹339"
+        },
+        {
+          "id": "b",
+          "text": "₹357"
+        },
+        {
+          "id": "c",
+          "text": "₹333"
+        },
+        {
+          "id": "d",
+          "text": "₹393"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447424096-2",
+      "correct_option": "b",
+      "solution": "Cost Price = ₹$310$. Profit percentage = $15\\%$. Final Selling Price $= 310 \\times (1 + \\frac{15}{100}) = ₹357$.",
+      "shortcut": "Direct multiplier multiplication: $310 \\times 1.15 = ₹357$."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447461694-1",
+      "topic_id": "number-series",
+      "type": "mcq",
+      "difficulty_assigned": 2,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "An article is marked at ₹$250$ and sold at a profit margin of $12\\%$. What is the final selling price of the article?",
+      "options": [
+        {
+          "id": "a",
+          "text": "₹280"
+        },
+        {
+          "id": "b",
+          "text": "₹298"
+        },
+        {
+          "id": "c",
+          "text": "₹256"
+        },
+        {
+          "id": "d",
+          "text": "₹316"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447461694-1",
+      "correct_option": "a",
+      "solution": "Cost Price = ₹$250$. Profit percentage = $12\\%$. Final Selling Price $= 250 \\times (1 + \\frac{12}{100}) = ₹280$.",
+      "shortcut": "Direct multiplier multiplication: $250 \\times 1.12 = ₹280$."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447461694-2",
+      "topic_id": "number-series",
+      "type": "mcq",
+      "difficulty_assigned": 2,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "An article is marked at ₹$310$ and sold at a profit margin of $15\\%$. What is the final selling price of the article?",
+      "options": [
+        {
+          "id": "a",
+          "text": "₹339"
+        },
+        {
+          "id": "b",
+          "text": "₹357"
+        },
+        {
+          "id": "c",
+          "text": "₹333"
+        },
+        {
+          "id": "d",
+          "text": "₹393"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447461694-2",
+      "correct_option": "b",
+      "solution": "Cost Price = ₹$310$. Profit percentage = $15\\%$. Final Selling Price $= 310 \\times (1 + \\frac{15}{100}) = ₹357$.",
+      "shortcut": "Direct multiplier multiplication: $310 \\times 1.15 = ₹357$."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447515655-1",
+      "topic_id": "number-series",
+      "type": "mcq",
+      "difficulty_assigned": 2,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "What will come in place of the question mark ($?$) in the following number series?\n\n$$14, 25, 47, 91, 179, ?$$",
+      "options": [
+        {
+          "id": "a",
+          "text": "345"
+        },
+        {
+          "id": "b",
+          "text": "355"
+        },
+        {
+          "id": "c",
+          "text": "367"
+        },
+        {
+          "id": "d",
+          "text": "335"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447515655-1",
+      "correct_option": "b",
+      "solution": "The difference between consecutive terms doubles at each step:\n25 - 14 = 11\n47 - 25 = 22\n91 - 47 = 44\n179 - 91 = 88\nNext difference = $88 \\times 2 = 176$.\nMissing term = $179 + 176 = 355$.",
+      "shortcut": "Pattern: $+11, +22, +44, +88, +176$. Next term $= 179 + 176 = 355$."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447515655-2",
+      "topic_id": "number-series",
+      "type": "mcq",
+      "difficulty_assigned": 2,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "Find the missing value ($?$) in the given number series:\n\n$$4, 9, 20, 43, 90, ?$$",
+      "options": [
+        {
+          "id": "a",
+          "text": "170"
+        },
+        {
+          "id": "b",
+          "text": "195"
+        },
+        {
+          "id": "c",
+          "text": "185"
+        },
+        {
+          "id": "d",
+          "text": "193"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447515655-2",
+      "correct_option": "c",
+      "solution": "Logic: $\\times 2 + 1, \\times 2 + 2, \\times 2 + 3, \\times 2 + 4, \\times 2 + 5$.\n$90 \\times 2 + 5 = 185$.",
+      "shortcut": "Multiplication with increasing addition: $90 \\times 2 + 5 = 185$."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447521234-1",
+      "topic_id": "time-and-work",
+      "type": "mcq",
+      "difficulty_assigned": 3,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "$A$ can complete a work in $15$ days and $B$ can complete the same work in $30$ days. If both of them work together, in how many days will the entire work be completed?",
+      "options": [
+        {
+          "id": "a",
+          "text": "12 days"
+        },
+        {
+          "id": "b",
+          "text": "10 days"
+        },
+        {
+          "id": "c",
+          "text": "8 days"
+        },
+        {
+          "id": "d",
+          "text": "14 days"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447521234-1",
+      "correct_option": "b",
+      "solution": "Total work $= \\text{LCM}(15, 30)$.\nOne day work $= \\frac{1}{15} + \\frac{1}{30} = \\frac{45}{450}$.\nTotal days $= \\frac{15 \\times 30}{45} = 10$ days.",
+      "shortcut": "Direct formula: $\\frac{A \\times B}{A + B} = \\frac{15 \\times 30}{45} = 10$ days."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447526567-1",
+      "topic_id": "si-ci",
+      "type": "mcq",
+      "difficulty_assigned": 4,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "The difference between compound interest (compounded annually) and simple interest on a sum of ₹$15000$ for $2$ years at $10\\%$ per annum is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "₹130"
+        },
+        {
+          "id": "b",
+          "text": "₹175"
+        },
+        {
+          "id": "c",
+          "text": "₹150"
+        },
+        {
+          "id": "d",
+          "text": "₹165"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447526567-1",
+      "correct_option": "c",
+      "solution": "For 2 years, difference $= P \\times (R/100)^2 = 15000 \\times (10/100)^2 = 15000 \\times (1/100) = ₹150$.",
+      "shortcut": "Difference is $1\\%$ of Principal $= 0.01 \\times 15000 = ₹150$."
+    }
+  },
+  {
+    "question": {
+      "id": "q-ai-1793447531522-1",
+      "topic_id": "tabular-di",
+      "type": "mcq",
+      "difficulty_assigned": 3,
+      "status": "live",
+      "source": "ai_twist",
+      "version": 1,
+      "stem": "Directions (Q.1): Study the following table regarding units sold (in thousands) by four companies across three years:\n\n| Company | 2022 | 2023 | 2024 |\n| :--- | :---: | :---: | :---: |\n| Alpha | 45 | 54 | 60 |\n| Beta | 36 | 48 | 56 |\n| Gamma | 50 | 65 | 75 |\n| Delta | 40 | 50 | 65 |\n\nWhat is the ratio of the total units sold by Alpha and Beta together in 2023 to that of Gamma and Delta together in 2024?",
+      "options": [
+        {
+          "id": "a",
+          "text": "49 : 70"
+        },
+        {
+          "id": "b",
+          "text": "51 : 70"
+        },
+        {
+          "id": "c",
+          "text": "53 : 70"
+        },
+        {
+          "id": "d",
+          "text": "48 : 65"
+        },
+        {
+          "id": "e",
+          "text": "None of these"
+        }
+      ]
+    },
+    "key": {
+      "question_id": "q-ai-1793447531522-1",
+      "correct_option": "b",
+      "solution": "Alpha + Beta in 2023 $= 54 + 48 = 102$ thousand.\nGamma + Delta in 2024 $= 75 + 65 = 140$ thousand.\nRequired ratio $= 102 : 140 = 51 : 70$ (dividing by 2).",
+      "shortcut": "Numerator $= 54 + 48 = 102$. Denominator $= 75 + 65 = 140$. Ratio $= 102/140 = 51 : 70$."
+    }
   }
 ]

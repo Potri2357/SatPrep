@@ -336,7 +336,7 @@ export default function MockTestsHubPage() {
                     </div>
                     <div className="px-1.5 py-1 flex flex-col items-center justify-center">
                       <div className="flex items-center gap-1 text-[9.5px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-wider mb-0.5">
-                        <Award className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" />
+                        <Award className="w-2.5 h-2.5 text-[#005CE6] dark:text-blue-400" />
                         <span>Marks</span>
                       </div>
                       <span className="text-[13px] font-black text-[#005CE6] dark:text-blue-400 font-mono tracking-tight">{test.totalMarks}</span>
@@ -467,15 +467,15 @@ export default function MockTestsHubPage() {
                     className={cn(
                       "p-3 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-2",
                       configFeedbackMode === 'practice'
-                        ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 dark:border-emerald-500 text-emerald-800 dark:text-emerald-300 ring-2 ring-emerald-500/20 shadow-xs"
+                        ? "bg-blue-50 dark:bg-[#202938] border-[#005CE6] dark:border-blue-500 text-blue-900 dark:text-blue-300 ring-2 ring-blue-500/20 shadow-xs"
                         : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2E2E2E]"
                     )}
                   >
                     <div className="flex items-center justify-between w-full">
                       <span className="text-xs font-extrabold flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Practice Mode
+                        <Sparkles className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" /> Practice Mode
                       </span>
-                      {configFeedbackMode === 'practice' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+                      {configFeedbackMode === 'practice' && <CheckCircle2 className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" />}
                     </div>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
                       Instant option verification, derivations revealed, 0 penalty.
@@ -544,12 +544,12 @@ export default function MockTestsHubPage() {
                     className={cn(
                       "p-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all cursor-pointer",
                       configPenalty === 0
-                        ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-400 dark:border-emerald-500 text-emerald-800 dark:text-emerald-300 ring-2 ring-emerald-200 dark:ring-emerald-900/30"
+                        ? "bg-blue-50 dark:bg-[#202938] border-[#005CE6] dark:border-blue-500 text-blue-900 dark:text-blue-300 ring-2 ring-blue-500/20"
                         : "bg-white dark:bg-[#252525] border-slate-200 dark:border-[#2C2C2C] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#2C2C2C]"
                     )}
                   >
                     <span>0 Negative Marks (Relaxed)</span>
-                    {configPenalty === 0 && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+                    {configPenalty === 0 && <CheckCircle2 className="w-3.5 h-3.5 text-[#005CE6] dark:text-blue-400" />}
                   </button>
                 </div>
               </div>
