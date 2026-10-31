@@ -10,7 +10,6 @@ import {
   Award,
   Clock,
   ArrowRight,
-  ShieldCheck,
   CheckCircle2,
   Zap,
   SlidersHorizontal,
@@ -297,11 +296,6 @@ export default function MockTestsHubPage() {
             >
               Sectional Speed Mocks
             </button>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>Exact IBPS PO &amp; Clerk Question Blueprint</span>
           </div>
         </div>
 
