@@ -679,12 +679,12 @@ export default function ExamTestWindow() {
               "px-2.5 py-1 rounded-md border text-[11px] font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-2xs",
               showScratchpad
                 ? "bg-[#005CE6] text-white border-[#005CE6] shadow-xs"
-                : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+                : "bg-slate-50 hover:bg-slate-100 dark:bg-[#252525] border-slate-200 dark:border-[#333333] text-slate-700 dark:text-slate-200"
             )}
             title="Open Rough Scratchpad for Calculations"
           >
             <Pencil className="w-3.5 h-3.5 text-amber-500" />
-            <span className="hidden sm:inline">Rough Scratchpad</span>
+            <span className="font-bold">Scratchpad</span>
           </button>
         </div>
       </div>
@@ -1165,7 +1165,7 @@ export default function ExamTestWindow() {
                       )}
                       <button
                         onClick={() => setShowScratchpad(!showScratchpad)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 dark:border-[#333333] bg-white dark:bg-[#252525] hover:bg-slate-50 dark:hover:bg-[#2C2C2C] text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
                       >
                         <Pencil className="w-3.5 h-3.5 text-amber-500" />
                         <span>Rough Scratchpad</span>
